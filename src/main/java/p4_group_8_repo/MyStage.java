@@ -30,10 +30,8 @@ public class MyStage extends World{
 	}
 	
 	public void playMusic() {
-		System.out.println("path1:");////
 		String musicFile = Objects.requireNonNull(getClass().getResource("/Snake_Charmer.mp3")).toExternalForm();
 		Media sound = new Media(musicFile);
-		System.out.println("path:"+getClass().getResource("/Snake_Charmer.mp3"));
 
 		//Media sound = new Media(new File(musicFile).toURI().toString());
 		mediaPlayer = new MediaPlayer(sound);

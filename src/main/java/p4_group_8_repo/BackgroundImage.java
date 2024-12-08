@@ -16,7 +16,7 @@ public class BackgroundImage extends Actor{
 		setImage(image);
 		setFitWidth(600);
 		setFitHeight(800);
-		setPreserveRatio(false);
+		//setPreserveRatio(false);
 	}
 
 }

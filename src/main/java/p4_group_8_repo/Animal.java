@@ -1,13 +1,13 @@
 package p4_group_8_repo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.event.EventHandler;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
 
 public class Animal extends Actor {
 	Image imgW1;
@@ -35,7 +35,8 @@ public class Animal extends Actor {
 	public Animal(String imageLink) {
 		setImage(new Image(imageLink, imgSize, imgSize, true, true));
 		setX(300);
-		setY(679.8+movement);
+		//setY(679.8+movement);
+		setY(733+movement);
 		imgW1 = new Image(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm(), imgSize, imgSize, true, true);
 		imgA1 = new Image(getClass().getResource("/p4_group_8_repo/froggerLeft.png").toExternalForm(), imgSize, imgSize, true, true);
 		imgS1 = new Image(getClass().getResource("/p4_group_8_repo/froggerDown.png").toExternalForm(), imgSize, imgSize, true, true);
@@ -137,7 +138,8 @@ public class Animal extends Actor {
 		int bounds = 0;
 		if (getY()<0 || getY()>734) {
 			setX(300);
-			setY(679.8+movement);
+			//setY(679.8+movement);
+			setY(733+movement);
 		}
 		if (getX()<0) {
 			move(movement*2, 0);
@@ -158,7 +160,8 @@ public class Animal extends Actor {
 			}
 			if (carD == 4) {
 				setX(300);
-				setY(679.8 + movement);
+				//setY(679.8 + movement);
+				setY(733+movement);
 				carDeath = false;
 				carD = 0;
 				setImage(new Image(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm(), imgSize, imgSize, true, true));
@@ -189,7 +192,8 @@ public class Animal extends Actor {
 			}
 			if (carD == 5) {
 				setX(300);
-				setY(679.8 + movement);
+				//setY(679.8 + movement);
+				setY(733+movement);
 				waterDeath = false;
 				carD = 0;
 				setImage(new Image(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm(), imgSize, imgSize, true, true));
@@ -240,7 +244,8 @@ public class Animal extends Actor {
 			getIntersectingObjects(End.class).get(0).setEnd();
 			end++;
 			setX(300);
-			setY(679.8+movement);
+			//setY(679.8+movement);
+			setY(733+movement);
 		}
 		else if (getY()<413){
 			waterDeath = true;
@@ -264,6 +269,4 @@ public class Animal extends Actor {
 		return false;
 		
 	}
-	
-
 }

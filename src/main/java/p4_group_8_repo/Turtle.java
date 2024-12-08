@@ -31,6 +31,7 @@ public class Turtle extends Actor{
 		if (getX() < -75 && speed<0)
 			setX(600);
 	}
+
 	public Turtle(int xpos, int ypos, int s, int w, int h) {
 		turtle1 = new Image(getClass().getResource("/p4_group_8_repo/TurtleAnimation1.png").toExternalForm(), w, h, true, true);
 		turtle2 = new Image(getClass().getResource("/p4_group_8_repo/TurtleAnimation2.png").toExternalForm(), w, h, true, true);

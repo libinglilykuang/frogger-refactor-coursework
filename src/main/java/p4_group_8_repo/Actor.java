@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public abstract class Actor extends ImageView{
 
     public void move(double dx, double dy) {
-        setX(getX() - dx);
-        setY(getY() - dy);
+        setX(getX() + dx);
+        setY(getY() + dy);
     }
 
     public World getWorld() {
