@@ -57,6 +57,14 @@ public class FroggerUI extends UI {
     public void create() {
     }
 
+    public Label getLevelLabel() {
+        return levelLabel;
+    }
+
+    public StackPane getGameOverPane() {
+        return gameOverPane;
+    }
+
     @Override
     public void placeCanvas(Group root) {
         BorderPane.setAlignment(levelLabel, Pos.CENTER);

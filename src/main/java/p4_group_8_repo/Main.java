@@ -2,23 +2,85 @@ package p4_group_8_repo;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 
 public class Main extends Application {
 	AnimationTimer timer;
 	MyStage background;
 	Animal animal;
+	private int level = 1;
+	private int totalEnds = 2;
+	private int reachedEnds = 0;
+	private boolean levelReset = false;
+
+	public void setLevel(int level) {
+		background.getChildren().removeIf(node -> node instanceof Text && ((Text) node).getText().startsWith("LEVEL:"));
+
+		Text levelLabel = new Text("LEVEL: " + level);
+		levelLabel.setFont(Font.font("Arial", 30));
+		levelLabel.setFill(Color.WHITE);
+		levelLabel.setX(250);
+		levelLabel.setY(30);
+		background.getChildren().add(levelLabel);
+	}
+	public void onTargetReached() {
+		reachedEnds++;
+		if (reachedEnds == totalEnds) {
+			checkLevelProgress();
+		}
+	}
+
+	public void checkLevelProgress() {
+		if (reachedEnds == totalEnds) {
+			increaseLevel();
+			resetLevel();
+		}
+	}
+	public void resetLevel() {
+		levelReset = true;
+		reachedEnds = 0;
+
+		background.getChildren().removeIf(node -> node instanceof End);
+		int startX = 4;
+		int y = 96;
+		int gap = 133;
+
+		for (int i = 0; i < 5; i++) {
+			background.add(new End(startX + i * gap, y));
+		}
+		animal.setX(300);
+		animal.setY(733);
+
+		Platform.runLater(() -> {
+			background.layout();
+			levelReset = false;
+		});
+	}
+
+	public void increaseLevel() {
+		level++;
+		setLevel(level);
+
+	}
+
 	public static void main(String[] args) {
 		try {
 			System.out.println("Main method started...");
@@ -56,9 +118,9 @@ public class Main extends Application {
 		background.add(new Turtle(500, 376, -1, 130, 130));
 		background.add(new Turtle(300, 376, -1, 130, 130));
 		background.add(new Turtle(700, 376, -1, 130, 130));
-		background.add(new WetTurtle(600, 217, -1, 130, 130));
-		background.add(new WetTurtle(400, 217, -1, 130, 130));
-		background.add(new WetTurtle(200, 217, -1, 130, 130));
+		background.add(new Turtle(600, 217, -1, 130, 130));
+		background.add(new Turtle(400, 217, -1, 130, 130));
+		background.add(new Turtle(200, 217, -1, 130, 130));
 
 		/*background.add(new Log(getClass().getResource("/p4_group_8_repo/log2.png").toExternalForm(), 120, 200, 100, 1));
 		background.add(new Log(getClass().getResource("/p4_group_8_repo/log2.png").toExternalForm(), 120, 0, 100, 1));
@@ -93,24 +155,24 @@ public class Main extends Application {
 		animal = new Animal(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm());
 		background.add(animal);
 
-		background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck1Right.png").toExternalForm(), 0, 649, 1, 120, 120));
+		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck1Right.png").toExternalForm(), 0, 649, 1, 120, 120));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck1Right.png").toExternalForm(), 300, 649, 1, 120, 120));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck1Right.png").toExternalForm(), 600, 649, 1, 120, 120));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck1Right.png").toExternalForm(), 720, 649, 1, 120, 120));
 
-		background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1Left.png").toExternalForm(), 100, 597, -1, 50, 50));
+		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1Left.png").toExternalForm(), 100, 597, -1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1Left.png").toExternalForm(), 250, 597, -1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1Left.png").toExternalForm(), 400, 597, -1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1Left.png").toExternalForm(), 550, 597, -1, 50, 50));
 
-		background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck2Right.png").toExternalForm(), 0, 540, 1, 200, 200));
+		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck2Right.png").toExternalForm(), 0, 540, 1, 200, 200));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/truck2Right.png").toExternalForm(), 500, 540, 1, 200, 200));
 
-		background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/redcar.png").toExternalForm(), 100, 480, -1, 50, 50));
+		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/redcar.png").toExternalForm(), 100, 480, -1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/redcar.png").toExternalForm(), 400, 490, -1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/redcar.png").toExternalForm(), 600, 490, -1, 50, 50));
 
-		background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1right.png").toExternalForm(), 100, 700, 1, 50, 50));
+		background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1Left.png").toExternalForm(), 100, 700, -1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1right.png").toExternalForm(), 400, 455, 1, 50, 50));
 		//background.add(new Obstacle(getClass().getResource("/p4_group_8_repo/car1right.png").toExternalForm(), 700, 455, 1, 50, 50));
 
@@ -121,8 +183,9 @@ public class Main extends Application {
 		background.add(obstacle1);
 		background.add(obstacle2);
 */
+		setNumber(0);
+		setLevel(level);
 
-		background.add(new digit(0, 30, 360, 25));
 		background.start();
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
@@ -137,6 +200,16 @@ public class Main extends Application {
             	if (animal.changeScore()) {
             		setNumber(animal.getPoints());
             	}
+
+				if (!levelReset &&!animal.getIntersectingObjects(End.class).isEmpty()) {
+					for (End end : animal.getIntersectingObjects(End.class)) {
+						if (!end.isActivated()) {
+							end.setEnd();
+							onTargetReached();
+						}
+					}
+				}
+
             	if (animal.getStop()) {
             		System.out.print("STOPP:");
             		background.stopMusic();
@@ -161,21 +234,34 @@ public class Main extends Application {
     public void stop() {
         timer.stop();
     }
-    
-    public void setNumber(int n) {
-    	int shift = 0;
-    	while (n < 0) {
-    		  int d = n / 10;
-    		  int k = n - d * 10;
-    		  n = d;
-    		  background.add(new digit(k, 30, 360 - shift, 25));
-    		  shift+=30;
-    		}
-		/*while (n > 0) {
-			int d = n % 10;
-			n = n / 10;
-			background.add(new digit(d, 30, 360 - shift, 25));
+
+	public void setNumber(int n) {
+		background.getChildren().removeIf(node -> node instanceof digit);
+		Text scoreLabel = new Text("SCORE:");
+		scoreLabel.setFont(Font.font("Arial", 30));
+		scoreLabel.setFill(Color.WHITE);
+		int labelX = 15;
+		int labelY = 30;
+		scoreLabel.setX(labelX);
+		scoreLabel.setY(labelY);
+		background.getChildren().add(scoreLabel);
+
+		int shift = 0;
+		Stack<Integer> digits = new Stack<>();
+		if (n == 0) {
+			digits.push(0);
+		} else {
+			while (n > 0) {
+				digits.push(n % 10);
+				n = n / 10;
+			}
+		}
+
+		while (!digits.isEmpty()) {
+			int d = digits.pop();
+			background.add(new digit(d, 30, 140 + shift, 5));
 			shift += 30;
-		}*/
-    }
+		}
+	}
+
 }

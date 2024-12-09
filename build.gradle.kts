@@ -13,9 +13,9 @@ repositories {
 }
 
 dependencies {
-    //implementation("org.openjfx:javafx-controls:22.0.1")
-    //implementation("org.openjfx:javafx-fxml:22.0.1")
-    //implementation("org.openjfx:javafx-media:22.0.1")
+    implementation("org.openjfx:javafx-controls:22.0.1")
+    implementation("org.openjfx:javafx-fxml:22.0.1")
+    implementation("org.openjfx:javafx-media:22.0.1")
 
     implementation("org.apache.commons:commons-csv:1.12.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))

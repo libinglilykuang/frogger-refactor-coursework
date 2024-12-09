@@ -51,4 +51,8 @@ public class WetTurtle extends Actor{
 	public boolean isSunk() {
 		return sunk;
 	}
+
+	public void setSunk(boolean sunk) {
+		this.sunk = sunk;
+	}
 }
