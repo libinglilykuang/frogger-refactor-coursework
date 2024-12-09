@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="p4_group_8_repo.TurtleTest" tests="3" skipped="0" failures="3" errors="0" timestamp="2024-12-09T19:23:13" hostname="KLBNOTTINGHAM" time="0.254">
+  <properties/>
+  <testcase name="testMovementLogic()" classname="p4_group_8_repo.TurtleTest" time="0.25">
+    <failure message="java.lang.RuntimeException: Internal graphics not initialized yet" type="java.lang.RuntimeException">java.lang.RuntimeException: Internal graphics not initialized yet
+	at com.sun.glass.ui.Screen.getScreens(Screen.java:68)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.getScreens(QuantumToolkit.java:774)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.getMaxRenderScale(QuantumToolkit.java:801)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.loadImage(QuantumToolkit.java:810)
+	at javafx.scene.image.Image.loadImage(Image.java:1075)
+	at javafx.scene.image.Image.initialize(Image.java:821)
+	at javafx.scene.image.Image.&lt;init&gt;(Image.java:666)
+	at p4_group_8_repo.Turtle.&lt;init&gt;(Turtle.java:36)
+	at p4_group_8_repo.TurtleTest.setUp(TurtleTest.java:14)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="testInitialization()" classname="p4_group_8_repo.TurtleTest" time="0.001">
+    <failure message="java.lang.RuntimeException: Internal graphics not initialized yet" type="java.lang.RuntimeException">java.lang.RuntimeException: Internal graphics not initialized yet
+	at com.sun.glass.ui.Screen.getScreens(Screen.java:68)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.getScreens(QuantumToolkit.java:774)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.getMaxRenderScale(QuantumToolkit.java:801)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.loadImage(QuantumToolkit.java:810)
+	at javafx.scene.image.Image.loadImage(Image.java:1075)
+	at javafx.scene.image.Image.initialize(Image.java:821)
+	at javafx.scene.image.Image.&lt;init&gt;(Image.java:666)
+	at p4_group_8_repo.Turtle.&lt;init&gt;(Turtle.java:36)
+	at p4_group_8_repo.TurtleTest.setUp(TurtleTest.java:14)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="testAnimationFrames()" classname="p4_group_8_repo.TurtleTest" time="0.001">
+    <failure message="java.lang.RuntimeException: Internal graphics not initialized yet" type="java.lang.RuntimeException">java.lang.RuntimeException: Internal graphics not initialized yet
+	at com.sun.glass.ui.Screen.getScreens(Screen.java:68)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.getScreens(QuantumToolkit.java:774)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.getMaxRenderScale(QuantumToolkit.java:801)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.loadImage(QuantumToolkit.java:810)
+	at javafx.scene.image.Image.loadImage(Image.java:1075)
+	at javafx.scene.image.Image.initialize(Image.java:821)
+	at javafx.scene.image.Image.&lt;init&gt;(Image.java:666)
+	at p4_group_8_repo.Turtle.&lt;init&gt;(Turtle.java:36)
+	at p4_group_8_repo.TurtleTest.setUp(TurtleTest.java:14)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
