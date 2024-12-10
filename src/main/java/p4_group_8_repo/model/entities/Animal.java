@@ -1,273 +1,244 @@
 package p4_group_8_repo.model.entities;
 
-import java.util.ArrayList;
-
-import javafx.event.EventHandler;
-
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import p4_group_8_repo.model.base.Actor;
 
 public class Animal extends Actor {
-	Image imgW1;
-	Image imgA1;
-	Image imgS1;
-	Image imgD1;
-	Image imgW2;
-	Image imgA2;
-	Image imgS2;
-	Image imgD2;
-	int points = 0;
-	int end = 0;
+	private final Image imgW1, imgA1, imgS1, imgD1, imgW2, imgA2, imgS2, imgD2;
+	private int points = 0;
+	private int endCount = 0;
 	private boolean second = false;
-	boolean noMove = false;
-	double movement = 13.3333333*2;
-	double movementX = 10.666666*2;
-	int imgSize = 40;
-	boolean carDeath = false;
-	boolean waterDeath = false;
-	boolean stop = false;
-	boolean changeScore = false;
-	int carD = 0;
-	double w = 800;
-	ArrayList<End> inter = new ArrayList<End>();
+	private boolean noMove = false;
+	private boolean carDeath = false;
+	private boolean waterDeath = false;
+	private boolean scoreChanged = false;
+
+	private static final double MOVEMENT_Y = 26.6667;
+	private static final double MOVEMENT_X = 21.3333;
+	private static final int IMAGE_SIZE = 40;
+	private static final double DEFAULT_X = 300;
+	private static final double DEFAULT_Y = 733 + MOVEMENT_Y;
+	private static final double BOUNDARY_Y = 734;
+	private static final double BOUNDARY_X = 600;
+	private static final int DEATH_ANIMATION_FRAME_INTERVAL = 11;
+	private static final int POINTS_INCREMENT = 50;
+	private static final int POINTS_DECREMENT = 50;
+	private static final int GAME_WIN_END_COUNT = 5;
+	private static final double LOG_MOVE_LEFT_SPEED = -2.0;
+	private static final double LOG_MOVE_RIGHT_SPEED = 0.75;
+	private static final double INITIAL_HIGHEST_Y = 800.0;
+	private static final double WATER_DEATH_Y_THRESHOLD = 413.0;
+
+	private int deathAnimationFrame = 0;
+	private double highestY = 800;
 
 	public Animal(String imageLink) {
-		setImage(new Image(imageLink, imgSize, imgSize, true, true));
-		setX(300);
-		//setY(679.8+movement);
-		setY(733+movement);
-		imgW1 = new Image(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgA1 = new Image(getClass().getResource("/p4_group_8_repo/froggerLeft.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgS1 = new Image(getClass().getResource("/p4_group_8_repo/froggerDown.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgD1 = new Image(getClass().getResource("/p4_group_8_repo/froggerRight.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgW2 = new Image(getClass().getResource("/p4_group_8_repo/froggerUpJump.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgA2 = new Image(getClass().getResource("/p4_group_8_repo/froggerLeftJump.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgS2 = new Image(getClass().getResource("/p4_group_8_repo/froggerDownJump.png").toExternalForm(), imgSize, imgSize, true, true);
-		imgD2 = new Image(getClass().getResource("/p4_group_8_repo/froggerRightJump.png").toExternalForm(), imgSize, imgSize, true, true);
+		setImage(new Image(imageLink, IMAGE_SIZE, IMAGE_SIZE, true, true));
+		resetPosition();
 
-		setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event){
-				if (noMove) {
-					
-				}
-				else {
-				if (second) {
-					if (event.getCode() == KeyCode.W) {	  
-		                move(0, -movement);
-		                changeScore = false;
-		                setImage(imgW1);
-		                second = false;
-		            }
-		            else if (event.getCode() == KeyCode.A) {	            	
-		            	 move(-movementX, 0);
-		            	 setImage(imgA1);
-		            	 second = false;
-		            }
-		            else if (event.getCode() == KeyCode.S) {	            	
-		            	 move(0, movement);
-		            	 setImage(imgS1);
-		            	 second = false;
-		            }
-		            else if (event.getCode() == KeyCode.D) {	            	
-		            	 move(movementX, 0);
-		            	 setImage(imgD1);
-		            	 second = false;
-		            }
-				}
-				else if (event.getCode() == KeyCode.W) {	            	
-	                move(0, -movement);
-	                setImage(imgW2);
-	                second = true;
-	            }
-	            else if (event.getCode() == KeyCode.A) {	            	
-	            	 move(-movementX, 0);
-	            	 setImage(imgA2);
-	            	 second = true;
-	            }
-	            else if (event.getCode() == KeyCode.S) {	            	
-	            	 move(0, movement);
-	            	 setImage(imgS2);
-	            	 second = true;
-	            }
-	            else if (event.getCode() == KeyCode.D) {	            	
-	            	 move(movementX, 0);
-	            	 setImage(imgD2);
-	            	 second = true;
-	            }
-	        }
-			}
-		});	
-		setOnKeyReleased(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event) {
-				if (noMove) {}
-				else {
-				if (event.getCode() == KeyCode.W) {	  
-					if (getY() < w) {
-						changeScore = true;
-						w = getY();
-						points+=10;
-					}
-	                move(0, -movement);
-	                setImage(imgW1);
-	                second = false;
-	            }
-	            else if (event.getCode() == KeyCode.A) {	            	
-	            	 move(-movementX, 0);
-	            	 setImage(imgA1);
-	            	 second = false;
-	            }
-	            else if (event.getCode() == KeyCode.S) {	            	
-	            	 move(0, movement);
-	            	 setImage(imgS1);
-	            	 second = false;
-	            }
-	            else if (event.getCode() == KeyCode.D) {	            	
-	            	 move(movementX, 0);
-	            	 setImage(imgD1);
-	            	 second = false;
-	            }
-	        }
-			}
-			
-		});
+		imgW1 = loadImage("/p4_group_8_repo/froggerUp.png");
+		imgA1 = loadImage("/p4_group_8_repo/froggerLeft.png");
+		imgS1 = loadImage("/p4_group_8_repo/froggerDown.png");
+		imgD1 = loadImage("/p4_group_8_repo/froggerRight.png");
+		imgW2 = loadImage("/p4_group_8_repo/froggerUpJump.png");
+		imgA2 = loadImage("/p4_group_8_repo/froggerLeftJump.png");
+		imgS2 = loadImage("/p4_group_8_repo/froggerDownJump.png");
+		imgD2 = loadImage("/p4_group_8_repo/froggerRightJump.png");
+
+		setOnKeyPressed(this::handleKeyPressed);
+		setOnKeyReleased(this::handleKeyReleased);
 	}
-	
+
+	public void resetPosition() {
+		setX(DEFAULT_X);
+		setY(DEFAULT_Y);
+	}
+
+	private Image loadImage(String filePath) {
+		if (getClass().getResource(filePath) == null) {
+			throw new IllegalArgumentException("Resource not found: " + filePath);
+		}
+		return new Image(getClass().getResource(filePath).toExternalForm(), IMAGE_SIZE, IMAGE_SIZE, true, true);
+	}
+
+	private void handleKeyPressed(KeyEvent event) {
+		if (noMove) return;
+
+		KeyCode key = event.getCode();
+		Image image = second ? getImageForKey(key, false) : getImageForKey(key, true);
+
+		if (image != null) {
+			move(getMovementX(key), getMovementY(key), image);
+			second = !second;
+		}
+	}
+
+	private void handleKeyReleased(KeyEvent event) {
+		if (noMove) return;
+
+		KeyCode key = event.getCode();
+		if (key == KeyCode.W && getY() < highestY) {
+			highestY = getY();
+			addPoints(10);
+		}
+
+		Image image = getImageForKey(key, false);
+		if (image != null) {
+			move(getMovementX(key), getMovementY(key), image);
+		}
+		second = false;
+	}
+
+	private double getMovementX(KeyCode key) {
+		return switch (key) {
+			case A -> -MOVEMENT_X;
+			case D -> MOVEMENT_X;
+			default -> 0;
+		};
+	}
+
+	private double getMovementY(KeyCode key) {
+		return switch (key) {
+			case W -> -MOVEMENT_Y;
+			case S -> MOVEMENT_Y;
+			default -> 0;
+		};
+	}
+
+	private Image getImageForKey(KeyCode key, boolean jumping) {
+		return switch (key) {
+			case W -> jumping ? imgW2 : imgW1;
+			case A -> jumping ? imgA2 : imgA1;
+			case S -> jumping ? imgS2 : imgS1;
+			case D -> jumping ? imgD2 : imgD1;
+			default -> null;
+		};
+	}
+
+	private void move(double dx, double dy, Image img) {
+		setImage(img);
+		move(dx, dy);
+	}
+
 	@Override
 	public void act(long now) {
-		int bounds = 0;
-		if (getY()<0 || getY()>734) {
-			setX(300);
-			//setY(679.8+movement);
-			setY(733+movement);
-		}
-		if (getX()<0) {
-			move(movement*2, 0);
-		}
-		if (carDeath) {
-			noMove = true;
-			if ((now)% 11 ==0) {
-				carD++;
-			}
-			if (carD == 1) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/cardeath1.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 2) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/cardeath2.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 3) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/cardeath3.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 4) {
-				setX(300);
-				//setY(679.8 + movement);
-				setY(733+movement);
-				carDeath = false;
-				carD = 0;
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm(), imgSize, imgSize, true, true));
-				noMove = false;
-				if (points > 50) {
-					points -= 50;
-					changeScore = true;
-				}
-			}
-			
-		}
-		if (waterDeath) {
-			noMove = true;
-			if ((now)% 11 ==0) {
-				carD++;
-			}
-			if (carD == 1) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/waterdeath1.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 2) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/waterdeath2.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 3) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/waterdeath3.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 4) {
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/waterdeath4.png").toExternalForm(), imgSize, imgSize, true, true));
-			}
-			if (carD == 5) {
-				setX(300);
-				//setY(679.8 + movement);
-				setY(733+movement);
-				waterDeath = false;
-				carD = 0;
-				setImage(new Image(getClass().getResource("/p4_group_8_repo/froggerUp.png").toExternalForm(), imgSize, imgSize, true, true));
-				noMove = false;
-				if (points > 50) {
-					points -= 50;
-					changeScore = true;
-				}
-			}
+		handleBounds();
+		if (carDeath) animateDeath(now, "cardeath", 4);
+		if (waterDeath) animateDeath(now, "waterdeath", 5);
+		checkCollisions();
+	}
 
-			
+	private void handleBounds() {
+		if (getY() < 0 || getY() > BOUNDARY_Y) resetPosition();
+		if (getX() < 0) move(MOVEMENT_X * 2, 0);
+		if (getX() > BOUNDARY_X) move(-MOVEMENT_X * 2, 0);
+	}
+
+	private void animateDeath(long now, String type, int frameLimit) {
+		noMove = true;
+
+		if (now % DEATH_ANIMATION_FRAME_INTERVAL == 0) {
+			deathAnimationFrame++;
 		}
-		
-		if (getX()>600) {
-			move(-movement*2, 0);
+
+		if (deathAnimationFrame >= 1 && deathAnimationFrame < frameLimit) {
+			setImage(loadImage(String.format("/p4_group_8_repo/%s%d.png", type, deathAnimationFrame)));
 		}
-		if (getIntersectingObjects(Obstacle.class).size() >= 1) {
+
+		if (deathAnimationFrame == frameLimit) {
+			resetAfterDeath();
+		}
+	}
+
+	private void resetAfterDeath() {
+		resetPosition();
+		carDeath = false;
+		waterDeath = false;
+		deathAnimationFrame = 0;
+		setImage(imgW1);
+		noMove = false;
+		deductPoints(POINTS_DECREMENT);
+	}
+
+	private void checkCollisions() {
+		if (!noMove) {
+			if (!getIntersectingObjects(End.class).isEmpty()) {
+				handleEndCollision();
+			}
+			if (!getIntersectingObjects(Log.class).isEmpty()) {
+				handleLogCollision();
+				return;
+			}
+			if (!getIntersectingObjects(Turtle.class).isEmpty()) {
+				move(-1, 0);
+				return;
+			}
+			if (!getIntersectingObjects(WetTurtle.class).isEmpty()) {
+				handleWetTurtleCollision();
+				return;
+			}
+			if (getY() < WATER_DEATH_Y_THRESHOLD) {
+				waterDeath = true;
+			}
+		}
+
+		if (!getIntersectingObjects(Obstacle.class).isEmpty()) {
 			carDeath = true;
 		}
-		if (getX() == 240 && getY() == 82) {
-			stop = true;
+	}
+
+	private void handleEndCollision() {
+		End endObj = getIntersectingObjects(End.class).get(0);
+		if (endObj.isActivated()) {
+			endCount--;
+			deductPoints(POINTS_DECREMENT);
+		} else {
+			endObj.setEnd();
+			endCount++;
+			addPoints(POINTS_INCREMENT);
 		}
-		if (getIntersectingObjects(Log.class).size() >= 1 && !noMove) {
-			if(getIntersectingObjects(Log.class).get(0).getLeft())
-				move(-2,0);
-			else
-				move (.75,0);
-		}
-		else if (getIntersectingObjects(Turtle.class).size() >= 1 && !noMove) {
-			move(-1,0);
-		}
-		else if (getIntersectingObjects(WetTurtle.class).size() >= 1) {
-			if (getIntersectingObjects(WetTurtle.class).get(0).isSunk()) {
-				waterDeath = true;
-			} else {
-				move(-1,0);
-			}
-		}
-		else if (getIntersectingObjects(End.class).size() >= 1) {
-			inter = (ArrayList<End>) getIntersectingObjects(End.class);
-			if (getIntersectingObjects(End.class).get(0).isActivated()) {
-				end--;
-				points-=50;
-			}
-			points+=50;
-			changeScore = true;
-			w=800;
-			getIntersectingObjects(End.class).get(0).setEnd();
-			end++;
-			setX(300);
-			//setY(679.8+movement);
-			setY(733+movement);
-		}
-		else if (getY()<413){
+		highestY = INITIAL_HIGHEST_Y;
+		resetPosition();
+	}
+
+	private void handleLogCollision() {
+		Log log = getIntersectingObjects(Log.class).get(0);
+		move(log.getLeft() ? LOG_MOVE_LEFT_SPEED : LOG_MOVE_RIGHT_SPEED, 0);
+	}
+
+	private void handleWetTurtleCollision() {
+		WetTurtle turtle = getIntersectingObjects(WetTurtle.class).get(0);
+		if (turtle.isSunk()) {
 			waterDeath = true;
-			//setX(300);
-			//setY(679.8+movement);
+		} else {
+			move(-1, 0);
 		}
 	}
-	public boolean getStop() {
-		return end==5;
+
+	private void addPoints(int value) {
+		points += value;
+		scoreChanged = true;
 	}
-	
+
+	private void deductPoints(int value) {
+		points = Math.max(points - value, 0);
+		scoreChanged = true;
+	}
+
 	public int getPoints() {
 		return points;
 	}
-	
-	public boolean changeScore() {
-		if (changeScore) {
-			changeScore = false;
-			return true;
-		}
-		return false;
-		
+
+	public boolean isGameWon() {
+		return endCount == GAME_WIN_END_COUNT;
+	}
+
+
+	public boolean hasScoreChanged() {
+		boolean changed = scoreChanged;
+		scoreChanged = false;
+		return changed;
 	}
 }
