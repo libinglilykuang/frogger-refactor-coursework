@@ -193,7 +193,7 @@ public class Main extends Application {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-            	if (animal.changeScore()) {
+            	if (animal.hasScoreChanged()) {
             		setNumber(animal.getPoints());
             	}
 
@@ -206,7 +206,7 @@ public class Main extends Application {
 					}
 				}
 
-            	if (animal.getStop()) {
+            	if (animal.isGameWon()) {
             		System.out.print("STOPP:");
             		background.stopMusic();
             		stop();
