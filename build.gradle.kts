@@ -34,7 +34,7 @@ tasks.test {
 }
 
 application {
-    mainClass = "p4_group_8_repo.Main"
+    mainClass = "p4_group_8_repo.view.Main"
 }
 
 java {

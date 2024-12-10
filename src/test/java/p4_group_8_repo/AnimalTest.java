@@ -4,6 +4,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import p4_group_8_repo.model.entities.Animal;
+import p4_group_8_repo.model.entities.End;
+import p4_group_8_repo.model.entities.Obstacle;
+import p4_group_8_repo.model.entities.WetTurtle;
 
 import static org.junit.jupiter.api.Assertions.*;
 

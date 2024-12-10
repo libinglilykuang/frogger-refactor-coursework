@@ -3,6 +3,7 @@ package p4_group_8_repo;
 import javafx.scene.media.MediaPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import p4_group_8_repo.view.scene.MyStage;
 
 import static org.junit.jupiter.api.Assertions.*;
 

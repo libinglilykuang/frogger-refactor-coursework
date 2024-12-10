@@ -5,9 +5,10 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import p4_group_8_repo.com.lagocp.gameEngine.sprite.Sprite;
-import p4_group_8_repo.com.lagocp.sprites.Frog;
-import p4_group_8_repo.com.lagocp.sprites.Car;
+import p4_group_8_repo.model.base.Sprite;
+import p4_group_8_repo.model.entities.Frog;
+import p4_group_8_repo.model.entities.Car;
+import p4_group_8_repo.view.ui.FroggerUI;
 
 import static org.junit.jupiter.api.Assertions.*;
 

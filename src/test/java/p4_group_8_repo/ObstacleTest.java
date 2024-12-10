@@ -3,6 +3,7 @@ package p4_group_8_repo;
 import javafx.scene.image.Image;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import p4_group_8_repo.model.entities.Obstacle;
 
 import static org.junit.jupiter.api.Assertions.*;
 
