@@ -2,6 +2,7 @@ package p4_group_8_repo.view.ui;
 
 import javafx.scene.image.Image;
 import p4_group_8_repo.model.base.Actor;
+import p4_group_8_repo.model.base.ImageLoader;
 
 public class BackgroundImage extends Actor {
 
@@ -9,7 +10,7 @@ public class BackgroundImage extends Actor {
 	private static final double DEFAULT_HEIGHT = 800;
 
 	public BackgroundImage(String imageLink) {
-		Image image = loadImage(imageLink);
+		Image image = ImageLoader.loadImage(imageLink, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setImage(image);
 		setFitWidth(DEFAULT_WIDTH);
 		setFitHeight(DEFAULT_HEIGHT);
@@ -17,13 +18,4 @@ public class BackgroundImage extends Actor {
 
 	@Override
 	public void act(long now) {}
-
-	private Image loadImage(String imageLink) {
-		try {
-			return new Image(imageLink, DEFAULT_WIDTH, DEFAULT_HEIGHT, false, true);
-		} catch (IllegalArgumentException e) {
-			System.err.println("Error loading image: " + imageLink);
-			throw e; // Propagate the exception to ensure the issue is visible
-		}
-	}
 }
