@@ -36,11 +36,4 @@ public class Log extends Actor {
 			setX(RESET_LEFT_POSITION);
 		}
 	}
-
-	private Image loadImage(String imageLink, int size) {
-		if (getClass().getResource(imageLink) == null) {
-			throw new IllegalArgumentException("Resource not found: " + imageLink);
-		}
-		return new Image(getClass().getResource(imageLink).toExternalForm(), size, size, true, true);
-	}
 }

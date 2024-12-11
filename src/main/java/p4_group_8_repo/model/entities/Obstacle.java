@@ -32,11 +32,4 @@ public class Obstacle extends Actor {
 			setX(RESET_LEFT_POSITION);
 		}
 	}
-
-	private Image loadImage(String imageLink, int width, int height) {
-		if (getClass().getResource(imageLink) == null) {
-			throw new IllegalArgumentException("Resource not found: " + imageLink);
-		}
-		return new Image(getClass().getResource(imageLink).toExternalForm(), width, height, true, true);
-	}
 }
