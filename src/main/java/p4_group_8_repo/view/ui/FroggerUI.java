@@ -1,7 +1,4 @@
 package p4_group_8_repo.view.ui;
-import p4_group_8_repo.model.base.Sprite;
-import p4_group_8_repo.model.entities.Car;
-import p4_group_8_repo.model.entities.Frog;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -14,58 +11,64 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import p4_group_8_repo.model.base.Sprite;
+import p4_group_8_repo.model.entities.Car;
+import p4_group_8_repo.model.entities.Frog;
 
 /**
- * This class derives from the UI and will provide the basic UI elements for
- * Frogger, including the current level and statistics of each Sprite.
- *
- * @author Phillip
- *
+ * Provides the UI for the Frogger game, including levels and sprite statistics.
  */
 public class FroggerUI extends UI {
-    private StackPane base;
+    private static final String GAME_OVER_STYLE = "-fx-background-color: rgba(255, 102, 129, 0.73);";
+    private static final String TRANSPARENT_STYLE = "-fx-background-color: transparent;";
+    private static final String LEVEL_TEXT_PREFIX = "LEVEL: ";
+    private static final String FONT_FAMILY = "Impact";
+    private static final int GAME_OVER_FONT_SIZE = 60;
 
-    private BorderPane stats;
-    private HBox statsPane;
-    private Label froggerStats;
-    private Label carStats;
+    private final StackPane base;
+    private final BorderPane uiPane;
+    private final StackPane gameOverPane;
 
-    private BorderPane uiPane;
-
-    private int level;
     private Label levelLabel;
+    private int level;
 
-    private StackPane gameOverPane;
+    private BorderPane statsContainer;
+    private HBox statsPane;
+    private Label frogStatsLabel;
+    private Label carStatsLabel;
 
     public FroggerUI(Canvas canvas) {
         super(canvas);
-        base = new StackPane();
 
+        base = new StackPane();
         uiPane = new BorderPane(canvas);
         uiPane.setId("uiPane");
 
         level = 1;
-        levelLabel = new Label("LEVEL: " + level);
-        levelLabel.setId("levelLabel");
+        levelLabel = createLevelLabel();
+        gameOverPane = createGameOverPane();
+    }
 
-        gameOverPane = new StackPane();
-        gameOverPane.setStyle("-fx-background-color: transparent;");
+    private Label createLevelLabel() {
+        Label label = new Label(LEVEL_TEXT_PREFIX + level);
+        label.setId("levelLabel");
+        label.setAlignment(Pos.CENTER);
+        return label;
+    }
+
+    private StackPane createGameOverPane() {
+        StackPane pane = new StackPane();
+        pane.setStyle(TRANSPARENT_STYLE);
+        return pane;
     }
 
     @Override
-    public void create() {
-    }
-
-    public Label getLevelLabel() {
-        return levelLabel;
-    }
-
-    public StackPane getGameOverPane() {
-        return gameOverPane;
+    public void setupComponents() {
+        initializeStatistics();
     }
 
     @Override
-    public void placeCanvas(Group root) {
+    public void render(Group root) {
         BorderPane.setAlignment(levelLabel, Pos.CENTER);
         uiPane.setTop(levelLabel);
 
@@ -77,70 +80,82 @@ public class FroggerUI extends UI {
     }
 
     @Override
-    public void updateUI(Sprite... sprites) {
+    public void refreshUI(Sprite... sprites) {
         for (Sprite sprite : sprites) {
             if (sprite instanceof Frog) {
-                froggerStats.setText("Frog: (" + sprite.getX() + ", " + sprite.getY() + ")\n" + "Center: ("
-                        + sprite.getCenterX() + ", " + sprite.getCenterY() + ")\n" + "vX: " + sprite.getvX() + " - vY: "
-                        + sprite.getvY() + "\nWidth: " + sprite.getWidth() + "\nHeight: " + sprite.getHeight()
-                        + "\nHalfWidth: " + sprite.getHalfWidth() + "\nHalfHeight: " + sprite.getHalfHeight());
+                updateFrogStats((Frog) sprite);
             } else if (sprite instanceof Car) {
-                carStats.setText("Car: (" + sprite.getX() + ", " + sprite.getY() + ")\n" + "Center: ("
-                        + sprite.getCenterX() + ", " + sprite.getCenterY() + ")\n" + "vX: " + sprite.getvX() + " - vY: "
-                        + sprite.getvY() + "\nWidth: " + sprite.getWidth() + "\nHeight: " + sprite.getHeight()
-                        + "\nHalfWidth: " + sprite.getHalfWidth() + "\nHalfHeight: " + sprite.getHalfHeight());
+                updateCarStats((Car) sprite);
             }
         }
     }
 
-    @Override
-    public void initStats() {
-        // Initialize UI elements relevant to stats
-        stats = new BorderPane();
-        statsPane = new HBox();
-        froggerStats = new Label();
-        carStats = new Label();
-
-        // Set alignment
-        froggerStats.setAlignment(Pos.CENTER);
-        carStats.setAlignment(Pos.CENTER);
-
-        // Adding children
-        statsPane.getChildren().addAll(froggerStats, carStats);
-        stats.setTop(statsPane);
+    private void updateFrogStats(Frog frog) {
+        frogStatsLabel.setText(formatSpriteStats("Frog", frog));
     }
 
-    /**
-     * Increases the level in the UI.
-     */
+    private void updateCarStats(Car car) {
+        carStatsLabel.setText(formatSpriteStats("Car", car));
+    }
+
+    private String formatSpriteStats(String type, Sprite sprite) {
+        return String.format(
+                "%s: (%.2f, %.2f)\nCenter: (%.2f, %.2f)\nvX: %.2f - vY: %.2f\nWidth: %.2f\nHeight: %.2f\nHalfWidth: %.2f\nHalfHeight: %.2f",
+                type,
+                sprite.getX(), sprite.getY(),
+                sprite.getCenterX(), sprite.getCenterY(),
+                sprite.getvX(), sprite.getvY(),
+                sprite.getWidth(), sprite.getHeight(),
+                sprite.getHalfWidth(), sprite.getHalfHeight()
+        );
+    }
+
+    @Override
+    public void initializeStatistics() {
+        statsContainer = new BorderPane();
+        statsPane = new HBox();
+
+        frogStatsLabel = createStatsLabel();
+        carStatsLabel = createStatsLabel();
+
+        statsPane.getChildren().addAll(frogStatsLabel, carStatsLabel);
+        statsPane.setAlignment(Pos.CENTER);
+        statsContainer.setTop(statsPane);
+    }
+
+    private Label createStatsLabel() {
+        Label label = new Label();
+        label.setAlignment(Pos.CENTER);
+        return label;
+    }
+
     public void increaseLevel() {
         level++;
-        levelLabel.setText("LEVEL: " + level);
+        levelLabel.setText(LEVEL_TEXT_PREFIX + level);
     }
 
-    /**
-     * Creates the game over screen.
-     */
-    public void createGameOver() {
+    public void showGameOver() {
         Text gameOverText = new Text("GAME OVER!\nPress SPACE to restart...");
         gameOverText.setTextAlignment(TextAlignment.CENTER);
+        gameOverText.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, GAME_OVER_FONT_SIZE));
         StackPane.setAlignment(gameOverText, Pos.CENTER);
+
         gameOverPane.getChildren().add(gameOverText);
-        gameOverText.setFont(Font.font("Impact", FontWeight.BOLD, 60));
-
-        // Make gameOverPane and base transparent
-        gameOverPane.setStyle("-fx-background-color: rgba(255, 102, 129, 0.73);");
-        base.setStyle("-fx-background-color: rgba(255, 102, 129, 0.73);");
+        gameOverPane.setStyle(GAME_OVER_STYLE);
+        base.setStyle(GAME_OVER_STYLE);
     }
 
-    /**
-     * Removes the game over screen.
-     */
-    public void removeGameOver() {
-        gameOverPane.getChildren().remove(0);
-        gameOverPane.setStyle("-fx-background-color: transparent;");
-        base.setStyle("-fx-background-color: transparent;");
+    public void hideGameOver() {
+        gameOverPane.getChildren().clear();
+        gameOverPane.setStyle(TRANSPARENT_STYLE);
+        base.setStyle(TRANSPARENT_STYLE);
     }
 
+    public Label getLevelLabel() {
+        return levelLabel;
+    }
 
+    public StackPane getGameOverPane() {
+        return gameOverPane;
+    }
 }
