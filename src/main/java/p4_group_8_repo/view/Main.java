@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import p4_group_8_repo.model.entities.*;
 import p4_group_8_repo.view.scene.MyStage;
 import p4_group_8_repo.view.ui.BackgroundImage;
-import p4_group_8_repo.view.ui.digit;
+import p4_group_8_repo.view.ui.Digit;
 
 import java.util.Objects;
 import java.util.Stack;
@@ -232,7 +232,7 @@ public class Main extends Application {
     }
 
 	public void setNumber(int n) {
-		background.getChildren().removeIf(node -> node instanceof digit);
+		background.getChildren().removeIf(node -> node instanceof Digit);
 		Text scoreLabel = new Text("SCORE:");
 		scoreLabel.setFont(Font.font("Arial", 30));
 		scoreLabel.setFill(Color.WHITE);
@@ -255,7 +255,7 @@ public class Main extends Application {
 
 		while (!digits.isEmpty()) {
 			int d = digits.pop();
-			background.add(new digit(d, 30, 140 + shift, 5));
+			background.add(new Digit(d, 30, 140 + shift, 5));
 			shift += 30;
 		}
 	}

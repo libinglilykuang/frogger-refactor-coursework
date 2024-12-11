@@ -1,108 +1,98 @@
 package p4_group_8_repo.view.scene;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.animation.AnimationTimer;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import p4_group_8_repo.model.base.Actor;
 
-
 public abstract class World extends Pane {
-    private AnimationTimer t;
-    
+
+    private AnimationTimer timer;
+
     public World() {
-    	
-    	sceneProperty().addListener(new ChangeListener<Scene>() {
+        sceneProperty().addListener(this::configureKeyEvents);
+    }
 
-			@Override
-			public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
-				if (newValue != null) {
-					newValue.setOnKeyReleased(new EventHandler<KeyEvent>() {
+    private void configureKeyEvents(ObservableValue<? extends Scene> observable, Scene oldScene, Scene newScene) {
+        if (newScene != null) {
+            newScene.setOnKeyPressed(event -> processKeyEvent(event, true));
+            newScene.setOnKeyReleased(event -> processKeyEvent(event, false));
+        }
+    }
 
-						@Override
-						public void handle(KeyEvent event) {
-							if(getOnKeyReleased() != null) 
-								getOnKeyReleased().handle(event);
-							List<Actor> myActors = getObjects(Actor.class);
-							for (Actor anActor: myActors) {
-								if (anActor.getOnKeyReleased() != null) {
-									anActor.getOnKeyReleased().handle(event);
-								}
-							}
-						}
-						
-					});
-					
-					newValue.setOnKeyPressed(new EventHandler<KeyEvent>() {
+    private void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
+        handleSceneKeyEvent(event, isKeyPressed);
+        handleActorsKeyEvent(event, isKeyPressed);
+    }
 
-						@Override
-						public void handle(KeyEvent event) {
-							if(getOnKeyPressed() != null) 
-								getOnKeyPressed().handle(event);
-							List<Actor> myActors = getObjects(Actor.class);
-							for (Actor anActor: myActors) {
-								if (anActor.getOnKeyPressed() != null) {
-									anActor.getOnKeyPressed().handle(event);
-								}
-							}
-						}
-						
-					});
-				}
-				
-			}
-    		
-		});
+    private void handleSceneKeyEvent(KeyEvent event, boolean isKeyPressed) {
+        if (isKeyPressed && getOnKeyPressed() != null) {
+            getOnKeyPressed().handle(event);
+        } else if (!isKeyPressed && getOnKeyReleased() != null) {
+            getOnKeyReleased().handle(event);
+        }
+    }
+
+    private void handleActorsKeyEvent(KeyEvent event, boolean isKeyPressed) {
+        for (Actor actor : getObjects(Actor.class)) {
+            if (isKeyPressed && actor.getOnKeyPressed() != null) {
+                actor.getOnKeyPressed().handle(event);
+            } else if (!isKeyPressed && actor.getOnKeyReleased() != null) {
+                actor.getOnKeyReleased().handle(event);
+            }
+        }
     }
 
     public void createTimer() {
-        t = new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 act(now);
-                List<Actor> actors = getObjects(Actor.class);
-                
-                for (Actor anActor: actors) {
-                	anActor.act(now);
-                }
-      
+                actOnActors(now);
             }
         };
     }
 
+    private void actOnActors(long now) {
+        for (Actor actor : getObjects(Actor.class)) {
+            actor.act(now);
+        }
+    }
+
     public void start() {
-    	createTimer();
-        t.start();
+        if (timer == null) {
+            createTimer();
+        }
+        timer.start();
     }
 
     public void stop() {
-        t.stop();
+        if (timer != null) {
+            timer.stop();
+        }
     }
-    
+
     public void add(Actor actor) {
         getChildren().add(actor);
     }
 
-    public void remove(Actor actor) {
+    public void removeActor(Actor actor) {
         getChildren().remove(actor);
     }
 
     public <A extends Actor> List<A> getObjects(Class<A> cls) {
-        ArrayList<A> someArray = new ArrayList<A>();
-        for (Node n: getChildren()) {
-            if (cls.isInstance(n)) {
-                someArray.add((A)n);
+        List<A> result = new ArrayList<>();
+        for (Node node : getChildren()) {
+            if (cls.isInstance(node)) {
+                result.add(cls.cast(node));
             }
         }
-        return someArray;
+        return result;
     }
 
     public abstract void act(long now);
