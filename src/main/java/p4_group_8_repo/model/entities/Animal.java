@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import p4_group_8_repo.model.base.Actor;
+import p4_group_8_repo.model.base.ImageLoader;
 
 public class Animal extends Actor {
 	private final Image imgW1, imgA1, imgS1, imgD1, imgW2, imgA2, imgS2, imgD2;
@@ -38,14 +39,14 @@ public class Animal extends Actor {
 		setImage(new Image(imageLink, IMAGE_SIZE, IMAGE_SIZE, true, true));
 		resetPosition();
 
-		imgW1 = loadImage("/p4_group_8_repo/froggerUp.png");
-		imgA1 = loadImage("/p4_group_8_repo/froggerLeft.png");
-		imgS1 = loadImage("/p4_group_8_repo/froggerDown.png");
-		imgD1 = loadImage("/p4_group_8_repo/froggerRight.png");
-		imgW2 = loadImage("/p4_group_8_repo/froggerUpJump.png");
-		imgA2 = loadImage("/p4_group_8_repo/froggerLeftJump.png");
-		imgS2 = loadImage("/p4_group_8_repo/froggerDownJump.png");
-		imgD2 = loadImage("/p4_group_8_repo/froggerRightJump.png");
+		imgW1 = ImageLoader.loadImage("froggerUp.png", 40, 40);
+		imgA1 = ImageLoader.loadImage("froggerLeft.png", 40, 40);
+		imgS1 = ImageLoader.loadImage("froggerDown.png", 40, 40);
+		imgD1 = ImageLoader.loadImage("froggerRight.png", 40, 40);
+		imgW2 = ImageLoader.loadImage("froggerUpJump.png", 40, 40);
+		imgA2 = ImageLoader.loadImage("froggerLeftJump.png", 40, 40);
+		imgS2 = ImageLoader.loadImage("froggerDownJump.png", 40, 40);
+		imgD2 = ImageLoader.loadImage("froggerRightJump.png", 40, 40);
 
 		setOnKeyPressed(this::handleKeyPressed);
 		setOnKeyReleased(this::handleKeyReleased);
@@ -54,13 +55,6 @@ public class Animal extends Actor {
 	public void resetPosition() {
 		setX(DEFAULT_X);
 		setY(DEFAULT_Y);
-	}
-
-	private Image loadImage(String filePath) {
-		if (getClass().getResource(filePath) == null) {
-			throw new IllegalArgumentException("Resource not found: " + filePath);
-		}
-		return new Image(getClass().getResource(filePath).toExternalForm(), IMAGE_SIZE, IMAGE_SIZE, true, true);
 	}
 
 	private void handleKeyPressed(KeyEvent event) {
@@ -144,7 +138,8 @@ public class Animal extends Actor {
 		}
 
 		if (deathAnimationFrame >= 1 && deathAnimationFrame < frameLimit) {
-			setImage(loadImage(String.format("/p4_group_8_repo/%s%d.png", type, deathAnimationFrame)));
+			String filePath = String.format("%s%d.png", type, deathAnimationFrame);
+			setImage(ImageLoader.loadImage(filePath, IMAGE_SIZE, IMAGE_SIZE));
 		}
 
 		if (deathAnimationFrame == frameLimit) {

@@ -6,12 +6,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import p4_group_8_repo.model.base.Sprite;
+import p4_group_8_repo.model.entities.Animal;
 import p4_group_8_repo.model.entities.Car;
 import p4_group_8_repo.model.entities.Frog;
 
@@ -29,8 +31,8 @@ public class FroggerUI extends UI {
     private final BorderPane uiPane;
     private final StackPane gameOverPane;
 
-    private Label levelLabel;
-    private int level;
+    private int level = 1;
+    private final Label levelLabel;
 
     private BorderPane statsContainer;
     private HBox statsPane;
@@ -127,11 +129,6 @@ public class FroggerUI extends UI {
         Label label = new Label();
         label.setAlignment(Pos.CENTER);
         return label;
-    }
-
-    public void increaseLevel() {
-        level++;
-        levelLabel.setText(LEVEL_TEXT_PREFIX + level);
     }
 
     public void showGameOver() {
