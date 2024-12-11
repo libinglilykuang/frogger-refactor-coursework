@@ -3,17 +3,17 @@ package p4_group_8_repo;
 import javafx.scene.image.Image;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import p4_group_8_repo.view.ui.digit;
+import p4_group_8_repo.view.ui.Digit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class digitTest {
 
-    private digit digitInstance;
+    private Digit digitInstance;
 
     @BeforeEach
     void setUp() {
-        digitInstance = new digit(1, 50, 100, 200);
+        digitInstance = new Digit(1, 50, 100, 200);
     }
 
     @Test
@@ -38,7 +38,7 @@ class digitTest {
     @Test
     void testInvalidDigit() {
         Exception exception = assertThrows(NullPointerException.class, () -> {
-            new digit(99, 50, 100, 200);
+            new Digit(99, 50, 100, 200);
         });
         assertTrue(exception.getMessage().contains("/p4_group_8_repo/99.png"), "Exception should mention the missing resource.");
     }
