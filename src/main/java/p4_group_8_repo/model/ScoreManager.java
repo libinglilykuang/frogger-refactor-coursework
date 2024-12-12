@@ -1,7 +1,11 @@
 package p4_group_8_repo.model;
 
 import javafx.scene.layout.Pane;
+import p4_group_8_repo.view.scene.MyStage;
 import p4_group_8_repo.view.ui.Digit;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.Stack;
 
@@ -14,12 +18,16 @@ public class ScoreManager {
     private final int digitStartX;
     private final int digitStartY;
     private final int digitSpacing;
+    private final int SCORE_LABEL_X;
+    private final int SCORE_LABEL_Y;
 
     public ScoreManager(int digitSize, int digitStartX, int digitStartY, int digitSpacing) {
         this.digitSize = digitSize;
         this.digitStartX = digitStartX;
         this.digitStartY = digitStartY;
         this.digitSpacing = digitSpacing;
+        this.SCORE_LABEL_X = 15; // Default X position for score label
+        this.SCORE_LABEL_Y = 30; // Default Y position for score label
     }
 
     /**
@@ -67,5 +75,14 @@ public class ScoreManager {
             pane.getChildren().add(digitNode);
             shift += digitSpacing;
         }
+    }
+
+    public void createScoreLabel(MyStage background) {
+        Text scoreLabel = new Text("SCORE:");
+        scoreLabel.setFont(Font.font("Arial", 30));
+        scoreLabel.setFill(Color.WHITE);
+        scoreLabel.setX(SCORE_LABEL_X);
+        scoreLabel.setY(SCORE_LABEL_Y);
+        background.getChildren().add(scoreLabel);
     }
 }

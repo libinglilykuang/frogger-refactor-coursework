@@ -12,7 +12,7 @@ public class LevelManager {
     private boolean levelReset = false;
     private int level = 1;
     private int reachedEnds = 0;
-    private final int totalEnds = 5;
+    private final int totalEnds = 1;
     private final Pane background;
     private final Animal animal;
 
@@ -24,6 +24,10 @@ public class LevelManager {
     public void setLevel(int level) {
         this.level = level;
         updateLevelLabel();
+    }
+
+    public Pane getBackground() {
+        return background;
     }
 
     public boolean isLevelReset() {

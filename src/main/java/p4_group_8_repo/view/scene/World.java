@@ -6,6 +6,7 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import p4_group_8_repo.model.base.Actor;
@@ -78,8 +79,17 @@ public abstract class World extends Pane {
     }
 
     public void add(Actor actor) {
+        if (actor == null) {
+            throw new IllegalArgumentException("Cannot add null Actor to MyStage.");
+        }
+
+        if (((ImageView) actor).getImage() == null) {
+            throw new IllegalArgumentException("Cannot add ImageView with null image to MyStage.");
+        }
+
         getChildren().add(actor);
     }
+
 
     public void removeActor(Actor actor) {
         getChildren().remove(actor);

@@ -154,7 +154,7 @@ public class Animal extends Actor {
 		deathAnimationFrame = 0;
 		setImage(imgW1);
 		noMove = false;
-		deductPoints(POINTS_DECREMENT);
+		deductPoints();
 	}
 
 	private void checkCollisions() {
@@ -188,7 +188,7 @@ public class Animal extends Actor {
 		End endObj = getIntersectingObjects(End.class).get(0);
 		if (endObj.isActivated()) {
 			endCount--;
-			deductPoints(POINTS_DECREMENT);
+			deductPoints();
 		} else {
 			endObj.setEnd();
 			endCount++;
@@ -217,8 +217,8 @@ public class Animal extends Actor {
 		scoreChanged = true;
 	}
 
-	private void deductPoints(int value) {
-		points = Math.max(points - value, 0);
+	private void deductPoints() {
+		points = Math.max(points - Animal.POINTS_DECREMENT, 0);
 		scoreChanged = true;
 	}
 
