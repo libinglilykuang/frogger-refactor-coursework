@@ -4,72 +4,63 @@ import p4_group_8_repo.model.base.ImageLoader;
 import p4_group_8_repo.model.entities.Log;
 import p4_group_8_repo.model.entities.Obstacle;
 import p4_group_8_repo.model.entities.Turtle;
-import javafx.scene.Node;
-import java.util.ArrayList;
-import java.util.List;
+import p4_group_8_repo.model.entities.WetTurtle;
+import p4_group_8_repo.view.scene.MyStage;
 
 public class GameObjectFactory {
+    public void setupLogs(MyStage background, Object[][] logData) {
+        for (Object[] log : logData) {
+            String imageName = (String) log[0];
+            int width = (int) log[1];
+            int height = (int) log[2];
+            int xpos = (int) log[3];
+            int ypos = (int) log[4];
+            int yLevel = (int) log[5];
+            double speed = (double) log[6];
 
-    /**
-     * Creates a single Log object.
-     */
+            Log logObject = createLog(imageName, width, height, xpos, ypos, yLevel, speed);
+            background.add(logObject);
+        }
+    }
+
     public Log createLog(String imageName, int width, int height, int xpos, int ypos, int yLevel, double speed) {
-        String imageUrl = loadImage(imageName, width, height);
+        String imageUrl = ImageLoader.loadImage(imageName, width, height).getUrl();
         return new Log(imageUrl, xpos, ypos, yLevel, speed);
     }
 
-    /**
-     * Creates a single Turtle object.
-     */
-    public Turtle createTurtle(int xpos, int ypos, int speed, int width, int height) {
-        return new Turtle(xpos, ypos, speed, width, height);
+    public void setupTurtles(MyStage background, Object[][] turtleData) {
+        for (Object[] turtle : turtleData) {
+            int xpos = (int) turtle[0];
+            int ypos = (int) turtle[1];
+            int speed = (int) turtle[2];
+            int width = (int) turtle[3];
+            int height = (int) turtle[4];
+            boolean isWet = (boolean) turtle[5];
+
+            if (isWet) {
+                background.add(new WetTurtle(xpos, ypos, speed, width, height));
+            } else {
+                background.add(new Turtle(xpos, ypos, speed, width, height));
+            }
+        }
     }
 
-    /**
-     * Creates a single Obstacle object.
-     */
+    public void setupObstacles(MyStage background, Object[][] obstacleData) {
+        for (Object[] obstacle : obstacleData) {
+            String imageName = (String) obstacle[0];
+            int width = (int) obstacle[1];
+            int height = (int) obstacle[2];
+            int xpos = (int) obstacle[3];
+            int ypos = (int) obstacle[4];
+            int speed = (int) obstacle[5];
+
+            Obstacle obstacleObject = createObstacle(imageName, width, height, xpos, ypos, speed);
+            background.add(obstacleObject);
+        }
+    }
+
     public Obstacle createObstacle(String imageName, int width, int height, int xpos, int ypos, int speed) {
-        String imageUrl = loadImage(imageName, width, height);
+        String imageUrl = ImageLoader.loadImage(imageName, width, height).getUrl();
         return new Obstacle(imageUrl, xpos, ypos, speed, width, height);
-    }
-
-    /**
-     * Creates multiple Log objects.
-     */
-    public List<Log> createLogs(String imageName, int width, int height, int[][] positions, int yLevel, double speed) {
-        List<Log> logs = new ArrayList<>();
-        for (int[] position : positions) {
-            logs.add(createLog(imageName, width, height, position[0], position[1], yLevel, speed));
-        }
-        return logs;
-    }
-
-    /**
-     * Creates multiple Obstacle objects.
-     */
-    public List<Obstacle> createObstacles(String imageName, int width, int height, int[][] positions, int speed) {
-        List<Obstacle> obstacles = new ArrayList<>();
-        for (int[] position : positions) {
-            obstacles.add(createObstacle(imageName, width, height, position[0], position[1], speed));
-        }
-        return obstacles;
-    }
-
-    /**
-     * Creates multiple Turtle objects.
-     */
-    public List<Turtle> createTurtles(int[][] positions, int speed, int width, int height) {
-        List<Turtle> turtles = new ArrayList<>();
-        for (int[] position : positions) {
-            turtles.add(createTurtle(position[0], position[1], speed, width, height));
-        }
-        return turtles;
-    }
-
-    /**
-     * Loads an image and returns its URL.
-     */
-    private String loadImage(String imageName, int width, int height) {
-        return ImageLoader.loadImage(imageName, width, height).getUrl();
     }
 }
