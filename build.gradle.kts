@@ -4,7 +4,7 @@ plugins {
     id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
-group = "p4_group_8_repo"
+group = "uk.ac.nott.cs.comp2013"
 version = "1.0.0"
 
 repositories {
@@ -17,7 +17,6 @@ dependencies {
     implementation("org.openjfx:javafx-fxml:22.0.1")
     implementation("org.openjfx:javafx-media:22.0.1")
 
-    implementation("org.apache.commons:commons-csv:1.12.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit.vintage:junit-vintage-engine")
@@ -26,7 +25,6 @@ dependencies {
     testImplementation("com.pholser:junit-quickcheck-generators:1.0")
     testImplementation("org.mockito:mockito-core:5.14.+")
     implementation("org.slf4j:slf4j-simple:2.0.9")
-    implementation("com.opencsv:opencsv:5.8")
 }
 
 tasks.test {
@@ -34,7 +32,7 @@ tasks.test {
 }
 
 application {
-    mainClass = "p4_group_8_repo.view.Main"
+    mainClass = "uk.ac.nott.cs.comp2013.froggergame.Main"
 }
 
 java {
