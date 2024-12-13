@@ -1,15 +1,13 @@
 package p4_group_8_repo.view.scene;
 
-import java.util.Objects;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import p4_group_8_repo.controller.MusicManager;
 
 public class MyStage extends World {
-	MediaPlayer mediaPlayer;
 	private static final String MUSIC_FILE_PATH = "/Snake_Charmer.mp3";
+	private final MusicManager musicManager;
 
 	public MyStage() {
-		
+		musicManager = new MusicManager(MUSIC_FILE_PATH);
 //		mediaPlayer.play();
 //		mediaPlayer.setOnEndOfMedia(new Runnable() {
 //
@@ -24,30 +22,11 @@ public class MyStage extends World {
 	}
 
 	public void playMusic() {
-		if (mediaPlayer == null) {
-			initializeMediaPlayer();
-		}
-		if (mediaPlayer != null) {
-			mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop music
-			mediaPlayer.play();
-		}
+		musicManager.playMusic();
 	}
 
 	public void stopMusic() {
-		if (mediaPlayer != null) {
-			mediaPlayer.stop();
-		}
-	}
-
-	private void initializeMediaPlayer() {
-		try {
-			String musicFile = Objects.requireNonNull(getClass().getResource(MUSIC_FILE_PATH))
-					.toExternalForm();
-			Media sound = new Media(musicFile);
-			mediaPlayer = new MediaPlayer(sound);
-		} catch (NullPointerException | IllegalArgumentException e) {
-			System.err.println("Error loading music file: " + MUSIC_FILE_PATH);
-		}
+		musicManager.stopMusic();
 	}
 
 	@Override

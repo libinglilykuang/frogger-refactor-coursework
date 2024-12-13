@@ -1,8 +1,9 @@
 package p4_group_8_repo.controller;
 
 import javafx.animation.AnimationTimer;
-import p4_group_8_repo.model.LevelManager;
-import p4_group_8_repo.model.ScoreManager;
+import javafx.scene.layout.Pane;
+import p4_group_8_repo.model.logic.LevelManager;
+import p4_group_8_repo.model.logic.ScoreManager;
 import p4_group_8_repo.model.entities.Animal;
 import p4_group_8_repo.model.entities.End;
 
@@ -11,8 +12,10 @@ public class GameLoopManager {
     private final ScoreManager scoreManager;
     private Animal animal;
     private AnimationTimer gameLoop;
+    private final Pane background;
 
-    public GameLoopManager(ScoreManager scoreManager) {
+    public GameLoopManager(Pane background, ScoreManager scoreManager) {
+        this.background = background;
         this.scoreManager = scoreManager;
     }
 
@@ -68,7 +71,7 @@ public class GameLoopManager {
     private void updateScore() {
         if (animal.hasScoreChanged()) {
             int currentScore = animal.getPoints();
-            scoreManager.updateScoreDisplay(levelManager.getBackground(), currentScore);
+            scoreManager.updateScoreDisplay(background, currentScore); // 直接使用 background
         }
     }
 

@@ -1,4 +1,4 @@
-package p4_group_8_repo.model;
+package p4_group_8_repo.model.data;
 
 public class GameObjectData {
     public static final Object[][] LOG_DATA = {

@@ -4,8 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import p4_group_8_repo.controller.GameController;
-import p4_group_8_repo.controller.GameInitializer;
-import p4_group_8_repo.controller.GameLoopManager;
 import p4_group_8_repo.view.scene.MyStage;
 
 public class Main extends Application {
