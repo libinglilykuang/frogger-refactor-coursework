@@ -1,4 +1,4 @@
-package p4_group_8_repo.model;
+package p4_group_8_repo.model.logic;
 
 import javafx.scene.layout.Pane;
 import p4_group_8_repo.view.scene.MyStage;

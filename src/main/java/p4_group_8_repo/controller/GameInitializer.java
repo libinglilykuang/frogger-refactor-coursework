@@ -1,7 +1,8 @@
 package p4_group_8_repo.controller;
 
-import p4_group_8_repo.model.GameObjectFactory;
-import p4_group_8_repo.model.ScoreManager;
+import p4_group_8_repo.model.logic.GameObjectFactory;
+import p4_group_8_repo.model.data.GameObjectData;
+import p4_group_8_repo.model.logic.ScoreManager;
 import p4_group_8_repo.view.scene.MyStage;
 import p4_group_8_repo.view.ui.BackgroundImage;
 
@@ -28,20 +29,20 @@ public class GameInitializer {
     }
 
     private void setupGameObjects() {
-        Object[][] logData = p4_group_8_repo.model.GameObjectData.LOG_DATA;
+        Object[][] logData = GameObjectData.LOG_DATA;
         gameObjectFactory.setupLogs(background, logData);
 
-        Object[][] turtleData = p4_group_8_repo.model.GameObjectData.TURTLE_DATA;
+        Object[][] turtleData = GameObjectData.TURTLE_DATA;
         gameObjectFactory.setupTurtles(background, turtleData);
 
-        Object[][] obstacleData = p4_group_8_repo.model.GameObjectData.OBSTACLE_DATA;
+        Object[][] obstacleData = GameObjectData.OBSTACLE_DATA;
         gameObjectFactory.setupObstacles(background, obstacleData);
 
         setupEndPoints();
     }
 
     private void setupEndPoints() {
-        for (int[] position : p4_group_8_repo.model.GameObjectData.END_POINT_DATA) {
+        for (int[] position : GameObjectData.END_POINT_DATA) {
             background.add(new p4_group_8_repo.model.entities.End(position[0], position[1]));
         }
     }
