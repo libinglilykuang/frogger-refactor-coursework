@@ -68,11 +68,11 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\frogger-refactor-coursework-1.0.0.jar;%APP_HOME%\lib\javafx-fxml-22.0.1-win.jar;%APP_HOME%\lib\javafx-controls-22.0.1-win.jar;%APP_HOME%\lib\javafx-media-22.0.1-win.jar;%APP_HOME%\lib\commons-csv-1.12.0.jar;%APP_HOME%\lib\slf4j-simple-2.0.9.jar;%APP_HOME%\lib\opencsv-5.8.jar;%APP_HOME%\lib\javafx-graphics-22.0.1-win.jar;%APP_HOME%\lib\commons-io-2.17.0.jar;%APP_HOME%\lib\commons-codec-1.17.1.jar;%APP_HOME%\lib\slf4j-api-2.0.9.jar;%APP_HOME%\lib\commons-text-1.10.0.jar;%APP_HOME%\lib\commons-lang3-3.12.0.jar;%APP_HOME%\lib\commons-beanutils-1.9.4.jar;%APP_HOME%\lib\commons-collections4-4.4.jar;%APP_HOME%\lib\javafx-base-22.0.1-win.jar;%APP_HOME%\lib\commons-logging-1.2.jar;%APP_HOME%\lib\commons-collections-3.2.2.jar
+set CLASSPATH=%APP_HOME%\lib\frogger-refactor-coursework-1.0.0.jar;%APP_HOME%\lib\javafx-fxml-22.0.1-win.jar;%APP_HOME%\lib\javafx-controls-22.0.1-win.jar;%APP_HOME%\lib\javafx-media-22.0.1-win.jar;%APP_HOME%\lib\slf4j-simple-2.0.9.jar;%APP_HOME%\lib\javafx-graphics-22.0.1-win.jar;%APP_HOME%\lib\slf4j-api-2.0.9.jar;%APP_HOME%\lib\javafx-base-22.0.1-win.jar
 
 
 @rem Execute frogger-refactor-coursework
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %FROGGER_REFACTOR_COURSEWORK_OPTS%  -classpath "%CLASSPATH%" p4_group_8_repo.Main %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %FROGGER_REFACTOR_COURSEWORK_OPTS%  -classpath "%CLASSPATH%" uk.ac.nott.cs.comp2013.froggergame.Main %*
 
 :end
 @rem End local scope for the variables with windows NT shell
