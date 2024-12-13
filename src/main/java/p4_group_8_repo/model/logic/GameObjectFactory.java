@@ -1,4 +1,4 @@
-package p4_group_8_repo.model;
+package p4_group_8_repo.model.logic;
 
 import p4_group_8_repo.model.base.ImageLoader;
 import p4_group_8_repo.model.entities.Log;

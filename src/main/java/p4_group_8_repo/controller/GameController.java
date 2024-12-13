@@ -1,9 +1,10 @@
 package p4_group_8_repo.controller;
 
+import p4_group_8_repo.view.LevelView;
 import p4_group_8_repo.view.utils.AlertManager;
-import p4_group_8_repo.model.GameObjectFactory;
-import p4_group_8_repo.model.LevelManager;
-import p4_group_8_repo.model.ScoreManager;
+import p4_group_8_repo.model.logic.GameObjectFactory;
+import p4_group_8_repo.model.logic.LevelManager;
+import p4_group_8_repo.model.logic.ScoreManager;
 import p4_group_8_repo.model.base.ImageLoader;
 import p4_group_8_repo.model.entities.Animal;
 import p4_group_8_repo.view.scene.MyStage;
@@ -12,6 +13,7 @@ public class GameController {
     private final MyStage background;
     private Animal animal;
     private LevelManager levelManager;
+    private LevelView levelView;
     private final ScoreManager scoreManager;
     private final GameObjectFactory gameObjectFactory;
     private final GameInitializer gameInitializer;
@@ -22,9 +24,9 @@ public class GameController {
 
         this.scoreManager = new ScoreManager(30, 140, 5, 30);
         this.gameObjectFactory = new GameObjectFactory();
-
+        this.levelView = new LevelView(background);
         this.gameInitializer = new GameInitializer(background, scoreManager);
-        this.gameLoopManager = new GameLoopManager( scoreManager);
+        this.gameLoopManager = new GameLoopManager(background,scoreManager);
     }
 
     public void initializeGameComponents() {
@@ -50,9 +52,11 @@ public class GameController {
     }
 
     private void setupLevelManager() {
-        levelManager = new LevelManager(background, animal);
+        int totalEnds = 5;
+        levelManager = new LevelManager(animal, levelView, totalEnds);
         levelManager.setLevel(1);
     }
+
 
     public void handleGameWon() {
         stopGame();
