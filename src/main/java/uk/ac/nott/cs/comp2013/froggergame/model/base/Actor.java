@@ -68,21 +68,33 @@ public abstract class Actor extends ImageView {
         return intersectingObjects;
     }
 
-    /**
-     * Gets one object of the specified type that is intersecting with this actor.
-     *
-     * @param cls The class type of the object to find.
-     * @param <A> The type parameter.
-     * @return An intersecting object of the specified type, or null if none exist.
-     */
     public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
-        for (A actor : getWorld().getObjects(cls)) {
+        List<A> potentialObjects = getObjectsFromWorld(cls);
+
+        for (A actor : potentialObjects) {
             if (actor != this && actor.intersects(getBoundsInLocal())) {
                 return actor;
             }
         }
         return null;
     }
+
+    /**
+     * Helper method to retrieve objects of the specified type from the world.
+     * This abstracts the direct call to `getWorld().getObjects`.
+     *
+     * @param cls The class type to filter objects.
+     * @param <A> A type that extends Actor.
+     * @return A list of objects of type A in the world.
+     */
+    private <A extends Actor> List<A> getObjectsFromWorld(Class<A> cls) {
+        World world = getWorld();
+        if (world == null) {
+            throw new IllegalStateException("Actor is not attached to any world.");
+        }
+        return world.getObjects(cls);
+    }
+
 
     /**
      * Handles input events for the actor.

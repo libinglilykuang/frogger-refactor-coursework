@@ -5,11 +5,10 @@ import uk.ac.nott.cs.comp2013.froggergame.view.managers.AlertManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.LevelManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
-public class GameController {
+public class GameController implements GameLoopManager.GameEventListener{
     private final MyStage background;
     private Animal animal;
     private LevelManager levelManager;
@@ -17,46 +16,46 @@ public class GameController {
     private final ScoreManager scoreManager;
     private final GameObjectFactory gameObjectFactory;
     private final GameInitializer gameInitializer;
-    private final GameLoopManager gameLoopManager;
+    private GameLoopManager gameLoopManager;
 
     public GameController(MyStage background) {
         this.background = background;
-
         this.scoreManager = new ScoreManager(30, 140, 5, 30);
         this.gameObjectFactory = new GameObjectFactory();
         this.levelView = new LevelView(background);
-        this.gameInitializer = new GameInitializer(background, scoreManager);
-        this.gameLoopManager = new GameLoopManager(background,scoreManager);
+        this.gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory);
     }
 
     public void initializeGameComponents() {
-        setupAnimal();
-        setupLevelManager();
+        initializeAnimal();
+        initializeLevelManager();
         gameInitializer.initializeComponents();
-        gameLoopManager.setLevelManager(levelManager);
-        gameLoopManager.setAnimal(animal);
-        setupAnimal();
+        initializeGameLoopManager();
+        initializeAnimal();
     }
 
-    public void startGameLoop() {
-        gameLoopManager.startGameLoop();
-    }
-
-    public void stopGame() {
-        gameLoopManager.stopGameLoop();
-    }
-
-    private void setupAnimal() {
-        animal = new Animal(ImageLoader.loadImage("froggerUp.png", 40, 40).getUrl());
+    private void initializeAnimal() {
+        animal = gameInitializer.createAnimal();
         background.add(animal);
     }
 
-    private void setupLevelManager() {
-        int totalEnds = 5;
-        levelManager = new LevelManager(animal, levelView, totalEnds);
+    private void initializeLevelManager() {
+        levelManager = gameInitializer.createLevelManager(animal, levelView, 5);
         levelManager.setLevel(1);
     }
 
+    private void initializeGameLoopManager() {
+        gameLoopManager = new GameLoopManager(levelManager, scoreManager, animal, background,this);
+        gameLoopManager.setGameEventListener(this);
+    }
+
+    public void startGameLoop() {
+        gameLoopManager.startGameLoopExecution();
+    }
+
+    public void stopGame() {
+        gameLoopManager.stopGameLoopExecution();
+    }
 
     public void handleGameWon() {
         stopGame();
@@ -68,4 +67,15 @@ public class GameController {
         AlertManager.showGameOverAlert();
     }
 
+    @Override
+    public void onGameWon(int points) {
+        stopGame();
+        AlertManager.showGameWonAlert(points);
+    }
+
+    @Override
+    public void onGameOver() {
+        stopGame();
+        AlertManager.showGameOverAlert();
+    }
 }
