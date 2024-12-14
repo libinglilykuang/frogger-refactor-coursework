@@ -4,155 +4,130 @@ package uk.ac.nott.cs.comp2013.froggergame.model.base;
  * Represents a basic sprite in the game.
  * Provides position, velocity, and dimension properties for game objects.
  */
-public class Sprite {
+public abstract class Sprite {
     private double x;
     private double y;
-    private double vX;
-    private double vY;
+    private double velocityX;
+    private double velocityY;
     private double width;
     private double height;
 
     /**
-     * Gets the X-coordinate of the sprite.
+     * Constructs a new Sprite with specified position and dimensions.
      *
-     * @return The X-coordinate.
+     * @param x      The initial X-coordinate.
+     * @param y      The initial Y-coordinate.
+     * @param width  The width of the sprite.
+     * @param height The height of the sprite.
      */
+    protected Sprite(double x, double y, double width, double height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    // Getters and Setters for position
     public double getX() {
         return x;
     }
 
-    /**
-     * Sets the X-coordinate of the sprite.
-     *
-     * @param x The X-coordinate to set.
-     */
     public void setX(double x) {
         this.x = x;
     }
 
-    /**
-     * Gets the Y-coordinate of the sprite.
-     *
-     * @return The Y-coordinate.
-     */
     public double getY() {
         return y;
     }
 
-    /**
-     * Sets the Y-coordinate of the sprite.
-     *
-     * @param y The Y-coordinate to set.
-     */
     public void setY(double y) {
         this.y = y;
     }
 
-    /**
-     * Gets the center X-coordinate of the sprite.
-     *
-     * @return The center X-coordinate.
-     */
-    public double getCenterX() {
-        return x + width / 2;
+    // Getters and Setters for velocity
+    public double getVelocityX() {
+        return velocityX;
     }
 
-    /**
-     * Gets the center Y-coordinate of the sprite.
-     *
-     * @return The center Y-coordinate.
-     */
-    public double getCenterY() {
-        return y + height / 2;
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
     }
 
-    /**
-     * Gets the velocity in the X direction.
-     *
-     * @return The X velocity.
-     */
-    public double getvX() {
-        return vX;
+    public double getVelocityY() {
+        return velocityY;
     }
 
-    /**
-     * Sets the velocity in the X direction.
-     *
-     * @param vX The X velocity to set.
-     */
-    public void setvX(double vX) {
-        this.vX = vX;
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
     }
 
-    /**
-     * Gets the velocity in the Y direction.
-     *
-     * @return The Y velocity.
-     */
-    public double getvY() {
-        return vY;
-    }
-
-    /**
-     * Sets the velocity in the Y direction.
-     *
-     * @param vY The Y velocity to set.
-     */
-    public void setvY(double vY) {
-        this.vY = vY;
-    }
-
-    /**
-     * Gets the width of the sprite.
-     *
-     * @return The width.
-     */
+    // Getters and Setters for dimensions
     public double getWidth() {
         return width;
     }
 
-    /**
-     * Sets the width of the sprite.
-     *
-     * @param width The width to set.
-     */
     public void setWidth(double width) {
         this.width = width;
     }
 
-    /**
-     * Gets the height of the sprite.
-     *
-     * @return The height.
-     */
     public double getHeight() {
         return height;
     }
 
-    /**
-     * Sets the height of the sprite.
-     *
-     * @param height The height to set.
-     */
     public void setHeight(double height) {
         this.height = height;
     }
 
-    /**
-     * Gets half the width of the sprite.
-     *
-     * @return Half the width.
-     */
+    // Derived properties
+    public double getCenterX() {
+        return x + width / 2;
+    }
+
+    public double getCenterY() {
+        return y + height / 2;
+    }
+
     public double getHalfWidth() {
         return width / 2;
     }
 
-    /**
-     * Gets half the height of the sprite.
-     *
-     * @return Half the height.
-     */
     public double getHalfHeight() {
         return height / 2;
     }
+
+    /**
+     * Updates the sprite's position based on its velocity.
+     */
+    public void updatePosition() {
+        x += velocityX;
+        y += velocityY;
+    }
+
+    /**
+     * Checks if this sprite intersects with another sprite (AABB collision detection).
+     *
+     * @param other The other sprite to check for collision.
+     * @return True if the two sprites intersect, false otherwise.
+     */
+    public boolean intersects(Sprite other) {
+        return x < other.x + other.width &&
+                x + width > other.x &&
+                y < other.y + other.height &&
+                y + height > other.y;
+    }
+
+    /**
+     * Stops the sprite's movement by resetting its velocity to zero.
+     */
+    public void stop() {
+        velocityX = 0;
+        velocityY = 0;
+    }
+
+    /**
+     * Abstract method to define sprite-specific behavior.
+     *
+     * @param now The current timestamp of the game loop.
+     */
+    public abstract void act(long now);
 }

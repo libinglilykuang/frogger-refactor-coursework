@@ -1,6 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
 import javafx.scene.layout.Pane;
+import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Digit;
 import javafx.scene.paint.Color;
@@ -85,4 +86,12 @@ public class ScoreManager {
         scoreLabel.setY(SCORE_LABEL_Y);
         background.getChildren().add(scoreLabel);
     }
+
+    public void updateScoreIfChanged(Pane background, Animal animal) {
+        if (animal.hasScoreChanged()) {
+            int currentScore = animal.getPoints();
+            updateScoreDisplay(background, currentScore);
+        }
+    }
+
 }
