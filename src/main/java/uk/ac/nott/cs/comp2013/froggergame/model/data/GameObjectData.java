@@ -35,7 +35,7 @@ public class GameObjectData {
             {"truck2Right.png", 200, 200, 0, 540, 1},
             {"truck2Right.png", 200, 200, 500, 540, 1},
 
-            {"redcar.png", 50, 50, 100, 480, -1},
+            {"redcar.png", 50, 50, 100, 490, -1},
             {"redcar.png", 50, 50, 400, 490, -1},
             {"redcar.png", 50, 50, 600, 490, -1},
 

@@ -1,6 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
+import uk.ac.nott.cs.comp2013.froggergame.model.entities.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 
@@ -39,6 +40,10 @@ public class LevelManager {
             increaseLevel();
         }
     }
+    public boolean isGameWon() {
+        return reachedEnds == totalEnds;
+    }
+
 
     private void resetLevel() {
         reachedEnds = 0;
@@ -48,5 +53,23 @@ public class LevelManager {
         animal.setX(300);
         animal.setY(733);
     }
+
+    public void processLevelProgress(Animal animal) {
+        for (End end : animal.getIntersectingObjects(End.class)) {
+            if (!end.isActivated()) {
+                end.setEnd();
+                onTargetReached();
+            }
+        }
+    }
+
+    public boolean checkVictoryCondition(Animal animal) {
+        if (animal.isGameWon()) {
+            System.out.println("Game won! Display appropriate UI message.");
+            return true;
+        }
+        return false;
+    }
+
 
 }
