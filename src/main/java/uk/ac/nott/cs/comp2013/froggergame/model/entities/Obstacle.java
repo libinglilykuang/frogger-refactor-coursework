@@ -25,6 +25,11 @@ public class Obstacle extends Actor {
 		resetPositionIfOutOfBounds();
 	}
 
+	@Override
+	public void act(double elapsedTime) {
+
+	}
+
 	private void resetPositionIfOutOfBounds() {
 		if (getX() > SCREEN_RIGHT_BOUND && speed > 0) {
 			setX(RESET_RIGHT_POSITION);

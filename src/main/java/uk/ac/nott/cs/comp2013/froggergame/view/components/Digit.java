@@ -35,4 +35,9 @@ public class Digit extends Actor {
 	public void act(long now) {
 		// No behavior for static digits; can be extended if needed.
 	}
+
+	@Override
+	public void act(double elapsedTime) {
+
+	}
 }

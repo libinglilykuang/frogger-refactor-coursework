@@ -17,5 +17,10 @@ public class BackgroundImage extends Actor {
 	}
 
 	@Override
-	public void act(long now) {}
+	public void act(long now) {
+
+	}
+
+	@Override
+	public void act(double elapsedTime) {}
 }

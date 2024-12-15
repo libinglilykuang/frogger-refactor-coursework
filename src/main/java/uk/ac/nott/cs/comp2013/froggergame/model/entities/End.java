@@ -28,6 +28,11 @@ public class End extends Actor {
 		// TODO Auto-generated method st
 	}
 
+	@Override
+	public void act(double elapsedTime) {
+
+	}
+
 	public void setEnd() {
 		setImage(activatedImage);
 		isActivated = true;

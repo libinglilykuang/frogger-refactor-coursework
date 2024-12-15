@@ -5,10 +5,16 @@ import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 
 public class GameStateChecker {
     public static void checkGameState(LevelManager levelManager, Animal animal, GameLoopManager.GameEventListener eventListener) {
-        if (levelManager.checkVictoryCondition(animal)) {
-            eventListener.onGameWon(animal.getPoints());
-        } else if (animal.isDead()) {
-            eventListener.onGameOver();
+        if (levelManager.checkVictoryCondition()) {
+            if (eventListener != null) {
+                eventListener.onGameWon(levelManager.getPoints());
+            }
+        }
+
+        else if (animal.isDead()) {
+            if (eventListener != null) {
+                eventListener.onGameOver();
+            }
         }
     }
 }

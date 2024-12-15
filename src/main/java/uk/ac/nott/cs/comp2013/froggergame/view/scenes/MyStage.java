@@ -1,6 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.view.scenes;
 
 import uk.ac.nott.cs.comp2013.froggergame.controller.MusicManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 
 public class MyStage extends World {
 	private static final String MUSIC_FILE_PATH = "/Snake_Charmer.mp3";
@@ -21,6 +22,11 @@ public class MyStage extends World {
 //		mediaPlayer.play();
 	}
 
+	@Override
+	public void act(long now) {
+
+	}
+
 	public void playMusic() {
 		musicManager.playMusic();
 	}
@@ -30,8 +36,11 @@ public class MyStage extends World {
 	}
 
 	@Override
-	public void act(long now) {
+	public void act(double elapsedTime) {
 		// Stage logic can be added here
+		for (Actor actor : getObjects(Actor.class)) {
+			actor.act(elapsedTime);
+		}
 	}
 
 }

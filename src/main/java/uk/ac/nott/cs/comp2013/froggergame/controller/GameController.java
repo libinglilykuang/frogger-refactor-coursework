@@ -57,15 +57,10 @@ public class GameController implements GameLoopManager.GameEventListener{
         gameLoopManager.stopGameLoopExecution();
     }
 
-    public void handleGameWon() {
-        stopGame();
-        AlertManager.showGameWonAlert(animal.getPoints());
+    public Animal getAnimal() {
+        return this.animal;
     }
 
-    public void handleGameOver() {
-        stopGame();
-        AlertManager.showGameOverAlert();
-    }
 
     @Override
     public void onGameWon(int points) {
@@ -78,4 +73,18 @@ public class GameController implements GameLoopManager.GameEventListener{
         stopGame();
         AlertManager.showGameOverAlert();
     }
+
+    @Override
+    public void update(long now) {
+
+    }
+
+    @Override
+    public void update(double elapsedTime) {
+        //background.act(now);
+        background.act(elapsedTime);
+        scoreManager.updateScoreIfChanged(background, animal);
+        animal.getStateManager().resetScoreChangedFlag();
+    }
+
 }
