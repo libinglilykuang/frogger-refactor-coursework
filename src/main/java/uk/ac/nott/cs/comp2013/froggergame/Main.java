@@ -4,12 +4,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uk.ac.nott.cs.comp2013.froggergame.controller.*;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.GameObjectFactory;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.LevelManager;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
-import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
 public class Main extends Application {
@@ -18,6 +14,7 @@ public class Main extends Application {
 
 	private MyStage background;
 	private GameController gameController;
+	private InputHandler inputHandler;
 
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -35,6 +32,12 @@ public class Main extends Application {
 
 		gameController = createGameController(background);
 		gameController.initializeGameComponents();
+
+		Animal animal = gameController.getAnimal();
+
+		inputHandler = new InputHandler();
+		scene.setOnKeyPressed(event -> inputHandler.processInput(animal, event));
+		scene.setOnKeyReleased(event -> inputHandler.processInput(animal, event));
 
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);

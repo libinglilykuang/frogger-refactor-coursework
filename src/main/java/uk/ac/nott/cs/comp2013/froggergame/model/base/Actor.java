@@ -111,4 +111,6 @@ public abstract class Actor extends ImageView {
      * @param now The current timestamp of the animation timer.
      */
     public abstract void act(long now);
+
+    public abstract void act(double elapsedTime);
 }

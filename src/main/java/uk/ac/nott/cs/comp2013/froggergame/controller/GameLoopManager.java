@@ -14,6 +14,7 @@ public class GameLoopManager {
     private AnimationTimer gameLoop;
     private final Pane background;
     private GameEventListener eventListener;
+    private long lastUpdateTime = 0;
 
     public GameLoopManager(LevelManager levelManager, ScoreManager scoreManager, Animal animal, Pane background, GameEventListener eventListener) {
         this.levelManager = levelManager;
@@ -31,6 +32,18 @@ public class GameLoopManager {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if (lastUpdateTime == 0) {
+                    lastUpdateTime = now;
+                    return;
+                }
+
+                double elapsedTime = (now - lastUpdateTime) / 1_000_000_000.0;
+
+                lastUpdateTime = now;
+
+                if (eventListener != null) {
+                    eventListener.update(elapsedTime);
+                }
                 scoreManager.updateScoreIfChanged(background, animal);
                 GameStateChecker.checkGameState(levelManager, animal, eventListener);
             }
@@ -47,5 +60,10 @@ public class GameLoopManager {
     public interface GameEventListener {
         void onGameWon(int points);
         void onGameOver();
+
+        void update(long now);
+
+        void update(double elapsedTime);
+
     }
 }

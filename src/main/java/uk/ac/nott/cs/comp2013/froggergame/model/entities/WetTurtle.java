@@ -46,6 +46,10 @@ public class WetTurtle extends Actor {
 		resetPositionIfOutOfBounds();
 	}
 
+	@Override
+	public void act(double elapsedTime) {
+	}
+
 	private void updateAnimation(long now) {
 		int frame = (int) ((now / ANIMATION_INTERVAL) % 4);
 		switch (frame) {
