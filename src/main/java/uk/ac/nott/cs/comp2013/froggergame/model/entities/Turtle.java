@@ -41,6 +41,11 @@ public class Turtle extends Actor {
         resetPositionIfOutOfBounds();
     }
 
+    @Override
+    public void act(double elapsedTime) {
+
+    }
+
     private void updateAnimation(long now) {
         int frame = (int) ((now / ANIMATION_INTERVAL) % 3);
         switch (frame) {

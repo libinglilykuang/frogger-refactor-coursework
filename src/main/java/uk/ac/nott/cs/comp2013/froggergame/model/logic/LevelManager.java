@@ -1,5 +1,6 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
+import uk.ac.nott.cs.comp2013.froggergame.controller.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
@@ -12,6 +13,8 @@ public class LevelManager {
     private final int totalEnds;
     private final Animal animal;
     private final LevelView levelView;
+    private GameEventListener eventListener;
+    private int points = 0;
 
     public LevelManager(Animal animal, LevelView levelView, int totalEnds) {
         this.animal = animal;
@@ -63,13 +66,19 @@ public class LevelManager {
         }
     }
 
-    public boolean checkVictoryCondition(Animal animal) {
-        if (animal.isGameWon()) {
-            System.out.println("Game won! Display appropriate UI message.");
+    public boolean checkVictoryCondition() {
+        if (animal.getStateManager().isVictory()) {
+            if (eventListener != null) {
+                eventListener.onGameWon(animal.getStateManager().getPoints());
+            }
             return true;
         }
         return false;
     }
 
+
+    public int getPoints() {
+        return animal.getStateManager().getPoints();
+    }
 
 }

@@ -49,4 +49,6 @@ public abstract class World extends Pane {
     }
 
     public abstract void act(long now);
+
+    public abstract void act(double elapsedTime);
 }

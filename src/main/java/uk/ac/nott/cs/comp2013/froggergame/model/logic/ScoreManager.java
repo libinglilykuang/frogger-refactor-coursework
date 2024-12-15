@@ -7,7 +7,6 @@ import uk.ac.nott.cs.comp2013.froggergame.view.components.Digit;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.util.Stack;
 
 /**
@@ -88,10 +87,12 @@ public class ScoreManager {
     }
 
     public void updateScoreIfChanged(Pane background, Animal animal) {
-        if (animal.hasScoreChanged()) {
-            int currentScore = animal.getPoints();
+        if (animal.getStateManager().hasScoreChanged()) {
+            int currentScore = animal.getStateManager().getPoints();
             updateScoreDisplay(background, currentScore);
+            animal.getStateManager().resetScoreChangedFlag();
         }
     }
+
 
 }
