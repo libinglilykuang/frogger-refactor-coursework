@@ -1,8 +1,9 @@
-package uk.ac.nott.cs.comp2013.froggergame.model.logic;
+package uk.ac.nott.cs.comp2013.froggergame.controller.input;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.StateManager;
 
 public class InputHandler {
     public void processInput(Animal animal, KeyEvent event) {

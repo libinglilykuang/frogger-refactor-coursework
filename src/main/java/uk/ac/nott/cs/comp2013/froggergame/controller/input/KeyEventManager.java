@@ -1,4 +1,4 @@
-package uk.ac.nott.cs.comp2013.froggergame.controller;
+package uk.ac.nott.cs.comp2013.froggergame.controller.input;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;

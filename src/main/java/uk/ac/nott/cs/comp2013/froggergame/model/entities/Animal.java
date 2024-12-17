@@ -3,10 +3,7 @@ package uk.ac.nott.cs.comp2013.froggergame.model.entities;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.AnimalCollisionHandler;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.AnimalStateManager;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.CollisionHandler;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.StateManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.*;
 
 public class Animal extends Actor {
     private final StateManager stateManager;

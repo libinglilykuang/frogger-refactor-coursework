@@ -2,6 +2,7 @@ package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
 import javafx.scene.image.Image;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
+import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageManager;
 
 public class DeathAnimationHandler {
     private int deathAnimationFrame = 0;

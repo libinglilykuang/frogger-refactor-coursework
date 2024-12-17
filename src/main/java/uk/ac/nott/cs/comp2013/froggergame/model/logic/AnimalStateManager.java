@@ -2,8 +2,8 @@ package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uk.ac.nott.cs.comp2013.froggergame.controller.ScoreController;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
+import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageManager;
 
 public class AnimalStateManager implements StateManager{
     private final Animal animal;
@@ -11,13 +11,13 @@ public class AnimalStateManager implements StateManager{
     private int endCount = 0;
     private static final int GAME_WIN_END_COUNT = 5;
     private final ImageManager imageManager;
-    private final ScoreController scoreManager;
+    private final ScoreManager scoreManager;
     private final DeathAnimationHandler deathAnimationHandler;
 
     public AnimalStateManager(Animal animal) {
         this.animal = animal;
         this.imageManager = new ImageManager();
-        this.scoreManager = new ScoreController();
+        this.scoreManager = new ScoreManager();
         this.deathAnimationHandler = new DeathAnimationHandler();
     }
 
