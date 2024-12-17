@@ -14,21 +14,14 @@ import java.util.Stack;
  * including splitting scores into digits and updating score displays.
  */
 public class ScoreManager {
-    private final int digitSize;
-    private final int digitStartX;
-    private final int digitStartY;
-    private final int digitSpacing;
-    private final int SCORE_LABEL_X;
-    private final int SCORE_LABEL_Y;
-
-    public ScoreManager(int digitSize, int digitStartX, int digitStartY, int digitSpacing) {
-        this.digitSize = digitSize;
-        this.digitStartX = digitStartX;
-        this.digitStartY = digitStartY;
-        this.digitSpacing = digitSpacing;
-        this.SCORE_LABEL_X = 15; // Default X position for score label
-        this.SCORE_LABEL_Y = 30; // Default Y position for score label
-    }
+    private final int digitSize=30;
+    private final int digitStartX=140;
+    private final int digitStartY=5;
+    private final int digitSpacing=30;
+    private final int SCORE_LABEL_X=15;
+    private final int SCORE_LABEL_Y=30;
+    private int points = 0;
+    private boolean scoreChanged = false;
 
     /**
      * Splits the given score into its individual digits.
@@ -94,5 +87,24 @@ public class ScoreManager {
         }
     }
 
+    public void addPoints(int value) {
+        if (value != 0) {
+            points = Math.max(0, points + value);
+            scoreChanged = true;
+        }
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public boolean hasScoreChanged() {
+        return scoreChanged;
+    }
+
+    public void resetScoreChangedFlag() {
+        scoreChanged = false;
+    }
 
 }
+

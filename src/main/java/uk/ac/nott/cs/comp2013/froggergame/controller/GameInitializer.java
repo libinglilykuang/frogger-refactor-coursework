@@ -53,4 +53,5 @@ public class GameInitializer {
         scoreManager.createScoreLabel(background);
         scoreManager.updateScoreDisplay(background, 0);
     }
+
 }

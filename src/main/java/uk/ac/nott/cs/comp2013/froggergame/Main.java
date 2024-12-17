@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import uk.ac.nott.cs.comp2013.froggergame.controller.*;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.GameObjectFactory;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.InputHandler;
+import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
@@ -47,7 +47,7 @@ public class Main extends Application {
 	}
 
 	private GameController createGameController(MyStage background) {
-		ScoreManager scoreManager = new ScoreManager(30, 140, 5, 30);
+		ScoreManager scoreManager = new ScoreManager();
 		GameObjectFactory gameObjectFactory = new GameObjectFactory();
 		return new GameController(background, scoreManager, gameObjectFactory);
 	}

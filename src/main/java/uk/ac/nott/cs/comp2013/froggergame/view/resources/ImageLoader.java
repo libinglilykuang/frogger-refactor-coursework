@@ -1,4 +1,4 @@
-package uk.ac.nott.cs.comp2013.froggergame.model.base;
+package uk.ac.nott.cs.comp2013.froggergame.view.resources;
 
 import javafx.scene.image.Image;
 import java.util.Objects;

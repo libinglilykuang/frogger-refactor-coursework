@@ -1,4 +1,4 @@
-package uk.ac.nott.cs.comp2013.froggergame.controller;
+package uk.ac.nott.cs.comp2013.froggergame.view.resources;
 
 import java.util.Objects;
 import javafx.scene.media.Media;
