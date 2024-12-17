@@ -68,14 +68,44 @@ public class Animal extends Actor {
         highestY = y;
     }
 
+    private boolean isInWaterWithoutPlatform() {
+        Log log = getOneIntersectingObject(Log.class);
+        Turtle turtle = getOneIntersectingObject(Turtle.class);
+
+        if (log != null) {
+            return false;
+        }
+
+        return turtle == null && getY() < 413;
+    }
+
+    private void applyPlatformMovement() {
+        Log log = getOneIntersectingObject(Log.class);
+        if (log != null) {
+            setX(getX() + log.getSpeed());
+            return;
+        }
+
+        Turtle turtle = getOneIntersectingObject(Turtle.class);
+         if (turtle != null) {
+            setX(getX() + turtle.getSpeed());
+        }
+    }
+
     @Override
     public void act(long now) {
         if (carDeath) {
-            stateManager.animateDeath(now, "cardeath", 4);
+            stateManager.updateDeathAnimation(now, "cardeath", 4);
         } else if (waterDeath) {
-            stateManager.animateDeath(now, "waterdeath", 5);
+            stateManager.updateDeathAnimation(now, "waterdeath", 5);
         } else {
             collisionHandler.checkCollisions();
+            applyPlatformMovement();
+            if (isInWaterWithoutPlatform()) {
+                waterDeath = true;
+            } else {
+                collisionHandler.checkCollisions();
+            }
         }
 
         stateManager.update(now);
@@ -84,9 +114,9 @@ public class Animal extends Actor {
     @Override
     public void act(double elapsedTime) {
         if (carDeath) {
-            stateManager.animateDeath(System.nanoTime(), "cardeath", 4);
+            stateManager.updateDeathAnimation(System.nanoTime(), "cardeath", 4);
         } else if (waterDeath) {
-            stateManager.animateDeath(System.nanoTime(), "waterdeath", 5);
+            stateManager.updateDeathAnimation(System.nanoTime(), "waterdeath", 5);
         } else {
             collisionHandler.checkCollisions();
         }

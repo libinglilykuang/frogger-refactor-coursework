@@ -8,39 +8,38 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
-public class GameController implements GameLoopManager.GameEventListener{
+public class GameController implements GameEventListener{
     private final MyStage background;
+    private final GameInitializer gameInitializer;
     private Animal animal;
     private LevelManager levelManager;
-    private LevelView levelView;
     private final ScoreManager scoreManager;
     private final GameObjectFactory gameObjectFactory;
-    private final GameInitializer gameInitializer;
     private GameLoopManager gameLoopManager;
 
-    public GameController(MyStage background) {
+    public GameController(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory) {
         this.background = background;
-        this.scoreManager = new ScoreManager(30, 140, 5, 30);
-        this.gameObjectFactory = new GameObjectFactory();
-        this.levelView = new LevelView(background);
+        this.scoreManager = scoreManager;
+        this.gameObjectFactory = gameObjectFactory;
         this.gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory);
     }
 
-    public void initializeGameComponents() {
+    public void initializeGame() {
         initializeAnimal();
         initializeLevelManager();
-        gameInitializer.initializeComponents();
         initializeGameLoopManager();
+        gameInitializer.initializeComponents();
         initializeAnimal();
     }
 
     private void initializeAnimal() {
-        animal = gameInitializer.createAnimal();
+        animal = gameObjectFactory.createAnimal();
         background.add(animal);
     }
 
     private void initializeLevelManager() {
-        levelManager = gameInitializer.createLevelManager(animal, levelView, 5);
+        LevelView levelView = new LevelView(background);
+        levelManager = gameObjectFactory.createLevelManager(animal, levelView, 5);
         levelManager.setLevel(1);
     }
 
@@ -61,7 +60,6 @@ public class GameController implements GameLoopManager.GameEventListener{
         return this.animal;
     }
 
-
     @Override
     public void onGameWon(int points) {
         stopGame();
@@ -76,12 +74,11 @@ public class GameController implements GameLoopManager.GameEventListener{
 
     @Override
     public void update(long now) {
-
+        background.act(now);
     }
 
     @Override
     public void update(double elapsedTime) {
-        //background.act(now);
         background.act(elapsedTime);
         scoreManager.updateScoreIfChanged(background, animal);
         animal.getStateManager().resetScoreChangedFlag();
