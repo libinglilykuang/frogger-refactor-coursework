@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import uk.ac.nott.cs.comp2013.froggergame.controller.KeyEventHandlerProvider;
+import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 
 /**
@@ -19,7 +19,7 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     private int screenLeftBound;
     private int resetRightPosition;
     private int resetLeftPosition;
-
+    private boolean hasMoved = false;
     /**
      * Moves the actor by the specified amounts in the X and Y directions.
      *
@@ -29,8 +29,15 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     public void move(double dx, double dy) {
         setX(getX() + dx);
         setY(getY() + dy);
+        hasMoved = true;
     }
-
+    public boolean hasMoved() {
+        if (hasMoved) {
+            hasMoved = false;
+            return true;
+        }
+        return false;
+    }
     public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
         this.screenLeftBound = screenLeftBound;
         this.screenRightBound = screenRightBound;

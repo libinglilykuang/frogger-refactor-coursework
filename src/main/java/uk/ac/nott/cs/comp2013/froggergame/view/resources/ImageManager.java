@@ -1,8 +1,8 @@
-package uk.ac.nott.cs.comp2013.froggergame.model.logic;
+package uk.ac.nott.cs.comp2013.froggergame.view.resources;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.ImageLoader;
+
 import java.util.HashMap;
 import java.util.Map;
 

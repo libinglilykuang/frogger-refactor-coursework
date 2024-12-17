@@ -2,7 +2,7 @@ package uk.ac.nott.cs.comp2013.froggergame.view.components;
 
 import javafx.scene.image.Image;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.ImageLoader;
+import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageLoader;
 
 /**
  * Represents a digit image displayed in the game UI.

@@ -1,6 +1,6 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
-import uk.ac.nott.cs.comp2013.froggergame.model.base.ImageLoader;
+import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.*;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
