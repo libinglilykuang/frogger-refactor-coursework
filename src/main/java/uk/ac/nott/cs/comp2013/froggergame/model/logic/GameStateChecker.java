@@ -1,10 +1,10 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
-import uk.ac.nott.cs.comp2013.froggergame.controller.GameLoopManager;
+import uk.ac.nott.cs.comp2013.froggergame.controller.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 
 public class GameStateChecker {
-    public static void checkGameState(LevelManager levelManager, Animal animal, GameLoopManager.GameEventListener eventListener) {
+    public static void checkGameState(LevelManager levelManager, Animal animal, GameEventListener eventListener) {
         if (levelManager.checkVictoryCondition()) {
             if (eventListener != null) {
                 eventListener.onGameWon(levelManager.getPoints());

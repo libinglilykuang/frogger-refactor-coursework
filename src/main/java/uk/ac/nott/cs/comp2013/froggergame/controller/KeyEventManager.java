@@ -4,7 +4,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 import java.util.List;
 
@@ -24,16 +23,10 @@ public class KeyEventManager {
     }
 
     private void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
-        if (world != null) {
-            processSingleKeyEvent(event, isKeyPressed, world.getOnKeyPressed(), world.getOnKeyReleased());
-        }
+        List<KeyEventHandlerProvider> providers = world.getObjects(KeyEventHandlerProvider.class);
 
-        List<Actor> actors = world.getObjects(Actor.class).stream()
-                .filter(actor -> actor.getOnKeyPressed() != null || actor.getOnKeyReleased() != null)
-                .toList();
-
-        for (Actor actor : actors) {
-            processSingleKeyEvent(event, isKeyPressed, actor.getOnKeyPressed(), actor.getOnKeyReleased());
+        for (KeyEventHandlerProvider provider : providers) {
+            processSingleKeyEvent(event, isKeyPressed, provider.getKeyPressedHandler(), provider.getKeyReleasedHandler());
         }
     }
 
@@ -46,6 +39,5 @@ public class KeyEventManager {
             onReleasedHandler.handle(event);
         }
     }
-
 
 }
