@@ -5,7 +5,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uk.ac.nott.cs.comp2013.froggergame.controller.*;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.InputHandler;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
 public class Main extends Application {
@@ -31,7 +33,7 @@ public class Main extends Application {
 		Scene scene = new Scene(background, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		gameController = createGameController(background);
-		gameController.initializeGameComponents();
+		gameController.initializeGame();
 
 		Animal animal = gameController.getAnimal();
 
@@ -45,8 +47,11 @@ public class Main extends Application {
 	}
 
 	private GameController createGameController(MyStage background) {
-		return new GameController(background);
+		ScoreManager scoreManager = new ScoreManager(30, 140, 5, 30);
+		GameObjectFactory gameObjectFactory = new GameObjectFactory();
+		return new GameController(background, scoreManager, gameObjectFactory);
 	}
+
 
 	private void startGame() {
 		background.start();

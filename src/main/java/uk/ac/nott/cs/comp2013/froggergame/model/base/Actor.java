@@ -1,17 +1,24 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.base;
 
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputEvent;
-import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
-
+import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import uk.ac.nott.cs.comp2013.froggergame.controller.KeyEventHandlerProvider;
+import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 
 /**
  * Base class for all actors in the game.
  * Provides common functionalities like movement, collision detection, and input management.
  */
-public abstract class Actor extends ImageView {
+public abstract class Actor extends ImageView implements KeyEventHandlerProvider {
+    private EventHandler<? super KeyEvent> keyPressedHandler;
+    private EventHandler<? super KeyEvent> keyReleasedHandler;
+    private int screenRightBound;
+    private int screenLeftBound;
+    private int resetRightPosition;
+    private int resetLeftPosition;
 
     /**
      * Moves the actor by the specified amounts in the X and Y directions.
@@ -24,31 +31,37 @@ public abstract class Actor extends ImageView {
         setY(getY() + dy);
     }
 
-    /**
-     * Gets the world this actor belongs to.
-     *
-     * @return The world instance.
-     */
+    public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
+        this.screenLeftBound = screenLeftBound;
+        this.screenRightBound = screenRightBound;
+        this.resetLeftPosition = resetLeftPosition;
+        this.resetRightPosition = resetRightPosition;
+    }
+
+    public void resetPositionIfOutOfBounds(double speed) {
+        if (getX() > screenRightBound && speed > 0) {
+            setX(resetRightPosition);
+        } else if (getX() < screenLeftBound && speed < 0) {
+            setX(resetLeftPosition);
+        }
+    }
+
     public World getWorld() {
         return (World) getParent();
     }
 
-    /**
-     * Gets the width of the actor.
-     *
-     * @return The width of the actor in pixels.
-     */
-    public double getWidth() {
-        return getBoundsInLocal().getWidth();
+    public double getSpeed() {
+        return 0;
     }
 
-    /**
-     * Gets the height of the actor.
-     *
-     * @return The height of the actor in pixels.
-     */
-    public double getHeight() {
-        return getBoundsInLocal().getHeight();
+    @Override
+    public EventHandler<? super KeyEvent> getKeyPressedHandler() {
+        return keyPressedHandler;
+    }
+
+    @Override
+    public EventHandler<? super KeyEvent> getKeyReleasedHandler() {
+        return keyReleasedHandler;
     }
 
     /**
@@ -78,15 +91,6 @@ public abstract class Actor extends ImageView {
         }
         return null;
     }
-
-    /**
-     * Helper method to retrieve objects of the specified type from the world.
-     * This abstracts the direct call to `getWorld().getObjects`.
-     *
-     * @param cls The class type to filter objects.
-     * @param <A> A type that extends Actor.
-     * @return A list of objects of type A in the world.
-     */
     private <A extends Actor> List<A> getObjectsFromWorld(Class<A> cls) {
         World world = getWorld();
         if (world == null) {
@@ -95,15 +99,6 @@ public abstract class Actor extends ImageView {
         return world.getObjects(cls);
     }
 
-
-    /**
-     * Handles input events for the actor.
-     *
-     * @param event The input event to handle.
-     */
-    public void manageInput(InputEvent event) {
-        // Default implementation does nothing. Subclasses can override.
-    }
 
     /**
      * Updates the actor's behavior.

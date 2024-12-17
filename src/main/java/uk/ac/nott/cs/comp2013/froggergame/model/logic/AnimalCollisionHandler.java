@@ -59,7 +59,7 @@ public class AnimalCollisionHandler implements CollisionHandler{
 
     private void handleLogCollision() {
         Log log = animal.getIntersectingObjects(Log.class).get(0);
-        animal.move(log.getLeft() ? -2.0 : 0.75, 0);
+        animal.move(log.getLeft() ? LOG_MOVE_LEFT_SPEED : LOG_MOVE_RIGHT_SPEED, 0);
     }
 
     private void handleWetTurtleCollision() {

@@ -4,12 +4,6 @@ import javafx.scene.image.Image;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 
 public class Log extends Actor {
-
-	private static final int SCREEN_RIGHT_BOUND = 600;
-	private static final int SCREEN_LEFT_BOUND = -300;
-	private static final int RESET_RIGHT_POSITION = -180;
-	private static final int RESET_LEFT_POSITION = 700;
-
 	private final double speed;
 
 	public Log(String imageLink, int size, int xpos, int ypos, double speed) {
@@ -17,28 +11,25 @@ public class Log extends Actor {
 		setX(xpos);
 		setY(ypos);
 		this.speed = speed;
-	}
-
-	@Override
-	public void act(long now) {
-		move(speed, 0);
-		resetPositionIfOutOfBounds();
-	}
-
-	@Override
-	public void act(double elapsedTime) {
-
+		configureBounds(-300, 600, 700, -180);
 	}
 
 	public boolean getLeft() {
 		return speed < 0;
 	}
 
-	private void resetPositionIfOutOfBounds() {
-		if (getX() > SCREEN_RIGHT_BOUND && speed > 0) {
-			setX(RESET_RIGHT_POSITION);
-		} else if (getX() < SCREEN_LEFT_BOUND && speed < 0) {
-			setX(RESET_LEFT_POSITION);
-		}
+	@Override
+	public double getSpeed() {
+		return speed;
+	}
+
+	@Override
+	public void act(long now) {
+		move(speed, 0);
+		resetPositionIfOutOfBounds(speed);
+	}
+
+	@Override
+	public void act(double elapsedTime) {
 	}
 }
