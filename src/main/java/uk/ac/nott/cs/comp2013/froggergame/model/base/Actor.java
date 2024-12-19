@@ -15,29 +15,25 @@ import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 public abstract class Actor extends ImageView implements KeyEventHandlerProvider {
     private EventHandler<? super KeyEvent> keyPressedHandler;
     private EventHandler<? super KeyEvent> keyReleasedHandler;
+
     private int screenRightBound;
     private int screenLeftBound;
     private int resetRightPosition;
     private int resetLeftPosition;
     private boolean hasMoved = false;
-    /**
-     * Moves the actor by the specified amounts in the X and Y directions.
-     *
-     * @param dx The amount to move in the X direction.
-     * @param dy The amount to move in the Y direction.
-     */
+
     public void move(double dx, double dy) {
         setX(getX() + dx);
         setY(getY() + dy);
         hasMoved = true;
     }
+
     public boolean hasMoved() {
-        if (hasMoved) {
-            hasMoved = false;
-            return true;
-        }
-        return false;
+        boolean result = hasMoved;
+        hasMoved = false;
+        return result;
     }
+
     public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
         this.screenLeftBound = screenLeftBound;
         this.screenRightBound = screenRightBound;
@@ -46,11 +42,27 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     }
 
     public void resetPositionIfOutOfBounds(double speed) {
-        if (getX() > screenRightBound && speed > 0) {
-            setX(resetRightPosition);
-        } else if (getX() < screenLeftBound && speed < 0) {
-            setX(resetLeftPosition);
+        if (isOutOfRightBound(speed)) {
+            resetToRightBound();
+        } else if (isOutOfLeftBound(speed)) {
+            resetToLeftBound();
         }
+    }
+
+    private boolean isOutOfRightBound(double speed) {
+        return getX() > screenRightBound && speed > 0;
+    }
+
+    private boolean isOutOfLeftBound(double speed) {
+        return getX() < screenLeftBound && speed < 0;
+    }
+
+    private void resetToRightBound() {
+        setX(resetRightPosition);
+    }
+
+    private void resetToLeftBound() {
+        setX(resetLeftPosition);
     }
 
     public World getWorld() {
@@ -60,6 +72,36 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     public double getSpeed() {
         return 0;
     }
+
+    public <A extends Actor> List<A> getIntersectingObjects(Class<A> cls) {
+        return filterIntersectingObjects(getObjectsFromWorld(cls));
+    }
+
+    public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
+        return getIntersectingObjects(cls).stream().findFirst().orElse(null);
+    }
+
+    private <A extends Actor> List<A> filterIntersectingObjects(List<A> actors) {
+        List<A> intersectingObjects = new ArrayList<>();
+        for (A actor : actors) {
+            if (actor != this && actor.intersects(getBoundsInLocal())) {
+                intersectingObjects.add(actor);
+            }
+        }
+        return intersectingObjects;
+    }
+
+    private <A extends Actor> List<A> getObjectsFromWorld(Class<A> cls) {
+        World world = getWorld();
+        if (world == null) {
+            throw new IllegalStateException("Actor is not attached to any world.");
+        }
+        return world.getObjects(cls);
+    }
+
+    public abstract void act(long now);
+
+    public abstract void act(double elapsedTime);
 
     @Override
     public EventHandler<? super KeyEvent> getKeyPressedHandler() {
@@ -71,48 +113,4 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         return keyReleasedHandler;
     }
 
-    /**
-     * Gets all objects of the specified type that are intersecting with this actor.
-     *
-     * @param cls The class type of the objects to find.
-     * @param <A> The type parameter.
-     * @return A list of intersecting objects of the specified type.
-     */
-    public <A extends Actor> List<A> getIntersectingObjects(Class<A> cls) {
-        List<A> intersectingObjects = new ArrayList<>();
-        for (A actor : getWorld().getObjects(cls)) {
-            if (actor != this && actor.intersects(getBoundsInLocal())) {
-                intersectingObjects.add(actor);
-            }
-        }
-        return intersectingObjects;
-    }
-
-    public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
-        List<A> potentialObjects = getObjectsFromWorld(cls);
-
-        for (A actor : potentialObjects) {
-            if (actor != this && actor.intersects(getBoundsInLocal())) {
-                return actor;
-            }
-        }
-        return null;
-    }
-    private <A extends Actor> List<A> getObjectsFromWorld(Class<A> cls) {
-        World world = getWorld();
-        if (world == null) {
-            throw new IllegalStateException("Actor is not attached to any world.");
-        }
-        return world.getObjects(cls);
-    }
-
-
-    /**
-     * Updates the actor's behavior.
-     *
-     * @param now The current timestamp of the animation timer.
-     */
-    public abstract void act(long now);
-
-    public abstract void act(double elapsedTime);
 }

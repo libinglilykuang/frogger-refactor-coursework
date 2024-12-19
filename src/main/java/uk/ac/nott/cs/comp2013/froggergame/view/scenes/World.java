@@ -21,7 +21,8 @@ public abstract class World extends Pane implements KeyEventHandlerProvider {
     }
 
     public void start() {
-        timerManager.createAndStartTimer();
+        timerManager.initializeTimer();
+        timerManager.startTimer();
     }
 
     public void add(Actor actor) {

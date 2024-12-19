@@ -17,6 +17,9 @@ public class GameController implements GameEventListener{
     private final GameObjectFactory gameObjectFactory;
     private GameLoopManager gameLoopManager;
 
+    private static final int DEFAULT_INITIAL_LEVEL = 1;
+    private static final int MAX_LIVES = 5;
+
     public GameController(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory) {
         this.background = background;
         this.scoreManager = scoreManager;
@@ -39,8 +42,8 @@ public class GameController implements GameEventListener{
 
     private void initializeLevelManager() {
         LevelView levelView = new LevelView(background);
-        levelManager = gameObjectFactory.createLevelManager(animal, levelView, 5);
-        levelManager.setLevel(1);
+        levelManager = gameObjectFactory.createLevelManager(animal, levelView, MAX_LIVES);
+        levelManager.setLevel(DEFAULT_INITIAL_LEVEL);
     }
 
     private void initializeGameLoopManager() {

@@ -8,6 +8,8 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 
 public class GameLoopManager {
+    private static final double NANOSECONDS_TO_SECONDS = 1_000_000_000.0;
+
     private final LevelManager levelManager;
     private final ScoreManager scoreManager;
     private final Animal animal;
@@ -28,32 +30,49 @@ public class GameLoopManager {
         this.eventListener = listener;
     }
 
+    public void stopGameLoopExecution() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+    }
+
     public void startGameLoopExecution() {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (lastUpdateTime == 0) {
-                    lastUpdateTime = now;
-                    return;
+                try {
+                    executeGameLoop(now);
+                } catch (Exception e) {
+                    stopGameLoopExecution();
                 }
-
-                double elapsedTime = (now - lastUpdateTime) / 1_000_000_000.0;
-
-                lastUpdateTime = now;
-
-                if (eventListener != null) {
-                    eventListener.update(elapsedTime);
-                }
-                scoreManager.updateScoreIfChanged(background, animal);
-                GameStateChecker.checkGameState(levelManager, animal, eventListener);
             }
         };
         gameLoop.start();
     }
 
-    public void stopGameLoopExecution() {
-        if (gameLoop != null) {
-            gameLoop.stop();
+    private void executeGameLoop(long now) {
+        if (lastUpdateTime == 0) {
+            lastUpdateTime = now;
+            return;
         }
+        double elapsedTime = calculateElapsedTime(now);
+        if (eventListener != null) {
+            eventListener.update(elapsedTime);
+        }
+        updateScore();
+        checkGameState();
+        lastUpdateTime = now;
+    }
+
+    private double calculateElapsedTime(long now) {
+        return (now - lastUpdateTime) / NANOSECONDS_TO_SECONDS;
+    }
+
+    private void updateScore() {
+        scoreManager.updateScoreIfChanged(background, animal);
+    }
+
+    private void checkGameState() {
+        GameStateChecker.checkGameState(levelManager, animal, eventListener);
     }
 }
