@@ -17,27 +17,37 @@ public class KeyEventManager {
 
     private void configureKeyEvents(ObservableValue<? extends Scene> observable, Scene oldScene, Scene newScene) {
         if (newScene != null) {
-            newScene.setOnKeyPressed(event -> processKeyEvent(event, true));
-            newScene.setOnKeyReleased(event -> processKeyEvent(event, false));
+            newScene.setOnKeyPressed(event -> handleKeyEvent(event, true));
+            newScene.setOnKeyReleased(event -> handleKeyEvent(event, false));
         }
     }
 
-    private void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
+    private void handleKeyEvent(KeyEvent event, boolean isKeyPressed) {
         List<KeyEventHandlerProvider> providers = world.getObjects(KeyEventHandlerProvider.class);
 
         for (KeyEventHandlerProvider provider : providers) {
-            processSingleKeyEvent(event, isKeyPressed, provider.getKeyPressedHandler(), provider.getKeyReleasedHandler());
+            try {
+                processKeyEventWithProvider(event, isKeyPressed, provider);
+            } catch (Exception e) {
+                logError(event, provider, e);
+            }
         }
     }
 
-    private void processSingleKeyEvent(KeyEvent event, boolean isKeyPressed,
-                                       EventHandler<? super KeyEvent> onPressedHandler,
-                                       EventHandler<? super KeyEvent> onReleasedHandler) {
-        if (isKeyPressed && onPressedHandler != null) {
-            onPressedHandler.handle(event);
-        } else if (!isKeyPressed && onReleasedHandler != null) {
-            onReleasedHandler.handle(event);
+    private void processKeyEventWithProvider(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
+        EventHandler<? super KeyEvent> handler = isKeyPressed
+                ? provider.getKeyPressedHandler()
+                : provider.getKeyReleasedHandler();
+
+        if (handler != null) {
+            handler.handle(event);
         }
+    }
+
+    private void logError(KeyEvent event, KeyEventHandlerProvider provider, Exception e) {
+        System.err.println("Error processing key event: " + event.getCode());
+        System.err.println("Provider: " + provider.getClass().getSimpleName());
+        e.printStackTrace();
     }
 
 }

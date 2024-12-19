@@ -8,6 +8,9 @@ import uk.ac.nott.cs.comp2013.froggergame.view.components.BackgroundImage;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.End;
 
 public class GameInitializer {
+    private static final String BACKGROUND_IMAGE = "background.png";
+    private static final int INITIAL_SCORE = 0;
+
     private final MyStage background;
     private final GameObjectFactory gameObjectFactory;
     private final ScoreManager scoreManager;
@@ -25,21 +28,24 @@ public class GameInitializer {
     }
 
     private void setupBackground() {
-        BackgroundImage bg = new BackgroundImage("iKogsKW.png");
+        BackgroundImage bg = new BackgroundImage(BACKGROUND_IMAGE);
         background.add(bg);
     }
 
     private void setupGameObjects() {
-        Object[][] logData = GameObjectData.LOG_DATA;
-        gameObjectFactory.setupLogs(background, logData);
-
-        Object[][] turtleData = GameObjectData.TURTLE_DATA;
-        gameObjectFactory.setupTurtles(background, turtleData);
-
-        Object[][] obstacleData = GameObjectData.OBSTACLE_DATA;
-        gameObjectFactory.setupObstacles(background, obstacleData);
-
+        addGameObjects(GameObjectData.LOG_DATA, "logs");
+        addGameObjects(GameObjectData.TURTLE_DATA, "turtles");
+        addGameObjects(GameObjectData.OBSTACLE_DATA, "obstacles");
         setupEndPoints();
+    }
+
+    private void addGameObjects(Object[][] data, String type) {
+        switch (type) {
+            case "logs" -> gameObjectFactory.setupLogs(background, data);
+            case "turtles" -> gameObjectFactory.setupTurtles(background, data);
+            case "obstacles" -> gameObjectFactory.setupObstacles(background, data);
+            default -> throw new IllegalArgumentException("Unsupported game object type: " + type);
+        }
     }
 
     private void setupEndPoints() {
@@ -49,9 +55,8 @@ public class GameInitializer {
     }
 
     private void setupScoreDisplay() {
-        // Initialize the score display with a starting score of 0
         scoreManager.createScoreLabel(background);
-        scoreManager.updateScoreDisplay(background, 0);
+        scoreManager.updateScoreDisplay(background, INITIAL_SCORE);
     }
 
 }
