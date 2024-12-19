@@ -13,15 +13,15 @@ public class TimerManager {
         this.world = world;
     }
 
-    public void createAndStartTimer() {
+    public void initializeTimer() {
         if (timer == null) {
-            timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    world.act(now);
-                    actOnActors(now);
-                }
-            };
+            timer = createTimer();
+        }
+    }
+
+    public void startTimer() {
+        if (timer == null) {
+            throw new IllegalStateException("Timer not initialized. Call initializeTimer() first.");
         }
         timer.start();
     }
@@ -32,10 +32,23 @@ public class TimerManager {
         }
     }
 
-    private void actOnActors(long now) {
-        List<Actor> actors = world.getObjects(Actor.class);
-        for (Actor actor : actors) {
-            actor.act(now);
-        }
+    private AnimationTimer createTimer() {
+        return new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                try {
+                    world.act(now);
+                    processActors(now);
+                } catch (Exception e) {
+                    stopTimer();
+                }
+            }
+        };
     }
+
+    private void processActors(long now) {
+        List<Actor> actors = world.getObjects(Actor.class);
+        for (Actor actor : actors) actor.act(now);
+    }
+
 }
