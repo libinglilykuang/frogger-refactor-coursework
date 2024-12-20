@@ -2,21 +2,16 @@ package uk.ac.nott.cs.comp2013.froggergame.model.entities;
 
 import javafx.scene.image.Image;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageLoader;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.AnimationHandler;
 
 public abstract class AbstractTurtle extends Actor {
     private static final long ANIMATION_INTERVAL = 900_000_000;
     protected final Image[] animationFrames;
-    protected final int speed;
 
     public AbstractTurtle(int xpos, int ypos, int speed, int width, int height, String[] framePaths) {
+        super(xpos, ypos, speed, width, height);
         this.animationFrames = loadAnimationFrames(framePaths, width, height);
-        setX(xpos);
-        setY(ypos);
-        this.speed = speed;
-
-        setImage(animationFrames[0]);
         configureBounds(-75, 600, 600, -200);
     }
 

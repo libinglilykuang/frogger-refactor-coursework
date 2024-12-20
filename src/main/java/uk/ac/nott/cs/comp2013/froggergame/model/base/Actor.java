@@ -1,6 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.base;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
@@ -16,11 +17,18 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     private EventHandler<? super KeyEvent> keyPressedHandler;
     private EventHandler<? super KeyEvent> keyReleasedHandler;
 
+    protected double speed;
     private int screenRightBound;
     private int screenLeftBound;
     private int resetRightPosition;
     private int resetLeftPosition;
     private boolean hasMoved = false;
+
+    public Actor(int xpos, int ypos, double speed, int width, int height) {
+        setX(xpos);
+        setY(ypos);
+        this.speed = speed;
+    }
 
     public void move(double dx, double dy) {
         setX(getX() + dx);
@@ -70,11 +78,21 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     }
 
     public double getSpeed() {
-        return 0;
+        return speed;
     }
 
-    public <A extends Actor> List<A> getIntersectingObjects(Class<A> cls) {
-        return filterIntersectingObjects(getObjectsFromWorld(cls));
+    public <A> List<A> getIntersectingObjects(Class<A> cls) {
+        List<A> objectsFromWorld = getObjectsFromWorld(cls);
+        return objectsFromWorld.stream()
+                .filter(this::isIntersecting)
+                .toList();
+    }
+
+    private boolean isIntersecting(Object obj) {
+        if (obj instanceof Node) {
+            return this.getBoundsInParent().intersects(((Node) obj).getBoundsInParent());
+        }
+        return false;
     }
 
     public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
@@ -91,7 +109,7 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         return intersectingObjects;
     }
 
-    private <A extends Actor> List<A> getObjectsFromWorld(Class<A> cls) {
+    private <A> List<A> getObjectsFromWorld(Class<A> cls) {
         World world = getWorld();
         if (world == null) {
             throw new IllegalStateException("Actor is not attached to any world.");

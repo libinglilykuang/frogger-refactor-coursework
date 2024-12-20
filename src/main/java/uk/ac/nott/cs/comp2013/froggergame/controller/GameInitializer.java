@@ -5,7 +5,7 @@ import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectData;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.BackgroundImage;
-import uk.ac.nott.cs.comp2013.froggergame.model.entities.End;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 
 public class GameInitializer {
     private static final String BACKGROUND_IMAGE = "background.png";
@@ -29,7 +29,7 @@ public class GameInitializer {
 
     private void setupBackground() {
         BackgroundImage bg = new BackgroundImage(BACKGROUND_IMAGE);
-        background.add(bg);
+        background.getChildren().add(bg);
     }
 
     private void setupGameObjects() {
@@ -50,7 +50,7 @@ public class GameInitializer {
 
     private void setupEndPoints() {
         for (int[] position : GameObjectData.END_POINT_DATA) {
-            background.add(new End(position[0], position[1]));
+            background.getChildren().add(new End(position[0], position[1]));
         }
     }
 

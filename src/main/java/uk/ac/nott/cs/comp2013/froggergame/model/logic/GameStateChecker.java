@@ -7,7 +7,7 @@ public class GameStateChecker {
     public static void checkGameState(LevelManager levelManager, Animal animal, GameEventListener eventListener) {
         if (levelManager.checkVictoryCondition()) {
             if (eventListener != null) {
-                eventListener.onGameWon(levelManager.getPoints());
+                eventListener.onGameWon(animal.getStateManager().getPoints());
             }
         }
 

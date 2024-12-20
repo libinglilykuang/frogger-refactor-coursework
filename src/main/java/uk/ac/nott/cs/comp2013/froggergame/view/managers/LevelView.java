@@ -4,7 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
-import uk.ac.nott.cs.comp2013.froggergame.model.entities.End;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 
 public class LevelView {
     private final Pane background;
