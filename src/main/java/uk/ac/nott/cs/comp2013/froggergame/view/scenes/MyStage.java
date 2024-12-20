@@ -9,22 +9,6 @@ public class MyStage extends World {
 
 	public MyStage() {
 		musicManager = new MusicManager(MUSIC_FILE_PATH);
-//		mediaPlayer.play();
-//		mediaPlayer.setOnEndOfMedia(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				mediaPlayer.seek(Duration.ZERO);
-//				
-//			}
-//			
-//		});
-//		mediaPlayer.play();
-	}
-
-	@Override
-	public void act(long now) {
-
 	}
 
 	public void playMusic() {
@@ -33,6 +17,10 @@ public class MyStage extends World {
 
 	public void stopMusic() {
 		musicManager.stopMusic();
+	}
+
+	@Override
+	public void act(long now) {
 	}
 
 	@Override

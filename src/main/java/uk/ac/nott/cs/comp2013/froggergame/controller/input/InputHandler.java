@@ -3,7 +3,7 @@ package uk.ac.nott.cs.comp2013.froggergame.controller.input;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.StateManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
 
 public class InputHandler {
     private static final KeyCode JUMP_KEY = KeyCode.W;
@@ -11,34 +11,29 @@ public class InputHandler {
 
     public void processInput(Animal animal, KeyEvent event) {
         if (animal.getStateManager().isNoMove()) return;
-
-        KeyCode key = event.getCode();
-
         if (event.getEventType() == KeyEvent.KEY_PRESSED) {
-            handleKeyPressed(animal, key);
+            processKeyEvent(animal, event.getCode(), true);
         } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
-            handleKeyReleased(animal, key);
+            processKeyEvent(animal, event.getCode(), false);
         }
     }
 
-    private void handleKeyPressed(Animal animal, KeyCode key) {
+    private void processKeyEvent(Animal animal, KeyCode key, boolean isPressed) {
         StateManager stateManager = animal.getStateManager();
-        stateManager.move(animal.getMovementX(key), animal.getMovementY(key), key, true);
-    }
-
-    private void handleKeyReleased(Animal animal, KeyCode key) {
-        StateManager stateManager = animal.getStateManager();
-
-        if (key == JUMP_KEY && animal.getY() < animal.getHighestY()) {
+        if (!isPressed && isJumpKey(key, animal)) {
             updateHighestYAndScore(animal, stateManager);
         }
+        stateManager.moveAnimal(animal.getMovementX(key), animal.getMovementY(key), key, isPressed);
+    }
 
-        stateManager.move(animal.getMovementX(key), animal.getMovementY(key), key, false);
+    private boolean isJumpKey(KeyCode key, Animal animal) {
+        return key == JUMP_KEY && animal.getY() < animal.getHighestY();
     }
 
     private void updateHighestYAndScore(Animal animal, StateManager stateManager) {
         animal.setHighestY(animal.getY());
         stateManager.addPoints(POINTS_FOR_JUMP);
+        System.out.println("Points added: " + stateManager.getPoints());
     }
 
 }

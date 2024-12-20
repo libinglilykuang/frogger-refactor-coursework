@@ -4,7 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Sprite;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.LevelManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
 
 public class FroggerUI extends UI {
     private final LevelManager levelManager;
