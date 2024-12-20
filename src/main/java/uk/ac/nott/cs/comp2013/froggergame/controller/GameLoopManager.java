@@ -2,14 +2,15 @@ package uk.ac.nott.cs.comp2013.froggergame.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.GameStateChecker;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.LevelManager;
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.ScoreManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
 
 public class GameLoopManager {
     private static final double NANOSECONDS_TO_SECONDS = 1_000_000_000.0;
-
+    private final Score scoreView;
     private final LevelManager levelManager;
     private final ScoreManager scoreManager;
     private final Animal animal;
@@ -17,13 +18,19 @@ public class GameLoopManager {
     private final Pane background;
     private GameEventListener eventListener;
     private long lastUpdateTime = 0;
+    private final GameStateChecker gameStateChecker;
 
-    public GameLoopManager(LevelManager levelManager, ScoreManager scoreManager, Animal animal, Pane background, GameEventListener eventListener) {
+    public GameLoopManager(LevelManager levelManager, ScoreManager scoreManager, Animal animal, Pane background, GameStateChecker gameStateChecker, Score scoreView) {
         this.levelManager = levelManager;
         this.scoreManager = scoreManager;
         this.animal = animal;
         this.background = background;
-        this.eventListener = eventListener;
+        this.gameStateChecker = gameStateChecker;
+        this.scoreView = scoreView;
+    }
+
+    private void checkGameState() {
+        gameStateChecker.checkGameState(animal, eventListener);
     }
 
     public void setGameEventListener(GameEventListener listener) {
@@ -69,10 +76,12 @@ public class GameLoopManager {
     }
 
     private void updateScore() {
-        scoreManager.updateScoreIfChanged(background, animal);
+        if (animal.getStateManager().hasScoreChanged()) {
+            int currentPoints = animal.getStateManager().getPoints();
+            scoreView.updateScoreDisplay(background, currentPoints, scoreManager);
+            animal.getStateManager().resetScoreChangedFlag();
+        }
     }
 
-    private void checkGameState() {
-        GameStateChecker.checkGameState(levelManager, animal, eventListener);
-    }
+
 }

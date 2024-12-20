@@ -5,7 +5,7 @@ import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 
 public class Obstacle extends Actor {
 	public Obstacle(String imageLink, int xpos, int ypos, double speed, int width, int height) {
-		super(xpos, ypos, speed, width, height);
+		super(xpos, ypos, speed);
 		setImage(new Image(imageLink, width, height,true,true));
 		configureBounds(-50, 600, 600, -200);
 	}
