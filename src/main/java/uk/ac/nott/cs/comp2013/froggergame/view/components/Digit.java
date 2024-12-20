@@ -1,25 +1,25 @@
 package uk.ac.nott.cs.comp2013.froggergame.view.components;
 
 import javafx.scene.image.Image;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageLoader;
+import javafx.scene.image.ImageView;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 
 /**
  * Represents a digit image displayed in the game UI.
  */
-public class Digit extends Actor {
+public class Digit extends ImageView {
 
 	private final int dimension;
-	private Image digitImage;
 
 	public Digit(int value, int dimension, int x, int y) {
+		super();
 		if (value < 0 || value > 9) {
 			throw new IllegalArgumentException("Digit value must be between 0 and 9.");
 		}
 
 		this.dimension = dimension;
-		this.digitImage = loadDigitImage(value);
-		setImage(digitImage);
+		Image digitImage = loadDigitImage(value);
+        setImage(digitImage);
 		setFitWidth(dimension);
 		setFitHeight(dimension);
 		setX(x);
@@ -29,15 +29,5 @@ public class Digit extends Actor {
 	private Image loadDigitImage(int value) {
 		String resourcePath = String.format("%d.png", value);
 		return ImageLoader.loadImage(resourcePath, dimension, dimension);
-	}
-
-	@Override
-	public void act(long now) {
-		// No behavior for static digits; can be extended if needed.
-	}
-
-	@Override
-	public void act(double elapsedTime) {
-
 	}
 }

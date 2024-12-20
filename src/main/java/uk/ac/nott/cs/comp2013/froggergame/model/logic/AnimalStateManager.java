@@ -3,13 +3,15 @@ package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
-import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageManager;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageManager;
 
 public class AnimalStateManager implements StateManager{
     private final Animal animal;
     private boolean noMove = false;
     private int endCount = 0;
     private static final int GAME_WIN_END_COUNT = 5;
+    private static final String DEATH_TYPE = "cardeath";
+    private static final int DEATH_FRAMES = 4;
     private final ImageManager imageManager;
     private final ScoreManager scoreManager;
     private final DeathAnimationHandler deathAnimationHandler;
@@ -34,7 +36,7 @@ public class AnimalStateManager implements StateManager{
 
     public void update(long now) {
         if (noMove) {
-            noMove = deathAnimationHandler.animateDeath(now, animal, imageManager, "cardeath", 4);
+            noMove = deathAnimationHandler.animateDeath(now, animal, imageManager, DEATH_TYPE, DEATH_FRAMES);
         }
     }
 

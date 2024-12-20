@@ -1,6 +1,6 @@
 package uk.ac.nott.cs.comp2013.froggergame.view.scenes;
 
-import uk.ac.nott.cs.comp2013.froggergame.view.resources.MusicManager;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.MusicManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 
 public class MyStage extends World {

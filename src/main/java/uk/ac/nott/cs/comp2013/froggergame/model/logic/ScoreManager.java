@@ -20,6 +20,10 @@ public class ScoreManager {
     private final int digitSpacing=30;
     private final int SCORE_LABEL_X=15;
     private final int SCORE_LABEL_Y=30;
+    private static final String SCORE_LABEL_TEXT = "SCORE:";
+    private static final String SCORE_LABEL_FONT = "Arial";
+    private static final int SCORE_LABEL_FONT_SIZE = 30;
+
     private int points = 0;
     private boolean scoreChanged = false;
 
@@ -71,8 +75,8 @@ public class ScoreManager {
     }
 
     public void createScoreLabel(MyStage background) {
-        Text scoreLabel = new Text("SCORE:");
-        scoreLabel.setFont(Font.font("Arial", 30));
+        Text scoreLabel = new Text(SCORE_LABEL_TEXT);
+        scoreLabel.setFont(Font.font(SCORE_LABEL_FONT, SCORE_LABEL_FONT_SIZE));
         scoreLabel.setFill(Color.WHITE);
         scoreLabel.setX(SCORE_LABEL_X);
         scoreLabel.setY(SCORE_LABEL_Y);

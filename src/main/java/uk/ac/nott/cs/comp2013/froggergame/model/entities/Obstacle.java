@@ -4,19 +4,10 @@ import javafx.scene.image.Image;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 
 public class Obstacle extends Actor {
-	private final int speed;
-
-	public Obstacle(String imageLink, int xpos, int ypos, int speed, int width, int height) {
+	public Obstacle(String imageLink, int xpos, int ypos, double speed, int width, int height) {
+		super(xpos, ypos, speed, width, height);
 		setImage(new Image(imageLink, width, height,true,true));
-		setX(xpos);
-		setY(ypos);
-		this.speed = speed;
 		configureBounds(-50, 600, 600, -200);
-	}
-
-	@Override
-	public double getSpeed() {
-		return speed;
 	}
 
 	@Override
