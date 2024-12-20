@@ -4,16 +4,18 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Base class for all actors in the game.
  * Provides common functionalities like movement, collision detection, and input management.
  */
 public abstract class Actor extends ImageView implements KeyEventHandlerProvider {
+
     private EventHandler<? super KeyEvent> keyPressedHandler;
     private EventHandler<? super KeyEvent> keyReleasedHandler;
 
@@ -22,9 +24,8 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     private int screenLeftBound;
     private int resetRightPosition;
     private int resetLeftPosition;
-    private boolean hasMoved = false;
 
-    public Actor(int xpos, int ypos, double speed, int width, int height) {
+    public Actor(int xpos, int ypos, double speed) {
         setX(xpos);
         setY(ypos);
         this.speed = speed;
@@ -33,13 +34,6 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     public void move(double dx, double dy) {
         setX(getX() + dx);
         setY(getY() + dy);
-        hasMoved = true;
-    }
-
-    public boolean hasMoved() {
-        boolean result = hasMoved;
-        hasMoved = false;
-        return result;
     }
 
     public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
@@ -50,31 +44,29 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     }
 
     public void resetPositionIfOutOfBounds(double speed) {
-        if (isOutOfRightBound(speed)) {
-            resetToRightBound();
-        } else if (isOutOfLeftBound(speed)) {
-            resetToLeftBound();
+        if (isOutOfBounds(speed)) {
+            resetPosition(speed);
         }
     }
 
-    private boolean isOutOfRightBound(double speed) {
-        return getX() > screenRightBound && speed > 0;
+    private boolean isOutOfBounds(double speed) {
+        return (getX() > screenRightBound && speed > 0) || (getX() < screenLeftBound && speed < 0);
     }
 
-    private boolean isOutOfLeftBound(double speed) {
-        return getX() < screenLeftBound && speed < 0;
-    }
-
-    private void resetToRightBound() {
-        setX(resetRightPosition);
-    }
-
-    private void resetToLeftBound() {
-        setX(resetLeftPosition);
+    private void resetPosition(double speed) {
+        if (speed > 0) {
+            setX(resetRightPosition);
+        } else if (speed < 0) {
+            setX(resetLeftPosition);
+        }
     }
 
     public World getWorld() {
-        return (World) getParent();
+        World world = (World) getParent();
+        if (world == null) {
+            throw new IllegalStateException("Actor is not attached to any World instance.");
+        }
+        return world;
     }
 
     public double getSpeed() {
@@ -82,10 +74,9 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     }
 
     public <A> List<A> getIntersectingObjects(Class<A> cls) {
-        List<A> objectsFromWorld = getObjectsFromWorld(cls);
-        return objectsFromWorld.stream()
+        return getObjectsFromWorld(cls).stream()
                 .filter(this::isIntersecting)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private boolean isIntersecting(Object obj) {
@@ -99,22 +90,8 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         return getIntersectingObjects(cls).stream().findFirst().orElse(null);
     }
 
-    private <A extends Actor> List<A> filterIntersectingObjects(List<A> actors) {
-        List<A> intersectingObjects = new ArrayList<>();
-        for (A actor : actors) {
-            if (actor != this && actor.intersects(getBoundsInLocal())) {
-                intersectingObjects.add(actor);
-            }
-        }
-        return intersectingObjects;
-    }
-
     private <A> List<A> getObjectsFromWorld(Class<A> cls) {
-        World world = getWorld();
-        if (world == null) {
-            throw new IllegalStateException("Actor is not attached to any world.");
-        }
-        return world.getObjects(cls);
+        return getWorld().getObjects(cls);
     }
 
     public abstract void act(long now);
@@ -130,5 +107,4 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     public EventHandler<? super KeyEvent> getKeyReleasedHandler() {
         return keyReleasedHandler;
     }
-
 }

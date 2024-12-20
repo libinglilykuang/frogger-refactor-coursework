@@ -5,6 +5,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class MusicManager {
+
     private MediaPlayer mediaPlayer;
     private final String musicFilePath;
 
@@ -28,14 +29,12 @@ public class MusicManager {
         if (mediaPlayer != null) {
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop music
             mediaPlayer.play();
-            System.out.println("Music is now playing...");
         }
     }
 
     public void stopMusic() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
-            System.out.println("Music has been stopped.");
         }
     }
 }

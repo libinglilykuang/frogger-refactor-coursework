@@ -17,24 +17,28 @@ public class KeyEventManager {
 
     private void configureKeyEvents(ObservableValue<? extends Scene> observable, Scene oldScene, Scene newScene) {
         if (newScene != null) {
-            newScene.setOnKeyPressed(event -> handleKeyEvent(event, true));
-            newScene.setOnKeyReleased(event -> handleKeyEvent(event, false));
+            newScene.setOnKeyPressed(event -> processKeyEvent(event, true));
+            newScene.setOnKeyReleased(event -> processKeyEvent(event, false));
         }
     }
 
-    private void handleKeyEvent(KeyEvent event, boolean isKeyPressed) {
+    private void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
         List<KeyEventHandlerProvider> providers = world.getObjects(KeyEventHandlerProvider.class);
 
         for (KeyEventHandlerProvider provider : providers) {
-            try {
-                processKeyEventWithProvider(event, isKeyPressed, provider);
-            } catch (Exception e) {
-                logError(event, provider, e);
-            }
+            safelyHandleKeyEvent(event, isKeyPressed, provider);
         }
     }
 
-    private void processKeyEventWithProvider(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
+    private void safelyHandleKeyEvent(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
+        try {
+            handleKeyEventWithProvider(event, isKeyPressed, provider);
+        } catch (Exception e) {
+            logError(event, provider, e);
+        }
+    }
+
+    private void handleKeyEventWithProvider(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
         EventHandler<? super KeyEvent> handler = isKeyPressed
                 ? provider.getKeyPressedHandler()
                 : provider.getKeyReleasedHandler();
@@ -45,9 +49,7 @@ public class KeyEventManager {
     }
 
     private void logError(KeyEvent event, KeyEventHandlerProvider provider, Exception e) {
-        System.err.println("Error processing key event: " + event.getCode());
-        System.err.println("Provider: " + provider.getClass().getSimpleName());
+        System.err.printf("Error processing key event: %s in provider: %s%n", event.getCode(), provider.getClass().getSimpleName());
         e.printStackTrace();
     }
-
 }

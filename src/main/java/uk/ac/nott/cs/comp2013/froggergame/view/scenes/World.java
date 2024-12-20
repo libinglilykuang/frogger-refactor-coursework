@@ -3,20 +3,29 @@ package uk.ac.nott.cs.comp2013.froggergame.view.scenes;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
-import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventManager;
-import uk.ac.nott.cs.comp2013.froggergame.controller.TimerManager;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import java.util.List;
 
+import uk.ac.nott.cs.comp2013.froggergame.controller.*;
+import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
+import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventManager;
+import uk.ac.nott.cs.comp2013.froggergame.controller.processor.ActorProcessor;
+import uk.ac.nott.cs.comp2013.froggergame.controller.processor.DefaultActorProcessor;
+import uk.ac.nott.cs.comp2013.froggergame.controller.timer.DefaultTimerFactory;
+import uk.ac.nott.cs.comp2013.froggergame.controller.timer.TimerFactory;
+import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
+
 public abstract class World extends Pane implements KeyEventHandlerProvider {
+
     private final TimerManager timerManager;
     private final KeyEventManager keyEventManager;
     private EventHandler<? super KeyEvent> keyPressedHandler;
     private EventHandler<? super KeyEvent> keyReleasedHandler;
 
     public World() {
-        timerManager = new TimerManager(this);
+        ActorProcessor actorProcessor = new DefaultActorProcessor();
+        TimerFactory timerFactory = new DefaultTimerFactory();
+
+        timerManager = new TimerManager(this, actorProcessor, timerFactory);
         keyEventManager = new KeyEventManager(this);
     }
 
@@ -25,16 +34,8 @@ public abstract class World extends Pane implements KeyEventHandlerProvider {
         timerManager.startTimer();
     }
 
-    public void add(Actor actor) {
+    public void addActor(Actor actor) {
         getChildren().add(actor);
-    }
-
-    public void stop() {
-        timerManager.stopTimer();
-    }
-
-    public void removeActor(Actor actor) {
-        getChildren().remove(actor);
     }
 
     public <A> List<A> getObjects(Class<A> cls) {
@@ -42,13 +43,6 @@ public abstract class World extends Pane implements KeyEventHandlerProvider {
                 .filter(cls::isInstance)
                 .map(cls::cast)
                 .toList();
-    }
-    public void setKeyPressedHandler(EventHandler<? super KeyEvent> handler) {
-        this.keyPressedHandler = handler;
-    }
-
-    public void setKeyReleasedHandler(EventHandler<? super KeyEvent> handler) {
-        this.keyReleasedHandler = handler;
     }
 
     @Override
