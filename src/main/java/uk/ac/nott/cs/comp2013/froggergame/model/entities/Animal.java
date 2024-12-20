@@ -6,23 +6,23 @@ import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.*;
 
 public class Animal extends Actor {
-    private final StateManager stateManager;
-    private final CollisionHandler collisionHandler;
     private static final double INITIAL_HIGHEST_Y = 800.0;
-    private double highestY = INITIAL_HIGHEST_Y;
-
-    // Constants
     private static final double MOVEMENT_Y = 26.6667;
     private static final double MOVEMENT_X = 21.3333;
     private static final int IMAGE_SIZE = 40;
-
     private static final double DEFAULT_X = 300;
     private static final double DEFAULT_Y = 733 + MOVEMENT_Y;
+    private static final double DEFAULT_SPEED = 0.0;
 
+    private final StateManager stateManager;
+    private final CollisionHandler collisionHandler;
+
+    private double highestY = INITIAL_HIGHEST_Y;
     private boolean carDeath = false;
     private boolean waterDeath = false;
 
     public Animal(String imageLink) {
+        super((int) DEFAULT_X, (int) DEFAULT_Y, DEFAULT_SPEED, IMAGE_SIZE, IMAGE_SIZE);
         setImage(new Image(imageLink, IMAGE_SIZE, IMAGE_SIZE, true, true));
         this.stateManager = createDefaultStateManager();
         this.collisionHandler = createDefaultCollisionHandler();
@@ -84,7 +84,7 @@ public class Animal extends Actor {
         }
 
         Turtle turtle = getOneIntersectingObject(Turtle.class);
-         if (turtle != null) {
+        if (turtle != null) {
             setX(getX() + turtle.getSpeed());
         }
     }
@@ -141,3 +141,4 @@ public class Animal extends Actor {
         };
     }
 }
+

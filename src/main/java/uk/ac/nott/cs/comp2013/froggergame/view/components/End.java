@@ -1,10 +1,10 @@
-package uk.ac.nott.cs.comp2013.froggergame.model.entities;
+package uk.ac.nott.cs.comp2013.froggergame.view.components;
 
 import javafx.scene.image.Image;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageLoader;
+import javafx.scene.image.ImageView;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 
-public class End extends Actor {
+public class End extends ImageView {
 
 	private static final String DEFAULT_IMAGE_PATH = "End.png";
 	private static final String ACTIVATED_IMAGE_PATH = "FrogEnd.png";
@@ -18,19 +18,12 @@ public class End extends Actor {
 		this.defaultImage = ImageLoader.loadImage(DEFAULT_IMAGE_PATH, IMAGE_SIZE, IMAGE_SIZE);
 		this.activatedImage = ImageLoader.loadImage(ACTIVATED_IMAGE_PATH, IMAGE_SIZE, IMAGE_SIZE);
 		setImage(defaultImage);
+		this.isActivated = false;
+
+		setFitWidth(IMAGE_SIZE);
+		setFitHeight(IMAGE_SIZE);
 		setX(x);
 		setY(y);
-		this.isActivated = false;
-	}
-
-	@Override
-	public void act(long now) {
-		// TODO Auto-generated method st
-	}
-
-	@Override
-	public void act(double elapsedTime) {
-
 	}
 
 	public void setEnd() {

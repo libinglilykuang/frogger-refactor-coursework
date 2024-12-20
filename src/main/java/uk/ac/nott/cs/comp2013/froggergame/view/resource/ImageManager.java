@@ -1,4 +1,4 @@
-package uk.ac.nott.cs.comp2013.froggergame.view.resources;
+package uk.ac.nott.cs.comp2013.froggergame.view.resource;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;

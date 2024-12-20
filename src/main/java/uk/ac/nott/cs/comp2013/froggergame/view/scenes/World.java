@@ -26,17 +26,7 @@ public abstract class World extends Pane implements KeyEventHandlerProvider {
     }
 
     public void add(Actor actor) {
-        validateActor(actor);
         getChildren().add(actor);
-    }
-
-    private void validateActor(Actor actor) {
-        if (actor == null) {
-            throw new IllegalArgumentException("Cannot add null Actor.");
-        }
-        if (actor.getImage() == null) {
-            throw new IllegalArgumentException("Cannot add ImageView with null image to MyStage.");
-        }
     }
 
     public void stop() {

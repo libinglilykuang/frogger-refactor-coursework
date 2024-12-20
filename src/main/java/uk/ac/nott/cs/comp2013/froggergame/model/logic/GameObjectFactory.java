@@ -1,13 +1,18 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic;
 
-import uk.ac.nott.cs.comp2013.froggergame.view.resources.ImageLoader;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.*;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 public class GameObjectFactory {
+    private static final String FROG_IMAGE = "froggerUp.png";
+
     public Animal createAnimal() {
-        return new Animal(ImageLoader.loadImage("froggerUp.png", 40, 40).getUrl());
+        return new Animal(ImageLoader.loadImage(FROG_IMAGE, 40, 40).getUrl());
     }
 
     public LevelManager createLevelManager(Animal animal, LevelView levelView, int maxLevel) {
@@ -24,49 +29,54 @@ public class GameObjectFactory {
         return new Obstacle(imageUrl, xpos, ypos, speed, width, height);
     }
 
-    public void setupTurtles(MyStage background, Object[][] turtleData) {
-        for (Object[] turtle : turtleData) {
-            int xpos = (int) turtle[0];
-            int ypos = (int) turtle[1];
-            int speed = (int) turtle[2];
-            int width = (int) turtle[3];
-            int height = (int) turtle[4];
-            boolean isWet = (boolean) turtle[5];
-
-            if (isWet) {
-                background.add(new WetTurtle(xpos, ypos, speed, width, height));
-            } else {
-                background.add(new Turtle(xpos, ypos, speed, width, height));
-            }
+    public AbstractTurtle createTurtle(int xpos, int ypos, int speed, int width, int height, boolean isWet) {
+        if (isWet) {
+            return new WetTurtle(xpos, ypos, speed, width, height);
+        } else {
+            return new Turtle(xpos, ypos, speed, width, height);
         }
     }
 
-    public void setupObstacles(MyStage background, Object[][] obstacleData) {
-        for (Object[] obstacle : obstacleData) {
-            String imageName = (String) obstacle[0];
-            int width = (int) obstacle[1];
-            int height = (int) obstacle[2];
-            int xpos = (int) obstacle[3];
-            int ypos = (int) obstacle[4];
-            int speed = (int) obstacle[5];
-
-            Obstacle obstacleObject = createObstacle(imageName, width, height, xpos, ypos, speed);
-            background.add(obstacleObject);
+    public <T> void setupGameObjects(MyStage background, Object[][] data, Function<Object[], T> mapper, BiConsumer<MyStage, T> setupAction) {
+        for (Object[] rawData : data) {
+            T gameObject = mapper.apply(rawData);
+            setupAction.accept(background, gameObject);
         }
     }
 
     public void setupLogs(MyStage background, Object[][] logData) {
-        for (Object[] log : logData) {
-            String imageName = (String) log[0];
-            int width = (int) log[1];
-            int height = (int) log[2];
-            int xpos = (int) log[3];
-            int ypos = (int) log[4];
-            int yLevel = (int) log[5];
-            double speed = (double) log[6];
+        setupGameObjects(
+                background,
+                logData,
+                rawData -> createLog(
+                        (String) rawData[0], (int) rawData[1], (int) rawData[2], (int) rawData[3],
+                        (int) rawData[4], (int) rawData[5], (double) rawData[6]
+                ),
+                MyStage::add
+        );
+    }
 
-            Log logObject = createLog(imageName, width, height, xpos, ypos, yLevel, speed);
-            background.add(logObject);
-        }
+    public void setupObstacles(MyStage background, Object[][] obstacleData) {
+        setupGameObjects(
+                background,
+                obstacleData,
+                rawData -> createObstacle(
+                        (String) rawData[0], (int) rawData[1], (int) rawData[2], (int) rawData[3],
+                        (int) rawData[4], (int) rawData[5]
+                ),
+                MyStage::add
+        );
+    }
+
+    public void setupTurtles(MyStage background, Object[][] turtleData) {
+        setupGameObjects(
+                background,
+                turtleData,
+                rawData -> createTurtle(
+                        (int) rawData[0], (int) rawData[1], (int) rawData[2], (int) rawData[3],
+                        (int) rawData[4], (boolean) rawData[5]
+                ),
+                MyStage::add
+        );
     }
 }

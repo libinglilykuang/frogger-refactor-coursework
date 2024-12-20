@@ -4,13 +4,10 @@ import javafx.scene.image.Image;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 
 public class Log extends Actor {
-	private final double speed;
 
 	public Log(String imageLink, int size, int xpos, int ypos, double speed) {
+		super( xpos, ypos, speed, size, size);
 		setImage(new Image(imageLink, size, size, true, true));
-		setX(xpos);
-		setY(ypos);
-		this.speed = speed;
 		configureBounds(-300, 600, 700, -180);
 	}
 
@@ -19,17 +16,14 @@ public class Log extends Actor {
 	}
 
 	@Override
-	public double getSpeed() {
-		return speed;
-	}
-
-	@Override
 	public void act(long now) {
 		move(speed, 0);
 		resetPositionIfOutOfBounds(speed);
 	}
 
+
 	@Override
 	public void act(double elapsedTime) {
+
 	}
 }
