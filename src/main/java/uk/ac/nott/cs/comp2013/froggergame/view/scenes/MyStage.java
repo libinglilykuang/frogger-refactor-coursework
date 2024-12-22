@@ -1,34 +1,41 @@
 package uk.ac.nott.cs.comp2013.froggergame.view.scenes;
 
-import uk.ac.nott.cs.comp2013.froggergame.view.resource.MusicManager;
+import java.util.Iterator;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
+import uk.ac.nott.cs.comp2013.froggergame.view.resource.MusicManager;
 
 public class MyStage extends World {
-	private static final String MUSIC_FILE_PATH = "/Snake_Charmer.mp3";
-	private final MusicManager musicManager;
+	private final MusicManager musicManager = new MusicManager("/Snake_Charmer.mp3");
+	private final Level level = new Level(this);
 
 	public MyStage() {
-		musicManager = new MusicManager(MUSIC_FILE_PATH);
+		this.initializeGame();
+	}
+
+	private void initializeGame() {
+		this.level.updateLevelDisplay(1);
+		this.level.resetLevelLayout(5, 100, 50, 120);
 	}
 
 	public void playMusic() {
-		musicManager.playMusic();
+		this.musicManager.playMusic();
 	}
 
 	public void stopMusic() {
-		musicManager.stopMusic();
+		this.musicManager.stopMusic();
 	}
 
-	@Override
 	public void act(long now) {
 	}
 
-	@Override
 	public void act(double elapsedTime) {
-		// Stage logic can be added here
-		for (Actor actor : getObjects(Actor.class)) {
+		Iterator var3 = this.getObjects(Actor.class).iterator();
+
+		while(var3.hasNext()) {
+			Actor actor = (Actor)var3.next();
 			actor.act(elapsedTime);
 		}
-	}
 
+	}
 }

@@ -17,7 +17,7 @@ public class Animal extends Actor {
     private static final double DEFAULT_X = 300;
     private static final double DEFAULT_Y = 733 + MOVEMENT_Y;
     private static final double DEFAULT_SPEED = 0.0;
-    private static final double WATER_BOUNDARY_Y = 413.0;
+    private Actor currentPlatform;
 
     private final StateManager stateManager;
     private final CollisionHandler collisionHandler;
@@ -41,12 +41,32 @@ public class Animal extends Actor {
         return new AnimalCollisionHandler(this, stateManager);
     }
 
+    public boolean isOnTurtleOrLog() {
+        return currentPlatform instanceof Turtle || currentPlatform instanceof Log;
+    }
+
     public void resetPosition() {
         setX(DEFAULT_X);
         setY(DEFAULT_Y);
         carDeath = false;
         waterDeath = false;
         stateManager.reset();
+    }
+
+    public void setCurrentPlatform(Actor platform) {
+        if (this.currentPlatform != platform) {
+            this.currentPlatform = platform;
+        }
+    }
+
+    public void clearCurrentPlatform() {
+        if (this.currentPlatform != null) {
+            this.currentPlatform = null;
+        }
+    }
+
+    public boolean isOnPlatform() {
+        return currentPlatform != null;
     }
 
     public void setCarDeath(boolean carDeath) {
@@ -85,32 +105,15 @@ public class Animal extends Actor {
         };
     }
 
-    private boolean isInWaterWithoutPlatform() {
-        return !isOnLog() && !isOnTurtle() && getY() < WATER_BOUNDARY_Y ;
-    }
-
-    private boolean isOnLog() {
-        return getOneIntersectingObject(Log.class) != null;
-    }
-
-    private boolean isOnTurtle() {
-        return getOneIntersectingObject(Turtle.class) != null;
-    }
-
     public boolean isDead() {
         return carDeath || waterDeath;
     }
 
     private void applyPlatformMovement() {
-        if (isOnLog()) {
-            moveWithPlatform(getOneIntersectingObject(Log.class).getSpeed());
-        } else if (isOnTurtle()) {
-            moveWithPlatform(getOneIntersectingObject(Turtle.class).getSpeed());
+        if (isOnPlatform() && currentPlatform != null) {
+            double platformSpeed = currentPlatform.getSpeed();
+            setX(getX() + platformSpeed);
         }
-    }
-
-    private void moveWithPlatform(double speed) {
-        setX(getX() + speed);
     }
 
     private void handleDeathAnimation(long now, String deathType, int frameCount) {
@@ -125,6 +128,10 @@ public class Animal extends Actor {
         }
     }
 
+    private boolean isInWaterWithoutPlatform() {
+        return !isOnPlatform() && getY() < 413.0;
+    }
+
     @Override
     public void act(long now) {
         if (isDead()) {
@@ -137,11 +144,5 @@ public class Animal extends Actor {
 
     @Override
     public void act(double elapsedTime) {
-        if (isDead()) {
-            handleDeathAnimation(System.nanoTime(), carDeath ? "cardeath" : "waterdeath", carDeath ? 4 : 5);
-        } else {
-            updateState();
-        }
-        stateManager.update(elapsedTime);
     }
 }

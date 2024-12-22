@@ -2,9 +2,11 @@ package uk.ac.nott.cs.comp2013.froggergame.view.components;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import uk.ac.nott.cs.comp2013.froggergame.view.managers.GameComponent;
 import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 
-public class End extends ImageView {
+public class End extends ImageView implements GameComponent {
 
 	private static final String DEFAULT_IMAGE_PATH = "End.png";
 	private static final String ACTIVATED_IMAGE_PATH = "FrogEnd.png";
@@ -33,5 +35,10 @@ public class End extends ImageView {
 
 	public boolean isActivated() {
 		return isActivated;
+	}
+
+	@Override
+	public void render(Pane pane) {
+		pane.getChildren().add(this);
 	}
 }

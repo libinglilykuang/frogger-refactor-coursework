@@ -2,8 +2,8 @@ package uk.ac.nott.cs.comp2013.froggergame.model.logic.level;
 
 import uk.ac.nott.cs.comp2013.froggergame.controller.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
-import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 
 public class LevelManager {
     private static final int DEFAULT_ANIMAL_START_X = 300;
@@ -15,64 +15,71 @@ public class LevelManager {
     private int reachedEnds = 0;
     private final int totalEnds;
     private final Animal animal;
-    private final LevelView levelView;
+    private final Level levelView;
     private GameEventListener eventListener;
+    private boolean levelChanged = false;
 
-    public LevelManager(Animal animal, LevelView levelView, int totalEnds) {
+    public LevelManager(Animal animal, Level levelView, int totalEnds) {
+        if (animal == null || levelView == null) {
+            throw new IllegalArgumentException("Animal and Level view cannot be null");
+        }
         this.animal = animal;
         this.levelView = levelView;
         this.totalEnds = totalEnds;
+        this.levelView.updateLevelDisplay(this.level);
+    }
+
+    public boolean hasLevelChanged() {
+        return this.levelChanged;
+    }
+
+    public void resetLevelChangedFlag() {
+        this.levelChanged = false;
     }
 
     public void setLevel(int level) {
         this.level = level;
-        levelView.updateLevelLabel(level);
+        this.levelChanged = true;
+    }
+
+    public int getCurrentLevel() {
+        return this.level;
     }
 
     public void increaseLevel() {
-        level++;
-        levelView.updateLevelLabel(level);
-        resetLevel();
+        this.level++;
+        this.levelView.updateLevelDisplay(this.level);
+        this.resetLevel();
     }
 
     public void onTargetReached() {
-        reachedEnds++;
-        if (reachedEnds == totalEnds) {
-            increaseLevel();
+        this.reachedEnds++;
+        if (this.reachedEnds == this.totalEnds) {
+            this.increaseLevel();
         }
+    }
+    public Level getLevelView() {
+        return this.levelView;
     }
 
     private void resetLevel() {
-        reachedEnds = 0;
-
-        LevelConfig config = getLevelConfig(level);
-        levelView.resetLevelLayout(totalEnds, config.getStartX(), config.getY(), config.getGap());
-        resetAnimalPosition();
+        this.reachedEnds = 0;
+        LevelConfig config = this.getLevelConfig(this.level);
+        this.levelView.resetLevelLayout(this.totalEnds, config.getStartX(), config.getY(), config.getGap());
+        this.resetAnimalPosition();
     }
 
     public boolean isLevelReset() {
-        return levelReset;
+        return this.levelReset;
     }
 
     private void resetAnimalPosition() {
-        animal.setX(DEFAULT_ANIMAL_START_X);
-        animal.setY(DEFAULT_ANIMAL_START_Y);
+        this.animal.setX(DEFAULT_ANIMAL_START_X);
+        this.animal.setY(DEFAULT_ANIMAL_START_Y);
     }
 
     private LevelConfig getLevelConfig(int currentLevel) {
         return DEFAULT_LEVEL_CONFIG;
-    }
-
-
-
-    public boolean checkVictoryCondition() {
-        if (animal.getStateManager().isVictory()) {
-            if (eventListener != null) {
-                eventListener.onGameWon(animal.getStateManager().getPoints());
-            }
-            return true;
-        }
-        return false;
     }
 
 }

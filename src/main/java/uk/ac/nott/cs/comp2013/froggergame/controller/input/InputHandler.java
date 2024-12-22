@@ -33,7 +33,6 @@ public class InputHandler {
     private void updateHighestYAndScore(Animal animal, StateManager stateManager) {
         animal.setHighestY(animal.getY());
         stateManager.addPoints(POINTS_FOR_JUMP);
-        System.out.println("Points added: " + stateManager.getPoints());
     }
 
 }

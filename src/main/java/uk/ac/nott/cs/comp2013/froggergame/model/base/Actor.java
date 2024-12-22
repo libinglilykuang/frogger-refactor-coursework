@@ -1,41 +1,61 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.base;
 
+import java.io.PrintStream;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
- * Base class for all actors in the game.
- * Provides common functionalities like movement, collision detection, and input management.
+ * Represents an abstract actor in the game, providing base functionality
+ * for movement, collision detection, and interaction with the game world.
  */
 public abstract class Actor extends ImageView implements KeyEventHandlerProvider {
-
     private EventHandler<? super KeyEvent> keyPressedHandler;
     private EventHandler<? super KeyEvent> keyReleasedHandler;
-
-    protected double speed;
+    protected double speed; // Speed of the actor
     private int screenRightBound;
     private int screenLeftBound;
     private int resetRightPosition;
     private int resetLeftPosition;
 
+    /**
+     * Constructor to initialize the actor's position and speed.
+     *
+     * @param xpos  Initial x position
+     * @param ypos  Initial y position
+     * @param speed Speed of the actor
+     */
     public Actor(int xpos, int ypos, double speed) {
-        setX(xpos);
-        setY(ypos);
+        this.setX(xpos);
+        this.setY(ypos);
         this.speed = speed;
     }
 
+    /**
+     * Moves the actor by the given x and y increments.
+     *
+     * @param dx Change in x position
+     * @param dy Change in y position
+     */
     public void move(double dx, double dy) {
-        setX(getX() + dx);
-        setY(getY() + dy);
+        this.setX(this.getX() + dx);
+        this.setY(Math.max(0.0, this.getY() + dy));
     }
 
+    /**
+     * Configures the screen boundaries and reset positions for the actor.
+     *
+     * @param screenLeftBound  Left boundary
+     * @param screenRightBound Right boundary
+     * @param resetLeftPosition Position to reset if out of bounds on the left
+     * @param resetRightPosition Position to reset if out of bounds on the right
+     */
     public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
         this.screenLeftBound = screenLeftBound;
         this.screenRightBound = screenRightBound;
@@ -43,68 +63,134 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         this.resetRightPosition = resetRightPosition;
     }
 
+    /**
+     * Resets the actor's position if it moves out of the configured boundaries.
+     *
+     * @param speed The speed of the actor
+     */
     public void resetPositionIfOutOfBounds(double speed) {
-        if (isOutOfBounds(speed)) {
-            resetPosition(speed);
+        if (this.isOutOfBounds(speed)) {
+            this.resetPosition(speed);
         }
     }
 
+    /**
+     * Checks if the actor is out of bounds.
+     *
+     * @param speed The speed of the actor
+     * @return True if out of bounds, otherwise false
+     */
     private boolean isOutOfBounds(double speed) {
-        return (getX() > screenRightBound && speed > 0) || (getX() < screenLeftBound && speed < 0);
+        return (this.getX() > (double) this.screenRightBound && speed > 0.0) ||
+                (this.getX() < (double) this.screenLeftBound && speed < 0.0);
     }
 
+    /**
+     * Resets the actor's position based on the direction of movement.
+     *
+     * @param speed The speed of the actor
+     */
     private void resetPosition(double speed) {
-        if (speed > 0) {
-            setX(resetRightPosition);
-        } else if (speed < 0) {
-            setX(resetLeftPosition);
+        if (speed > 0.0) {
+            this.setX(this.resetRightPosition);
+        } else if (speed < 0.0) {
+            this.setX(this.resetLeftPosition);
         }
     }
 
+    /**
+     * Gets the game world the actor belongs to.
+     *
+     * @return The game world
+     */
     public World getWorld() {
-        World world = (World) getParent();
+        World world = (World) this.getParent();
         if (world == null) {
             throw new IllegalStateException("Actor is not attached to any World instance.");
         }
         return world;
     }
 
+    /**
+     * Gets the actor's speed.
+     *
+     * @return The speed
+     */
     public double getSpeed() {
-        return speed;
+        return this.speed;
     }
 
+    /**
+     * Gets a list of objects intersecting with this actor.
+     *
+     * @param cls The class of the objects to check
+     * @param <A> The type of the objects
+     * @return A list of intersecting objects
+     */
     public <A> List<A> getIntersectingObjects(Class<A> cls) {
-        return getObjectsFromWorld(cls).stream()
+        return this.getObjectsFromWorld(cls).stream()
                 .filter(this::isIntersecting)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Checks if this actor is intersecting with a given object.
+     *
+     * @param obj The object to check
+     * @return True if intersecting, otherwise false
+     */
     private boolean isIntersecting(Object obj) {
         if (obj instanceof Node) {
-            return this.getBoundsInParent().intersects(((Node) obj).getBoundsInParent());
+            Bounds actorBounds = this.localToScene(this.getBoundsInLocal());
+            Bounds objectBounds = ((Node) obj).localToScene(((Node) obj).getBoundsInLocal());
+            return actorBounds.intersects(objectBounds);
         }
         return false;
     }
 
+    /**
+     * Gets one intersecting object of the specified class.
+     *
+     * @param cls The class of the object to check
+     * @param <A> The type of the object
+     * @return An intersecting object or null if none
+     */
     public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
-        return getIntersectingObjects(cls).stream().findFirst().orElse(null);
+        return this.getIntersectingObjects(cls).stream()
+                .findFirst()
+                .orElse(null);
     }
 
+    /**
+     * Gets objects of the specified class from the game world.
+     *
+     * @param cls The class of the objects to get
+     * @param <A> The type of the objects
+     * @return A list of objects
+     */
     private <A> List<A> getObjectsFromWorld(Class<A> cls) {
-        return getWorld().getObjects(cls);
+        return this.getWorld().getObjects(cls);
     }
 
+    /**
+     * Abstract method to define behavior per game tick.
+     *
+     * @param now The current time in nanoseconds
+     */
     public abstract void act(long now);
 
+    /**
+     * Abstract method to define behavior per elapsed time.
+     *
+     * @param elapsedTime The time elapsed since the last tick
+     */
     public abstract void act(double elapsedTime);
 
-    @Override
     public EventHandler<? super KeyEvent> getKeyPressedHandler() {
-        return keyPressedHandler;
+        return this.keyPressedHandler;
     }
 
-    @Override
     public EventHandler<? super KeyEvent> getKeyReleasedHandler() {
-        return keyReleasedHandler;
+        return this.keyReleasedHandler;
     }
 }

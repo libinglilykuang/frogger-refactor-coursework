@@ -1,7 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
-import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelView;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.AlertManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.factory.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
@@ -11,6 +11,7 @@ import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
 
 public class GameController implements GameEventListener {
+
     private final MyStage background;
     private final GameInitializer gameInitializer;
     private Animal animal;
@@ -22,13 +23,13 @@ public class GameController implements GameEventListener {
     private final Score scoreView;
 
     private static final int DEFAULT_INITIAL_LEVEL = 1;
-    private static final int MAX_LIVES = 5;
 
-    public GameController(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory, GameStateChecker gameStateChecker, Score scoreView) {
+    public GameController(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory,
+                          GameStateChecker gameStateChecker, Score scoreView) {
         this.background = background;
         this.scoreManager = scoreManager;
         this.gameObjectFactory = gameObjectFactory;
-        this.gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory, scoreView); // 传入 ScoreView
+        this.gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory, scoreView);
         this.gameStateChecker = gameStateChecker;
         this.scoreView = scoreView;
     }
@@ -47,13 +48,14 @@ public class GameController implements GameEventListener {
     }
 
     private void initializeLevelManager() {
-        LevelView levelView = new LevelView(background);
-        levelManager = gameObjectFactory.createLevelManager(animal, levelView, MAX_LIVES);
+        Level levelView = new Level(background);
+        levelManager = new LevelManager(animal, levelView, 5);
         levelManager.setLevel(DEFAULT_INITIAL_LEVEL);
+        levelView.updateLevelDisplay(DEFAULT_INITIAL_LEVEL);
     }
 
     private void initializeGameLoopManager() {
-        gameLoopManager = new GameLoopManager(levelManager, scoreManager, animal, background, gameStateChecker, scoreView); // 添加 scoreView 参数
+        gameLoopManager = new GameLoopManager(levelManager, scoreManager, animal, background, gameStateChecker, scoreView);
         gameLoopManager.setGameEventListener(this);
     }
 
@@ -85,12 +87,14 @@ public class GameController implements GameEventListener {
     public void update(long now) {
         background.act(now);
         updateScoreIfChanged();
+        updateLevelIfChanged();
     }
 
     @Override
     public void update(double elapsedTime) {
         background.act(elapsedTime);
         updateScoreIfChanged();
+        updateLevelIfChanged();
     }
 
     private void updateScoreIfChanged() {
@@ -98,6 +102,14 @@ public class GameController implements GameEventListener {
             int currentPoints = animal.getStateManager().getPoints();
             scoreView.updateScoreDisplay(background, currentPoints, scoreManager);
             animal.getStateManager().resetScoreChangedFlag();
+        }
+    }
+
+    private void updateLevelIfChanged() {
+        if (levelManager.hasLevelChanged()) {
+            int currentLevel = levelManager.getCurrentLevel();
+            levelManager.getLevelView().updateLevelDisplay(currentLevel);
+            levelManager.resetLevelChangedFlag();
         }
     }
 
