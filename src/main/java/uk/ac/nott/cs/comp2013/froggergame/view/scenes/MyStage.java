@@ -2,6 +2,7 @@ package uk.ac.nott.cs.comp2013.froggergame.view.scenes;
 
 import java.util.Iterator;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
+import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.resource.MusicManager;
 
@@ -15,7 +16,8 @@ public class MyStage extends World {
 
 	private void initializeGame() {
 		this.level.updateLevelDisplay(1);
-		this.level.resetLevelLayout(5, 100, 50, 120);
+		LevelConfig levelConfig = new LevelConfig(5, 100, 50, 120);
+		this.level.resetLevelLayout(levelConfig);
 	}
 
 	public void playMusic() {
@@ -30,12 +32,9 @@ public class MyStage extends World {
 	}
 
 	public void act(double elapsedTime) {
-		Iterator var3 = this.getObjects(Actor.class).iterator();
-
-		while(var3.hasNext()) {
-			Actor actor = (Actor)var3.next();
-			actor.act(elapsedTime);
-		}
+        for (Actor actor : this.getObjects(Actor.class)) {
+            actor.act(elapsedTime);
+        }
 
 	}
 }

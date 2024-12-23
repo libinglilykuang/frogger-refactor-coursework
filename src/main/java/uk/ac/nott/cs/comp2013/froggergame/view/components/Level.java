@@ -4,6 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
+import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelComposite;
 
 public class Level {
@@ -31,10 +32,10 @@ public class Level {
         background.getChildren().add(levelLabel);
     }
 
-    public void resetLevelLayout(int totalEnds, int startX, int y, int gap) {
+    public void resetLevelLayout(LevelConfig config) {
         LevelComposite levelComposite = new LevelComposite();
-        for (int i = 0; i < totalEnds; i++) {
-            levelComposite.addComponent(new End(startX + i * gap, y));
+        for (int i = 0; i < config.getTotalEnds(); i++) {
+            levelComposite.addComponent(new End(config.getStartX() + i * config.getGap(), config.getY()));
         }
         levelComposite.render(background);
     }

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uk.ac.nott.cs.comp2013.froggergame.controller.*;
+import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.factory.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
@@ -13,7 +14,6 @@ import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
 public class Main extends Application {
-
 	private static final int WINDOW_WIDTH = 600;
 	private static final int WINDOW_HEIGHT = 800;
 
@@ -32,9 +32,7 @@ public class Main extends Application {
 	}
 
 	private void initializeStage(Stage primaryStage) {
-		background = createBackground();
-		Scene scene = createScene();
-
+		Scene scene = initializeScene();
 		gameController = initializeGameController();
 		configureInputHandling(scene);
 
@@ -43,30 +41,20 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	private MyStage createBackground() {
-		return new MyStage();
-	}
-
-	private Scene createScene() {
+	private Scene initializeScene() {
+		background = new MyStage();
 		return new Scene(background, WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 
 	private GameController initializeGameController() {
-		ScoreManager scoreManager = new ScoreManager();
-		Score scoreView = new Score();
-		GameObjectFactory gameObjectFactory = new GameObjectFactory();
-		GameStateChecker gameStateChecker = new GameStateChecker();
-
-		GameController controller = new GameController(background, scoreManager, gameObjectFactory, gameStateChecker, scoreView); // 传入 ScoreView
-		controller.initializeGame();
-		return controller;
+		return GameControllerFactory.createGameController(background);
 	}
 
 	private void configureInputHandling(Scene scene) {
-		inputHandler = new InputHandler();
 		Animal animal = gameController.getAnimal();
-		scene.setOnKeyPressed(event -> inputHandler.processInput(animal, event));
-		scene.setOnKeyReleased(event -> inputHandler.processInput(animal, event));
+		inputHandler = new InputHandler(animal);
+		scene.setOnKeyPressed(event -> inputHandler.handleKeyPressed(event));
+		scene.setOnKeyReleased(event -> inputHandler.handleKeyReleased(event));
 	}
 
 	private void startGame() {

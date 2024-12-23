@@ -1,6 +1,5 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.base;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.event.EventHandler;
@@ -9,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.BoundaryManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 
 /**
@@ -19,10 +19,7 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     private EventHandler<? super KeyEvent> keyPressedHandler;
     private EventHandler<? super KeyEvent> keyReleasedHandler;
     protected double speed; // Speed of the actor
-    private int screenRightBound;
-    private int screenLeftBound;
-    private int resetRightPosition;
-    private int resetLeftPosition;
+    private BoundaryManager boundaryManager;
 
     /**
      * Constructor to initialize the actor's position and speed.
@@ -48,53 +45,13 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         this.setY(Math.max(0.0, this.getY() + dy));
     }
 
-    /**
-     * Configures the screen boundaries and reset positions for the actor.
-     *
-     * @param screenLeftBound  Left boundary
-     * @param screenRightBound Right boundary
-     * @param resetLeftPosition Position to reset if out of bounds on the left
-     * @param resetRightPosition Position to reset if out of bounds on the right
-     */
     public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
-        this.screenLeftBound = screenLeftBound;
-        this.screenRightBound = screenRightBound;
-        this.resetLeftPosition = resetLeftPosition;
-        this.resetRightPosition = resetRightPosition;
+        this.boundaryManager = new BoundaryManager(screenLeftBound, screenRightBound, resetLeftPosition, resetRightPosition);
     }
 
-    /**
-     * Resets the actor's position if it moves out of the configured boundaries.
-     *
-     * @param speed The speed of the actor
-     */
     public void resetPositionIfOutOfBounds(double speed) {
-        if (this.isOutOfBounds(speed)) {
-            this.resetPosition(speed);
-        }
-    }
-
-    /**
-     * Checks if the actor is out of bounds.
-     *
-     * @param speed The speed of the actor
-     * @return True if out of bounds, otherwise false
-     */
-    private boolean isOutOfBounds(double speed) {
-        return (this.getX() > (double) this.screenRightBound && speed > 0.0) ||
-                (this.getX() < (double) this.screenLeftBound && speed < 0.0);
-    }
-
-    /**
-     * Resets the actor's position based on the direction of movement.
-     *
-     * @param speed The speed of the actor
-     */
-    private void resetPosition(double speed) {
-        if (speed > 0.0) {
-            this.setX(this.resetRightPosition);
-        } else if (speed < 0.0) {
-            this.setX(this.resetLeftPosition);
+        if (boundaryManager != null && boundaryManager.isOutOfBounds(this.getX(), speed)) {
+            this.setX(boundaryManager.resetPositionBasedOnSpeed(speed));
         }
     }
 
@@ -149,19 +106,6 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     }
 
     /**
-     * Gets one intersecting object of the specified class.
-     *
-     * @param cls The class of the object to check
-     * @param <A> The type of the object
-     * @return An intersecting object or null if none
-     */
-    public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
-        return this.getIntersectingObjects(cls).stream()
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
      * Gets objects of the specified class from the game world.
      *
      * @param cls The class of the objects to get
@@ -194,3 +138,4 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         return this.keyReleasedHandler;
     }
 }
+

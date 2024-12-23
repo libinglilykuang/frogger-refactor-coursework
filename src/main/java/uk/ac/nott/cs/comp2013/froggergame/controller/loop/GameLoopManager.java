@@ -1,7 +1,8 @@
-package uk.ac.nott.cs.comp2013.froggergame.controller;
+package uk.ac.nott.cs.comp2013.froggergame.controller.loop;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
+import uk.ac.nott.cs.comp2013.froggergame.controller.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;

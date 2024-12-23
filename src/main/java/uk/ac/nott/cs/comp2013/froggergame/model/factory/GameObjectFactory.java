@@ -1,9 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.factory;
 
-import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.*;
-import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
 import java.util.function.BiConsumer;
@@ -14,10 +12,6 @@ public class GameObjectFactory {
 
     public Animal createAnimal() {
         return new Animal(ImageLoader.loadImage(FROG_IMAGE, 40, 40).getUrl());
-    }
-
-    public LevelManager createLevelManager(Animal animal, Level levelView, int maxLevel) {
-        return new LevelManager(animal, levelView, maxLevel);
     }
 
     public Log createLog(String imageName, int width, int height, int xpos, int ypos, int yLevel, double speed) {
