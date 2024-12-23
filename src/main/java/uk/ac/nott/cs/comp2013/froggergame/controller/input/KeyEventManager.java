@@ -5,10 +5,12 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
+import java.util.ArrayList;
 import java.util.List;
 
 public class KeyEventManager {
     private final World world;
+    private final List<KeyEventHandlerProvider> providers = new ArrayList<>();
 
     public KeyEventManager(World world) {
         this.world = world;
@@ -23,33 +25,18 @@ public class KeyEventManager {
     }
 
     private void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
-        List<KeyEventHandlerProvider> providers = world.getObjects(KeyEventHandlerProvider.class);
-
         for (KeyEventHandlerProvider provider : providers) {
-            safelyHandleKeyEvent(event, isKeyPressed, provider);
+            dispatchKeyEvent(event, isKeyPressed, provider);
         }
     }
 
-    private void safelyHandleKeyEvent(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
-        try {
-            handleKeyEventWithProvider(event, isKeyPressed, provider);
-        } catch (Exception e) {
-            logError(event, provider, e);
-        }
-    }
-
-    private void handleKeyEventWithProvider(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
+    private void dispatchKeyEvent(KeyEvent event, boolean isKeyPressed, KeyEventHandlerProvider provider) {
         EventHandler<? super KeyEvent> handler = isKeyPressed
                 ? provider.getKeyPressedHandler()
                 : provider.getKeyReleasedHandler();
-
         if (handler != null) {
             handler.handle(event);
         }
     }
 
-    private void logError(KeyEvent event, KeyEventHandlerProvider provider, Exception e) {
-        System.err.printf("Error processing key event: %s in provider: %s%n", event.getCode(), provider.getClass().getSimpleName());
-        e.printStackTrace();
-    }
 }

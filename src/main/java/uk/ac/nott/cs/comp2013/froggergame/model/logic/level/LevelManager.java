@@ -8,7 +8,7 @@ import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 public class LevelManager {
     private static final int DEFAULT_ANIMAL_START_X = 300;
     private static final int DEFAULT_ANIMAL_START_Y = 733;
-    private static final LevelConfig DEFAULT_LEVEL_CONFIG = new LevelConfig(4, 96, 133);
+    private static final LevelConfig DEFAULT_LEVEL_CONFIG = new LevelConfig(5,4, 96, 133);
 
     private boolean levelReset = false;
     private int level = 1;
@@ -65,7 +65,7 @@ public class LevelManager {
     private void resetLevel() {
         this.reachedEnds = 0;
         LevelConfig config = this.getLevelConfig(this.level);
-        this.levelView.resetLevelLayout(this.totalEnds, config.getStartX(), config.getY(), config.getGap());
+        this.levelView.resetLevelLayout(config);
         this.resetAnimalPosition();
     }
 

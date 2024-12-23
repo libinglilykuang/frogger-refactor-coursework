@@ -68,10 +68,8 @@ public class AnimalStateManager implements StateManager {
     }
 
     public int getPoints() {
-        int points = scoreManager.getPoints();
-        return points;
+        return scoreManager.getPoints();
     }
-
 
     public boolean hasScoreChanged() {
         return scoreManager.hasScoreChanged();

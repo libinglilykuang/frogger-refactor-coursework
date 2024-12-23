@@ -24,6 +24,6 @@ public class Log extends Actor {
 
 	@Override
 	public void act(double elapsedTime) {
-
+		resetPositionIfOutOfBounds(speed);
 	}
 }
