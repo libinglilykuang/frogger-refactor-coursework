@@ -1,5 +1,6 @@
-package uk.ac.nott.cs.comp2013.froggergame.controller;
+package uk.ac.nott.cs.comp2013.froggergame.controller.initializer;
 
+import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectType;
 import uk.ac.nott.cs.comp2013.froggergame.model.factory.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectData;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;
@@ -36,22 +37,24 @@ public class GameInitializer {
     }
 
     private void setupGameObjects() {
-        initializeLogs();
-        initializeTurtles();
-        initializeObstacles();
+        initializeGameObjects(GameObjectType.LOG, GameObjectData.LOG_DATA);
+        initializeGameObjects(GameObjectType.TURTLE, GameObjectData.TURTLE_DATA);
+        initializeGameObjects(GameObjectType.OBSTACLE, GameObjectData.OBSTACLE_DATA);
         setupEndPoints();
     }
 
-    private void initializeLogs() {
-        gameObjectFactory.setupLogs(background, GameObjectData.LOG_DATA);
-    }
-
-    private void initializeTurtles() {
-        gameObjectFactory.setupTurtles(background, GameObjectData.TURTLE_DATA);
-    }
-
-    private void initializeObstacles() {
-        gameObjectFactory.setupObstacles(background, GameObjectData.OBSTACLE_DATA);
+    private void initializeGameObjects(GameObjectType type, Object[][] data) {
+        switch (type) {
+            case LOG:
+                gameObjectFactory.setupLogs(background, data);
+                break;
+            case TURTLE:
+                gameObjectFactory.setupTurtles(background, data);
+                break;
+            case OBSTACLE:
+                gameObjectFactory.setupObstacles(background, data);
+                break;
+        }
     }
 
     private void setupEndPoints() {

@@ -9,30 +9,39 @@ public class InputHandler {
     private static final KeyCode JUMP_KEY = KeyCode.W;
     private static final int POINTS_FOR_JUMP = 10;
 
-    public void processInput(Animal animal, KeyEvent event) {
-        if (animal.getStateManager().isNoMove()) return;
-        if (event.getEventType() == KeyEvent.KEY_PRESSED) {
-            processKeyEvent(animal, event.getCode(), true);
-        } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
-            processKeyEvent(animal, event.getCode(), false);
-        }
+    private Animal animal;
+
+    public InputHandler(Animal animal) {
+        this.animal = animal;
     }
 
-    private void processKeyEvent(Animal animal, KeyCode key, boolean isPressed) {
+    public void handleKeyPressed(KeyEvent event) {
+        processInput(event, true);
+    }
+
+    public void handleKeyReleased(KeyEvent event) {
+        processInput(event, false);
+    }
+
+    private void processInput(KeyEvent event, boolean isPressed) {
+        if (animal.getStateManager().isNoMove()) return;
+        processKeyEvent(event.getCode(), isPressed);
+    }
+
+    private void processKeyEvent(KeyCode key, boolean isPressed) {
         StateManager stateManager = animal.getStateManager();
-        if (!isPressed && isJumpKey(key, animal)) {
-            updateHighestYAndScore(animal, stateManager);
+        if (!isPressed && isJumpKey(key)) {
+            updateHighestYAndScore(stateManager);
         }
         stateManager.moveAnimal(animal.getMovementX(key), animal.getMovementY(key), key, isPressed);
     }
 
-    private boolean isJumpKey(KeyCode key, Animal animal) {
+    private boolean isJumpKey(KeyCode key) {
         return key == JUMP_KEY && animal.getY() < animal.getHighestY();
     }
 
-    private void updateHighestYAndScore(Animal animal, StateManager stateManager) {
+    private void updateHighestYAndScore(StateManager stateManager) {
         animal.setHighestY(animal.getY());
         stateManager.addPoints(POINTS_FOR_JUMP);
     }
-
 }

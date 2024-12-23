@@ -1,5 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
+import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer;
+import uk.ac.nott.cs.comp2013.froggergame.controller.loop.GameLoopManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.AlertManager;
@@ -9,9 +11,9 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
+import java.util.function.Supplier;
 
 public class GameController implements GameEventListener {
-
     private final MyStage background;
     private final GameInitializer gameInitializer;
     private Animal animal;
@@ -24,14 +26,13 @@ public class GameController implements GameEventListener {
 
     private static final int DEFAULT_INITIAL_LEVEL = 1;
 
-    public GameController(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory,
-                          GameStateChecker gameStateChecker, Score scoreView) {
-        this.background = background;
-        this.scoreManager = scoreManager;
-        this.gameObjectFactory = gameObjectFactory;
-        this.gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory, scoreView);
-        this.gameStateChecker = gameStateChecker;
-        this.scoreView = scoreView;
+    public GameController(GameControllerConfig config) {
+        this.background = config.getBackground();
+        this.scoreManager = config.getScoreManager();
+        this.gameObjectFactory = config.getGameObjectFactory();
+        this.gameInitializer = config.getGameInitializer();
+        this.gameStateChecker = config.getGameStateChecker();
+        this.scoreView = config.getScoreView();
     }
 
     public void initializeGame() {
@@ -71,6 +72,40 @@ public class GameController implements GameEventListener {
         return this.animal;
     }
 
+    public void updateGameState() {
+        updateScoreIfChanged();
+        updateLevelIfChanged();
+    }
+
+    private void updateIfChanged(Supplier<Boolean> hasChanged, Runnable update, Runnable resetFlag) {
+        if (hasChanged.get()) {
+            update.run();
+            resetFlag.run();
+        }
+    }
+
+    private void updateScoreIfChanged() {
+        updateIfChanged(
+                () -> animal.getStateManager().hasScoreChanged(),
+                () -> {
+                    int currentPoints = animal.getStateManager().getPoints();
+                    scoreView.updateScoreDisplay(background, currentPoints, scoreManager);
+                },
+                () -> animal.getStateManager().resetScoreChangedFlag()
+        );
+    }
+
+    private void updateLevelIfChanged() {
+        updateIfChanged(
+                () -> levelManager.hasLevelChanged(),
+                () -> {
+                    int currentLevel = levelManager.getCurrentLevel();
+                    levelManager.getLevelView().updateLevelDisplay(currentLevel);
+                },
+                () -> levelManager.resetLevelChangedFlag()
+        );
+    }
+
     @Override
     public void onGameWon(int points) {
         stopGame();
@@ -86,31 +121,13 @@ public class GameController implements GameEventListener {
     @Override
     public void update(long now) {
         background.act(now);
-        updateScoreIfChanged();
-        updateLevelIfChanged();
+        updateGameState();
     }
 
     @Override
     public void update(double elapsedTime) {
         background.act(elapsedTime);
-        updateScoreIfChanged();
-        updateLevelIfChanged();
-    }
-
-    private void updateScoreIfChanged() {
-        if (animal.getStateManager().hasScoreChanged()) {
-            int currentPoints = animal.getStateManager().getPoints();
-            scoreView.updateScoreDisplay(background, currentPoints, scoreManager);
-            animal.getStateManager().resetScoreChangedFlag();
-        }
-    }
-
-    private void updateLevelIfChanged() {
-        if (levelManager.hasLevelChanged()) {
-            int currentLevel = levelManager.getCurrentLevel();
-            levelManager.getLevelView().updateLevelDisplay(currentLevel);
-            levelManager.resetLevelChangedFlag();
-        }
+        updateGameState();
     }
 
 }
