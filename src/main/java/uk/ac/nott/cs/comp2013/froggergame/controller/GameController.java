@@ -1,6 +1,9 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer;
+import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.controller.loop.GameLoopManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
@@ -34,12 +37,13 @@ public class GameController implements GameEventListener {
         this.gameStateChecker = config.getGameStateChecker();
         this.scoreView = config.getScoreView();
     }
-
+    
     public void initializeGame() {
         initializeAnimal();
         initializeLevelManager();
         initializeGameLoopManager();
         gameInitializer.initializeComponents(scoreView);
+
         initializeAnimal();
     }
 
@@ -58,6 +62,13 @@ public class GameController implements GameEventListener {
     private void initializeGameLoopManager() {
         gameLoopManager = new GameLoopManager(levelManager, scoreManager, animal, background, gameStateChecker, scoreView);
         gameLoopManager.setGameEventListener(this);
+    }
+
+    public void configureInputHandling(Scene scene) {
+        Animal animal = getAnimal();
+        InputHandler inputHandler = new InputHandler(animal);
+        scene.setOnKeyPressed(inputHandler::handleKeyPressed);
+        scene.setOnKeyReleased(inputHandler::handleKeyReleased);
     }
 
     public void startGameLoop() {
@@ -115,6 +126,8 @@ public class GameController implements GameEventListener {
     @Override
     public void onGameOver() {
         stopGame();
+        background.stopTimeBar();
+        background.stopMusic();
         AlertManager.showGameOverAlert();
     }
 
@@ -127,6 +140,10 @@ public class GameController implements GameEventListener {
     @Override
     public void update(double elapsedTime) {
         background.act(elapsedTime);
+        if (background.getTimeBar() != null) {
+            background.getTimeBar().getRectangle().toFront();
+            background.getTimeBar().getText().toFront();
+        }
         updateGameState();
     }
 
