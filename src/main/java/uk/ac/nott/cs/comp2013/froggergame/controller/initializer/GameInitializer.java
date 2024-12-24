@@ -13,22 +13,20 @@ public class GameInitializer {
     private static final String BACKGROUND_IMAGE = "background.png";
     private static final int INITIAL_SCORE = 0;
 
-    private final Score scoreView;
     private final MyStage background;
     private final GameObjectFactory gameObjectFactory;
     private final ScoreManager scoreManager;
 
-    public GameInitializer(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory, Score scoreView) {
+    public GameInitializer(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory) {
         this.background = background;
         this.scoreManager = scoreManager;
         this.gameObjectFactory = gameObjectFactory;
-        this.scoreView = scoreView;
     }
 
-    public void initializeComponents() {
+    public void initializeComponents(Score scoreView) {
         setupBackground();
         setupGameObjects();
-        setupScoreDisplay();
+        setupScoreDisplay(scoreView);
     }
 
     private void setupBackground() {
@@ -63,7 +61,7 @@ public class GameInitializer {
         }
     }
 
-    private void setupScoreDisplay() {
+    private void setupScoreDisplay(Score scoreView) {
         scoreView.createScoreLabel(background);
         scoreView.updateScoreDisplay(background, INITIAL_SCORE, scoreManager);
     }

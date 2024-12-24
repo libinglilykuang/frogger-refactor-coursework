@@ -4,9 +4,6 @@ import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageLoader;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.*;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 public class GameObjectFactory {
     private static final String FROG_IMAGE = "froggerUp.png";
 
@@ -32,46 +29,66 @@ public class GameObjectFactory {
         }
     }
 
-    public <T> void setupGameObjects(MyStage background, Object[][] data, Function<Object[], T> mapper, BiConsumer<MyStage, T> setupAction) {
+    public interface GameObjectSetup<T> {
+        T map(Object[] rawData);
+        void setup(MyStage background, T gameObject);
+    }
+
+    public <T> void setupGameObjects(MyStage background, Object[][] data, GameObjectSetup<T> setup) {
         for (Object[] rawData : data) {
-            T gameObject = mapper.apply(rawData);
-            setupAction.accept(background, gameObject);
+            T gameObject = setup.map(rawData);
+            setup.setup(background, gameObject);
         }
     }
 
     public void setupLogs(MyStage background, Object[][] logData) {
-        setupGameObjects(
-                background,
-                logData,
-                rawData -> createLog(
+        setupGameObjects(background, logData, new GameObjectSetup<Log>() {
+            @Override
+            public Log map(Object[] rawData) {
+                return createLog(
                         (String) rawData[0], (int) rawData[1], (int) rawData[2], (int) rawData[3],
                         (int) rawData[4], (int) rawData[5], (double) rawData[6]
-                ),
-                MyStage::addActor
-        );
+                );
+            }
+
+            @Override
+            public void setup(MyStage background, Log gameObject) {
+                background.addActor(gameObject);
+            }
+        });
     }
 
     public void setupObstacles(MyStage background, Object[][] obstacleData) {
-        setupGameObjects(
-                background,
-                obstacleData,
-                rawData -> createObstacle(
+        setupGameObjects(background, obstacleData, new GameObjectSetup<Obstacle>() {
+            @Override
+            public Obstacle map(Object[] rawData) {
+                return createObstacle(
                         (String) rawData[0], (int) rawData[1], (int) rawData[2], (int) rawData[3],
                         (int) rawData[4], (int) rawData[5]
-                ),
-                MyStage::addActor
-        );
+                );
+            }
+
+            @Override
+            public void setup(MyStage background, Obstacle gameObject) {
+                background.addActor(gameObject);
+            }
+        });
     }
 
     public void setupTurtles(MyStage background, Object[][] turtleData) {
-        setupGameObjects(
-                background,
-                turtleData,
-                rawData -> createTurtle(
+        setupGameObjects(background, turtleData, new GameObjectSetup<AbstractTurtle>() {
+            @Override
+            public AbstractTurtle map(Object[] rawData) {
+                return createTurtle(
                         (int) rawData[0], (int) rawData[1], (int) rawData[2], (int) rawData[3],
                         (int) rawData[4], (boolean) rawData[5]
-                ),
-                MyStage::addActor
-        );
+                );
+            }
+
+            @Override
+            public void setup(MyStage background, AbstractTurtle gameObject) {
+                background.addActor(gameObject);
+            }
+        });
     }
 }
