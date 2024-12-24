@@ -3,6 +3,7 @@ package uk.ac.nott.cs.comp2013.froggergame.view.components;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import java.util.Stack;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;
@@ -10,12 +11,12 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;
 public class Score {
 
     private static final int DEFAULT_DIGIT_SIZE = 30;
-    private static final int DEFAULT_DIGIT_START_X = 140;
+    private static final int DEFAULT_DIGIT_START_X = 120;
     private static final int DEFAULT_DIGIT_START_Y = 5;
     private static final int DEFAULT_DIGIT_SPACING = 30;
     private static final String DEFAULT_SCORE_LABEL_TEXT = "SCORE:";
     private static final String DEFAULT_SCORE_LABEL_FONT = "Arial";
-    private static final int DEFAULT_SCORE_LABEL_FONT_SIZE = 30;
+    private static final int DEFAULT_SCORE_LABEL_FONT_SIZE = 25;
     private static final int DEFAULT_SCORE_LABEL_X = 15;
     private static final int DEFAULT_SCORE_LABEL_Y = 30;
 
@@ -36,8 +37,8 @@ public class Score {
 
     public void createScoreLabel(Pane background) {
         Text scoreLabel = new Text(DEFAULT_SCORE_LABEL_TEXT);
-        scoreLabel.setFont(Font.font(DEFAULT_SCORE_LABEL_FONT, DEFAULT_SCORE_LABEL_FONT_SIZE));
-        scoreLabel.setFill(Color.WHITE);
+        scoreLabel.setFont(Font.font(DEFAULT_SCORE_LABEL_FONT, FontWeight.BOLD,DEFAULT_SCORE_LABEL_FONT_SIZE));
+        scoreLabel.setFill(Color.YELLOW);
         scoreLabel.setX(DEFAULT_SCORE_LABEL_X);
         scoreLabel.setY(DEFAULT_SCORE_LABEL_Y);
         background.getChildren().add(scoreLabel);

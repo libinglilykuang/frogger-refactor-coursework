@@ -34,3 +34,4 @@ public class GameControllerConfig {
     public Score getScoreView() { return scoreView; }
     public GameInitializer getGameInitializer() { return gameInitializer; }
 }
+
