@@ -13,7 +13,7 @@ public class GameControllerFactory {
         Score scoreView = new Score();
         GameObjectFactory gameObjectFactory = new GameObjectFactory();
         GameStateChecker gameStateChecker = new GameStateChecker();
-        GameInitializer gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory, scoreView);
+        GameInitializer gameInitializer = new GameInitializer(background, scoreManager, gameObjectFactory);
 
         GameControllerConfig config = new GameControllerConfig(
                 background, scoreManager, gameObjectFactory, gameStateChecker, scoreView, gameInitializer

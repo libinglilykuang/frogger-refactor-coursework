@@ -41,10 +41,6 @@ public class Animal extends Actor {
         return new AnimalCollisionHandler(this, stateManager);
     }
 
-    public boolean isOnTurtleOrLog() {
-        return currentPlatform instanceof Turtle || currentPlatform instanceof Log;
-    }
-
     public void resetPosition() {
         setX(DEFAULT_X);
         setY(DEFAULT_Y);
