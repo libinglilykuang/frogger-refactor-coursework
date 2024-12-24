@@ -64,6 +64,10 @@ public class GameLoopManager {
             return;
         }
         double elapsedTime = calculateElapsedTime(now);
+        if (!animal.isActive()) {
+            return;
+        }
+
         if (eventListener != null) {
             eventListener.update(elapsedTime);
         }

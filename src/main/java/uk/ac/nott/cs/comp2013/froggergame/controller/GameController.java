@@ -1,6 +1,5 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
@@ -43,8 +42,13 @@ public class GameController implements GameEventListener {
         initializeLevelManager();
         initializeGameLoopManager();
         gameInitializer.initializeComponents(scoreView);
-
         initializeAnimal();
+
+        background.getTimeBar().setTimeOutListener(() -> {
+            stopGame();
+            freezeFrog();
+            AlertManager.showGameOverAlert(background);
+        });
     }
 
     private void initializeAnimal() {
@@ -65,18 +69,42 @@ public class GameController implements GameEventListener {
     }
 
     public void configureInputHandling(Scene scene) {
-        Animal animal = getAnimal();
-        InputHandler inputHandler = new InputHandler(animal);
-        scene.setOnKeyPressed(inputHandler::handleKeyPressed);
-        scene.setOnKeyReleased(inputHandler::handleKeyReleased);
+        if (scene != null && getAnimal() != null) {
+            Animal animal = getAnimal();
+            InputHandler inputHandler = new InputHandler(animal);
+
+            scene.setOnKeyPressed(event -> {
+                if (animal.isActive()) {
+                    inputHandler.handleKeyPressed(event);
+                }
+            });
+
+            scene.setOnKeyReleased(event -> {
+                if (animal.isActive()) {
+                    inputHandler.handleKeyReleased(event);
+                }
+            });
+        } else {
+            if (scene != null) {
+                scene.setOnKeyPressed(null);
+                scene.setOnKeyReleased(null);
+            }
+        }
     }
 
     public void startGameLoop() {
         gameLoopManager.startGameLoopExecution();
+        if (background.getTimeBar() != null) {
+            background.getTimeBar().start();
+        }
     }
 
     public void stopGame() {
         gameLoopManager.stopGameLoopExecution();
+        if (background.getTimeBar() != null) {
+            background.getTimeBar().stop();
+        }
+        background.stopMusic();
     }
 
     public Animal getAnimal() {
@@ -117,6 +145,13 @@ public class GameController implements GameEventListener {
         );
     }
 
+    private void freezeFrog() {
+        if (animal != null) {
+            animal.setActive(false);
+        }
+        configureInputHandling(null);
+    }
+
     @Override
     public void onGameWon(int points) {
         stopGame();
@@ -128,7 +163,8 @@ public class GameController implements GameEventListener {
         stopGame();
         background.stopTimeBar();
         background.stopMusic();
-        AlertManager.showGameOverAlert();
+        freezeFrog();
+        AlertManager.showGameOverAlert(background);
     }
 
     @Override
@@ -140,6 +176,10 @@ public class GameController implements GameEventListener {
     @Override
     public void update(double elapsedTime) {
         background.act(elapsedTime);
+        if (animal != null && !animal.isActive()) {
+            return;
+        }
+
         if (background.getTimeBar() != null) {
             background.getTimeBar().getRectangle().toFront();
             background.getTimeBar().getText().toFront();

@@ -11,12 +11,22 @@ import javafx.util.Duration;
 public class TimeBar {
     private static final int BAR_WIDTH = 100;
     private static final int BAR_HEIGHT = 20;
-    private static final int TOTAL_TIME = 60;
+    private static final int TOTAL_TIME = 30;
 
     private final Rectangle timeBar;
     private final Text timeLabel;
     private Timeline timeline;
     private double remainingTime;
+
+    public interface TimeOutListener {
+        void onTimeOut();
+    }
+
+    private TimeOutListener timeOutListener;
+
+    public void setTimeOutListener(TimeOutListener listener) {
+        this.timeOutListener = listener;
+    }
 
     public TimeBar(Pane parentPane) {
         timeBar = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.GREEN);
@@ -72,6 +82,12 @@ public class TimeBar {
 
     private void onTimeOut() {
         timeLabel.setText("TIME: 0");
+
+        timeBar.setFill(Color.GRAY);
+
+        if (timeOutListener != null) {
+            timeOutListener.onTimeOut();
+        }
     }
 
     public void stop() {
