@@ -39,7 +39,7 @@ public class GameController implements GameEventListener {
         initializeAnimal();
         initializeLevelManager();
         initializeGameLoopManager();
-        gameInitializer.initializeComponents();
+        gameInitializer.initializeComponents(scoreView);
         initializeAnimal();
     }
 
