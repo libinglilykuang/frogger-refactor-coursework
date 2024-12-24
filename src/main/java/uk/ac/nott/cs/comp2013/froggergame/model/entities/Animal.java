@@ -17,8 +17,9 @@ public class Animal extends Actor {
     private static final double DEFAULT_X = 300;
     private static final double DEFAULT_Y = 733 + MOVEMENT_Y;
     private static final double DEFAULT_SPEED = 0.0;
-    private Actor currentPlatform;
 
+    private Actor currentPlatform;
+    private boolean active = true;
     private final StateManager stateManager;
     private final CollisionHandler collisionHandler;
     private double highestY = INITIAL_HIGHEST_Y;
@@ -31,6 +32,10 @@ public class Animal extends Actor {
         this.stateManager = createDefaultStateManager();
         this.collisionHandler = createDefaultCollisionHandler();
         resetPosition();
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     private StateManager createDefaultStateManager() {
@@ -128,8 +133,15 @@ public class Animal extends Actor {
         return !isOnPlatform() && getY() < 413.0;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     @Override
     public void act(long now) {
+        if (!active) {
+            return;
+        }
         if (isDead()) {
             handleDeathAnimation(now, carDeath ? "cardeath" : "waterdeath", carDeath ? 4 : 5);
         } else {

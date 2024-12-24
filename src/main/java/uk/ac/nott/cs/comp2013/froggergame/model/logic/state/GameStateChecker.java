@@ -7,7 +7,6 @@ public class GameStateChecker {
 
     public void checkGameState(Animal animal, GameEventListener eventListener) {
         StateManager stateManager = animal.getStateManager();
-
         if (stateManager.isVictory()) {
             notifyGameWon(eventListener, stateManager.getPoints());
         } else if (animal.isDead()) {
