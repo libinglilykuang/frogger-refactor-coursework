@@ -10,14 +10,13 @@ public class MyStage extends World {
 	private final MusicManager musicManager = new MusicManager("/Snake_Charmer.mp3");
 	private final Level level = new Level(this);
 	private TimeBar timeBar;
-
 	public MyStage() {
 		this.initializeGame();
 	}
 
 	private void initializeGame() {
 		this.level.updateLevelDisplay(1);
-		LevelConfig levelConfig = new LevelConfig(5, 100, 50, 120);
+		LevelConfig levelConfig = new LevelConfig(1, 100, 50, 120,2);
 		this.level.resetLevelLayout(levelConfig);
 
 		this.timeBar = new TimeBar(this);

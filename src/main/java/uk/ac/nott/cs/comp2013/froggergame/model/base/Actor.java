@@ -20,6 +20,8 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     private EventHandler<? super KeyEvent> keyReleasedHandler;
     protected double speed; // Speed of the actor
     private BoundaryManager boundaryManager;
+    private final double baseSpeed;
+    private World world;
 
     /**
      * Constructor to initialize the actor's position and speed.
@@ -32,6 +34,7 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         this.setX(xpos);
         this.setY(ypos);
         this.speed = speed;
+        this.baseSpeed = speed;
     }
 
     /**
@@ -45,6 +48,10 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         this.setY(Math.max(0.0, this.getY() + dy));
     }
 
+    public void setSpeedFactor(double speedFactor) {
+        this.speed = this.baseSpeed * speedFactor;
+    }
+
     public void configureBounds(int screenLeftBound, int screenRightBound, int resetLeftPosition, int resetRightPosition) {
         this.boundaryManager = new BoundaryManager(screenLeftBound, screenRightBound, resetLeftPosition, resetRightPosition);
     }
@@ -55,13 +62,12 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
         }
     }
 
-    /**
-     * Gets the game world the actor belongs to.
-     *
-     * @return The game world
-     */
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
     public World getWorld() {
-        World world = (World) this.getParent();
+        //World world = (World) this.getParent();
         if (world == null) {
             throw new IllegalStateException("Actor is not attached to any World instance.");
         }
