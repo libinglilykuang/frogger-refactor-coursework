@@ -30,8 +30,6 @@ public class GameController implements GameEventListener {
     private GameLoopManager gameLoopManager;
     private final GameStateChecker gameStateChecker;
     private final Score scoreView;
-    private static GameController instance;
-    private boolean levelTransitioning = false;
 
     private static final int DEFAULT_INITIAL_LEVEL = 1;
 
@@ -42,13 +40,6 @@ public class GameController implements GameEventListener {
         this.gameInitializer = config.getGameInitializer();
         this.gameStateChecker = config.getGameStateChecker();
         this.scoreView = config.getScoreView();
-    }
-
-    public static GameController getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("GameController is not initialized yet!");
-        }
-        return instance;
     }
 
     public void initializeGame() {
@@ -74,7 +65,7 @@ public class GameController implements GameEventListener {
         Level levelView = new Level(background);
         TimeBar timeBar = background.getTimeBar();
 
-        levelManager = new LevelManager(animal, levelView, 1, timeBar);
+        levelManager = new LevelManager(animal, levelView, 1, timeBar,this);
         levelManager.setLevel(DEFAULT_INITIAL_LEVEL);
         levelView.updateLevelDisplay(DEFAULT_INITIAL_LEVEL);
     }
@@ -171,7 +162,9 @@ public class GameController implements GameEventListener {
     @Override
     public void onGameWon(int points) {
         //stopGame();
-        AlertManager.showGameWonAlert(points);
+        //int point = scoreManager.getPoints();
+        AlertManager.showGameWonAlert(background, scoreManager.getPoints());
+        System.out.println("Displaying game won alert with points: " + scoreManager.getPoints());
     }
 
     @Override
