@@ -1,5 +1,6 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic.level;
 
+import uk.ac.nott.cs.comp2013.froggergame.controller.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
@@ -7,12 +8,15 @@ import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.TimeBar;
+import uk.ac.nott.cs.comp2013.froggergame.controller.GameController;
 
 public class LevelManager {
     private static final int DEFAULT_ANIMAL_START_X = 300;
     private static final int DEFAULT_ANIMAL_START_Y = 733;
     private int level = 1;
     private int reachedEnds = 0;
+
+    private GameEventListener eventListener;
 
     private int totalEnds;
     private final Animal animal;
@@ -21,7 +25,7 @@ public class LevelManager {
     private final TimeBar timeBar;
     private boolean levelTransitioning = false;
 
-    public LevelManager(Animal animal, Level levelView, int totalEnds, TimeBar timeBar) {
+    public LevelManager(Animal animal, Level levelView, int totalEnds, TimeBar timeBar, GameEventListener eventListener) {
         if (animal == null || levelView == null) {
             throw new IllegalArgumentException("Animal and Level view cannot be null");
         }
@@ -30,6 +34,7 @@ public class LevelManager {
         this.totalEnds = totalEnds;
         this.timeBar = timeBar;
         this.levelView.updateLevelDisplay(this.level);
+        this.eventListener = eventListener;
     }
 
     public boolean hasLevelChanged() {
@@ -56,7 +61,8 @@ public class LevelManager {
     }
 
     public boolean isAllLevelsComplete() {
-        return this.level >= 3;
+        System.out.println("Checking if all levels are complete. Current level: " + this.level);
+        return this.level >= 2;
     }
 
     public void onTargetReached() {
@@ -69,7 +75,12 @@ public class LevelManager {
         if (this.reachedEnds == this.totalEnds) {
             if (isAllLevelsComplete()) {
                 System.out.println("All levels completed! Triggering game won.");
-                //GameController.getInstance().onGameWon(stateManager.getCurrentPoints());
+                if (eventListener != null) {
+                    //eventListener.onGameWon(animal.getStateManager().getPoints());
+                    int points = animal.getStateManager().getPoints();
+                    System.out.println("Points before triggering victory: " + points);
+                    eventListener.onGameWon(points);
+                }
             } else {
                 this.increaseLevel();
                 if (animal != null) {
@@ -116,7 +127,7 @@ public class LevelManager {
     public LevelConfig getLevelConfig(int currentLevel) {
         return switch (currentLevel) {
             case 1 -> new LevelConfig(1, 4, 96, 133, 1.0);
-            case 2 -> new LevelConfig(2, 4, 96, 133, 1.5);
+            case 2 -> new LevelConfig(1, 4, 96, 133, 1);
             case 3 -> new LevelConfig(2, 4, 96, 133, 2.0);
             default -> new LevelConfig(5, 4, 96, 133, 1.0);
         };
