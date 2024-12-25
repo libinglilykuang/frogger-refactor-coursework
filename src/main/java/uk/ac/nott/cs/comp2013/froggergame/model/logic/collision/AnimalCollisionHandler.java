@@ -1,6 +1,7 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.logic.collision;
 
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.*;
+import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ public class AnimalCollisionHandler implements CollisionHandler {
         collisionActions.put(Turtle.class, turtle -> animal.setCurrentPlatform((Turtle) turtle));
         collisionActions.put(WetTurtle.class, this::handleWetTurtleCollision);
         collisionActions.put(End.class, this::handleEndCollision);
+
+        collisionActions.put(Crocodile.class, obj -> handleCrocodileCollision((Crocodile) obj));
     }
 
     @SuppressWarnings("unchecked")
@@ -44,6 +47,12 @@ public class AnimalCollisionHandler implements CollisionHandler {
         if (animal.isOnPlatform()) {
             animal.clearCurrentPlatform();
         }
+    }
+
+    private void handleCrocodileCollision(Crocodile crocodile) {
+        System.out.println("Frog collided with a crocodile!");
+        animal.setCarDeath(true);
+        animal.resetPosition();
     }
 
     private void handleWetTurtleCollision(Object obj) {

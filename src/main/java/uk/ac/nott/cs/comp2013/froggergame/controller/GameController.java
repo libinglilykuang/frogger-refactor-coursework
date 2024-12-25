@@ -4,8 +4,13 @@ import javafx.scene.Scene;
 import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.controller.loop.GameLoopManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
+import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
+import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.TimeBar;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.AlertManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.factory.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.level.LevelManager;
@@ -25,6 +30,8 @@ public class GameController implements GameEventListener {
     private GameLoopManager gameLoopManager;
     private final GameStateChecker gameStateChecker;
     private final Score scoreView;
+    private static GameController instance;
+    private boolean levelTransitioning = false;
 
     private static final int DEFAULT_INITIAL_LEVEL = 1;
 
@@ -36,7 +43,14 @@ public class GameController implements GameEventListener {
         this.gameStateChecker = config.getGameStateChecker();
         this.scoreView = config.getScoreView();
     }
-    
+
+    public static GameController getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("GameController is not initialized yet!");
+        }
+        return instance;
+    }
+
     public void initializeGame() {
         initializeAnimal();
         initializeLevelManager();
@@ -58,7 +72,9 @@ public class GameController implements GameEventListener {
 
     private void initializeLevelManager() {
         Level levelView = new Level(background);
-        levelManager = new LevelManager(animal, levelView, 5);
+        TimeBar timeBar = background.getTimeBar();
+
+        levelManager = new LevelManager(animal, levelView, 1, timeBar);
         levelManager.setLevel(DEFAULT_INITIAL_LEVEL);
         levelView.updateLevelDisplay(DEFAULT_INITIAL_LEVEL);
     }
@@ -154,7 +170,7 @@ public class GameController implements GameEventListener {
 
     @Override
     public void onGameWon(int points) {
-        stopGame();
+        //stopGame();
         AlertManager.showGameWonAlert(points);
     }
 
@@ -183,6 +199,17 @@ public class GameController implements GameEventListener {
         if (background.getTimeBar() != null) {
             background.getTimeBar().getRectangle().toFront();
             background.getTimeBar().getText().toFront();
+        }
+
+        for (Actor actor : background.getObjects(Crocodile.class)) {
+            actor.act(System.nanoTime());
+        }
+
+        for (End end : background.getObjects(End.class)) {
+            if (!end.isActivated()&& animal.isActive() &&animal.getBoundsInParent().intersects(end.getBoundsInParent())) {
+                end.setEnd();
+                levelManager.onTargetReached();
+            }
         }
         updateGameState();
     }

@@ -34,14 +34,18 @@ public abstract class World extends Pane implements KeyEventHandlerProvider {
     public void addActor(Actor actor) {
         actors.add(actor);
         getChildren().add(actor);
+        actor.setWorld(this);
     }
 
     public <A> List<A> getObjects(Class<A> cls) {
-        return getChildren().stream()
+        List<A> result = getChildren().stream()
                 .filter(cls::isInstance)
                 .map(cls::cast)
                 .toList();
+        //System.out.println("Objects of type " + cls.getSimpleName() + ": " + result);
+        return result;
     }
+
 
     @Override
     public EventHandler<? super KeyEvent> getKeyPressedHandler() {
