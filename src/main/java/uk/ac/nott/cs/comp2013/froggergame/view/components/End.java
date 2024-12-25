@@ -29,8 +29,15 @@ public class End extends ImageView implements GameComponent {
 	}
 
 	public void setEnd() {
-		setImage(activatedImage);
-		isActivated = true;
+		if (!isActivated) {
+			setImage(activatedImage);
+			isActivated = true;
+		}
+	}
+
+	public void reset() {
+		setImage(defaultImage);
+		isActivated = false;
 	}
 
 	public boolean isActivated() {

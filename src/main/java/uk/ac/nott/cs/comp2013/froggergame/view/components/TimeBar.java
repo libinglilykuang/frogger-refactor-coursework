@@ -11,7 +11,7 @@ import javafx.util.Duration;
 public class TimeBar {
     private static final int BAR_WIDTH = 100;
     private static final int BAR_HEIGHT = 20;
-    private static final int TOTAL_TIME = 30;
+    private static final int TOTAL_TIME = 90;
 
     private final Rectangle timeBar;
     private final Text timeLabel;
@@ -88,6 +88,15 @@ public class TimeBar {
         if (timeOutListener != null) {
             timeOutListener.onTimeOut();
         }
+    }
+
+    public void reset() {
+        stop();
+        remainingTime = TOTAL_TIME;
+        timeBar.setWidth(BAR_WIDTH);
+        timeBar.setFill(Color.GREEN);
+        timeLabel.setText("TIME");
+        start();
     }
 
     public void stop() {

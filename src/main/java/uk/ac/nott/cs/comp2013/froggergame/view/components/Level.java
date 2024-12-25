@@ -5,8 +5,13 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
+import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelComposite;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Level {
 
@@ -18,6 +23,8 @@ public class Level {
 
     private final Pane background;
     private Text levelLabel;
+    private final List<End> ends;
+    private List<Actor> actors;
 
     public Level(Pane background) {
         if (background == null) {
@@ -25,6 +32,16 @@ public class Level {
         }
         this.background = background;
         this.levelLabel = null;
+        this.ends = new ArrayList<>();
+        this.actors = new ArrayList<>();
+    }
+
+    public void addActor(Actor actor) {
+        if (actor != null) {
+            actors.add(actor);
+            background.getChildren().add(actor);
+            System.out.println("Actor added: " + actor.getClass().getSimpleName() + " at position (" + actor.getX() + ", " + actor.getY() + ")");
+        }
     }
 
     public void updateLevelDisplay(int level) {
@@ -55,5 +72,17 @@ public class Level {
         text.setX(LEVEL_LABEL_X);
         text.setY(LEVEL_LABEL_Y);
         return text;
+    }
+
+    public List<Actor> getActors() {
+        List<Actor> actors = background.getChildren().stream()
+                .filter(node -> node instanceof Actor)
+                .map(node -> (Actor) node)
+                .collect(Collectors.toList());
+        return actors;
+    }
+
+    public List<End> getEnds() {
+        return ends;
     }
 }
