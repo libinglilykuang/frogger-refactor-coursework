@@ -60,6 +60,7 @@ public class AnimalStateManager implements StateManager {
         if (img != null) {
             animal.setImage(img);
             animal.move(dx, dy);
+            scoreManager.handleMovementScore(dy);
         }
     }
 
