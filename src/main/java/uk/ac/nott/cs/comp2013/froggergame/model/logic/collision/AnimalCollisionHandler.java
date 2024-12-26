@@ -33,7 +33,6 @@ public class AnimalCollisionHandler implements CollisionHandler {
             stateManager.addPoints(-50);
             Platform.runLater(() -> scoreDisplay.updateScore(stateManager.getPoints()));
         });
-
         collisionActions.put(Log.class, log -> animal.setCurrentPlatform((Log) log));
         collisionActions.put(Turtle.class, turtle -> animal.setCurrentPlatform((Turtle) turtle));
         collisionActions.put(WetTurtle.class, this::handleWetTurtleCollision);
