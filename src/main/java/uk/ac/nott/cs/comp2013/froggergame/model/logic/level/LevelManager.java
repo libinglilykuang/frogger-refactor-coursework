@@ -5,18 +5,17 @@ import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
+import uk.ac.nott.cs.comp2013.froggergame.model.entities.Log;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.TimeBar;
-import uk.ac.nott.cs.comp2013.froggergame.controller.GameController;
 
 public class LevelManager {
     private static final int DEFAULT_ANIMAL_START_X = 300;
     private static final int DEFAULT_ANIMAL_START_Y = 733;
     private int level = 1;
     private int reachedEnds = 0;
-
-    private GameEventListener eventListener;
+    private final GameEventListener eventListener;
 
     private int totalEnds;
     private final Animal animal;
@@ -61,7 +60,6 @@ public class LevelManager {
     }
 
     public boolean isAllLevelsComplete() {
-        System.out.println("Checking if all levels are complete. Current level: " + this.level);
         return this.level >= 2;
     }
 
@@ -71,14 +69,10 @@ public class LevelManager {
         }
         levelTransitioning = true;
         this.reachedEnds++;
-        System.out.println("ends ++");
         if (this.reachedEnds == this.totalEnds) {
             if (isAllLevelsComplete()) {
-                System.out.println("All levels completed! Triggering game won.");
                 if (eventListener != null) {
-                    //eventListener.onGameWon(animal.getStateManager().getPoints());
                     int points = animal.getStateManager().getPoints();
-                    System.out.println("Points before triggering victory: " + points);
                     eventListener.onGameWon(points);
                 }
             } else {
@@ -114,7 +108,14 @@ public class LevelManager {
             Crocodile crocodile = new Crocodile(140, 440, 2.0, crocodileImagePath);
             this.levelView.addActor(crocodile);
         }
-
+        if (this.level == 2) {
+            String spiderImagePath = getClass().getResource("/images/spider.png").toExternalForm();
+            for (Actor actor : levelView.getActors()) {
+                if (actor instanceof Log log) {
+                    log.addRandomSpider(spiderImagePath);
+                }
+            }
+        }
         double speedFactor = config.getSpeedFactor();
         this.updateObjectsSpeed(speedFactor);
     }

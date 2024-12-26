@@ -42,7 +42,6 @@ public abstract class World extends Pane implements KeyEventHandlerProvider {
                 .filter(cls::isInstance)
                 .map(cls::cast)
                 .toList();
-        //System.out.println("Objects of type " + cls.getSimpleName() + ": " + result);
         return result;
     }
 

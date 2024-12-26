@@ -5,7 +5,6 @@ import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.controller.loop.GameLoopManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
@@ -71,7 +70,7 @@ public class GameController implements GameEventListener {
     }
 
     private void initializeGameLoopManager() {
-        gameLoopManager = new GameLoopManager(levelManager, scoreManager, animal, background, gameStateChecker, scoreView);
+        gameLoopManager = new GameLoopManager(animal,  gameStateChecker);
         gameLoopManager.setGameEventListener(this);
     }
 

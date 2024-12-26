@@ -7,6 +7,7 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.AnimalCollisionH
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.CollisionHandler;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.AnimalStateManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
 
 public class Animal extends Actor {
 
@@ -25,12 +26,14 @@ public class Animal extends Actor {
     private double highestY = INITIAL_HIGHEST_Y;
     private boolean carDeath = false;
     private boolean waterDeath = false;
+    private Score scoreDisplay;
 
     public Animal(String imageLink) {
         super((int) DEFAULT_X, (int) DEFAULT_Y, DEFAULT_SPEED);
         setImage(new Image(imageLink, IMAGE_SIZE, IMAGE_SIZE, true, true));
         this.stateManager = createDefaultStateManager();
         this.collisionHandler = createDefaultCollisionHandler();
+        this.scoreDisplay = new Score();
         resetPosition();
     }
 
@@ -43,7 +46,10 @@ public class Animal extends Actor {
     }
 
     private CollisionHandler createDefaultCollisionHandler() {
-        return new AnimalCollisionHandler(this, stateManager);
+        if (scoreDisplay == null) {
+            scoreDisplay = new Score();
+        }
+        return new AnimalCollisionHandler(this, stateManager, scoreDisplay);
     }
 
     public void resetPosition() {
