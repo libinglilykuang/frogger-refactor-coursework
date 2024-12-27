@@ -10,6 +10,8 @@ import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.TimeBar;
 
+import java.util.Map;
+
 public class LevelManager {
     private static final int DEFAULT_ANIMAL_START_X = 300;
     private static final int DEFAULT_ANIMAL_START_Y = 733;
@@ -98,26 +100,48 @@ public class LevelManager {
         this.levelView.resetLevelLayout(config);
         this.resetAnimalPosition();
 
-        for (End end : this.levelView.getEnds()) {
-            end.reset();
-        }
+        resetEnds();
         this.totalEnds = config.totalEnds();
 
         if (this.level == 2) {
-            String crocodileImagePath = getClass().getResource("/images/crocodile.png").toExternalForm();
-            Crocodile crocodile = new Crocodile(140, 440, 2.0, crocodileImagePath);
-            this.levelView.addActor(crocodile);
-
-            String spiderImagePath = getClass().getResource("/images/spider.png").toExternalForm();
-            for (Actor actor : levelView.getActors()) {
-                if (actor instanceof Log log) {
-                    log.addRandomSpider(spiderImagePath);
-                }
-            }
+            addLevelSpecificActors(this.level);
         }
 
         double speedFactor = config.speedFactor();
         this.updateObjectsSpeed(speedFactor);
+    }
+
+    private void resetEnds() {
+        for (End end : this.levelView.getEnds()) {
+            end.reset();
+        }
+    }
+
+    private static final Map<Integer, LevelActorConfig> LEVEL_ACTOR_CONFIGS = Map.of(
+            2, new LevelActorConfig("/images/crocodile.png", 140, 440, 2.0, "/images/spider.png")
+    );
+
+    private void addLevelSpecificActors(int level) {
+        LevelActorConfig config = LEVEL_ACTOR_CONFIGS.get(level);
+        if (config == null) {
+            return;
+        }
+
+        String crocodileImagePath = getClass().getResource(config.crocodileImagePath()).toExternalForm();
+        Crocodile crocodile = new Crocodile(
+                config.crocodileX(),
+                config.crocodileY(),
+                config.crocodileSpeed(),
+                crocodileImagePath
+        );
+        this.levelView.addActor(crocodile);
+
+        String spiderImagePath = getClass().getResource(config.spiderImagePath()).toExternalForm();
+        for (Actor actor : levelView.getActors()) {
+            if (actor instanceof Log log) {
+                log.addRandomSpider(spiderImagePath);
+            }
+        }
     }
 
     private void resetAnimalPosition() {
@@ -136,3 +160,4 @@ public class LevelManager {
     }
 
 }
+

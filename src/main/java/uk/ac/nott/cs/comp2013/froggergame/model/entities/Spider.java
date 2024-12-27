@@ -25,8 +25,10 @@ public class Spider extends Actor {
     }
 
     public void updatePosition() {
-        setX(parentLog.getX() + 50);
-        setY(parentLog.getY()+2);
+        double xOffset = 50;
+        setX(parentLog.getX() + xOffset);
+        double yOffset = 2;
+        setY(parentLog.getY() + yOffset);
     }
 
     @Override

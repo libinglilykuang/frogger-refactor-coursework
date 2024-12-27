@@ -33,6 +33,7 @@ public class End extends Pane implements GameComponent {
 		setLayoutX(x);
 		setLayoutY(y);
 		getChildren().add(endImageView);
+
 		this.isActivated = false;
 		this.hasEasterEgg = false;
 
@@ -148,3 +149,4 @@ public class End extends Pane implements GameComponent {
 		pane.getChildren().add(this);
 	}
 }
+

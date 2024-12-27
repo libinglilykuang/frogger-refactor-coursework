@@ -1,7 +1,5 @@
 package uk.ac.nott.cs.comp2013.froggergame.view;
 
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,112 +7,109 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.List;
 import java.util.Objects;
 
+import uk.ac.nott.cs.comp2013.froggergame.controller.MainMenuController;
+
+/**
+ * View for displaying high scores in the Frogger game.
+ */
 public class HighScoresView {
     private final Stage primaryStage;
     private final List<String[]> scores;
     private static final int WINDOW_WIDTH = 600;
     private static final int WINDOW_HEIGHT = 800;
-    private static final String BACKGROUND_COLOR = "#2F2F5E";
 
     public HighScoresView(Stage primaryStage, List<String[]> scores) {
         this.primaryStage = primaryStage;
-        this.scores = scores;
+        this.scores = (scores == null) ? List.of() : scores;
     }
 
     public void show() {
         BorderPane rootLayout = new BorderPane();
-        rootLayout.setStyle("-fx-background-color: " + BACKGROUND_COLOR + ";");
+        rootLayout.getStyleClass().add("root-layout");
 
         ImageView banner = createHeaderBanner();
         rootLayout.setTop(banner);
         BorderPane.setAlignment(banner, Pos.TOP_CENTER);
 
-        GridPane scoresLayout = createScoresLayout();
+        VBox scoresLayout = createScoresLayout();
         rootLayout.setCenter(scoresLayout);
 
-        Button newGameButton = createNewGameButton();
-        rootLayout.setBottom(newGameButton);
-        BorderPane.setAlignment(newGameButton, Pos.CENTER);
+        HBox newGameButtonBox = createNewGameButtonBox();
+        rootLayout.setBottom(newGameButtonBox);
+        BorderPane.setAlignment(newGameButtonBox, Pos.CENTER);
 
         Scene scene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/highscores.css")).toExternalForm());
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     private ImageView createHeaderBanner() {
         ImageView banner = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/banner.png")).toExternalForm()));
-        banner.setFitWidth(WINDOW_WIDTH);
-        banner.setPreserveRatio(true);
+        banner.getStyleClass().add("header-banner");
         return banner;
     }
 
-    private GridPane createScoresLayout() {
+    private VBox createScoresLayout() {
+        VBox scoresLayout = new VBox();
+        scoresLayout.getStyleClass().add("scores-layout");
+
         GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setVgap(15);
-        gridPane.setHgap(50);
+        gridPane.getStyleClass().add("grid-layout");
 
         Text nameHeader = new Text("NAME");
-        nameHeader.setFont(Font.font("Arial", FontWeight.BOLD, 25));
-        nameHeader.setFill(Color.YELLOW);
-        GridPane.setHalignment(nameHeader, HPos.LEFT);
+        nameHeader.getStyleClass().add("header-text");
         gridPane.add(nameHeader, 0, 0);
 
         Text scoreHeader = new Text("SCORE");
-        scoreHeader.setFont(Font.font("Arial", FontWeight.BOLD, 25));
-        scoreHeader.setFill(Color.YELLOW);
-        GridPane.setHalignment(scoreHeader, HPos.RIGHT);
+        scoreHeader.getStyleClass().add("header-text");
         gridPane.add(scoreHeader, 1, 0);
 
         if (scores == null || scores.isEmpty()) {
             Text noScores = new Text("COULD NOT ACCESS SCORES.");
-            noScores.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-            noScores.setFill(Color.YELLOW);
-            gridPane.add(noScores, 0, 1, 2, 1);
+            noScores.getStyleClass().add("no-scores-text");
+            scoresLayout.getChildren().add(noScores);
         } else {
             int row = 1;
             for (String[] score : scores) {
                 Text nameText = new Text(score[0]);
-                nameText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-                nameText.setFill(Color.WHITE);
-                GridPane.setHalignment(nameText, HPos.LEFT);
+                nameText.getStyleClass().add("score-text");
                 gridPane.add(nameText, 0, row);
 
                 Text scoreText = new Text(score[1]);
-                scoreText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-                scoreText.setFill(Color.WHITE);
-                GridPane.setHalignment(scoreText, HPos.RIGHT);
+                scoreText.getStyleClass().add("score-text");
+                GridPane.setHalignment(scoreText, javafx.geometry.HPos.RIGHT);
                 gridPane.add(scoreText, 1, row);
 
                 row++;
             }
+            scoresLayout.getChildren().add(gridPane);
         }
 
-        return gridPane;
+        return scoresLayout;
     }
 
-    private Button createNewGameButton() {
+    private HBox createNewGameButtonBox() {
         Button newGameButton = new Button("NEW GAME");
-        newGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        newGameButton.setTextFill(Color.LIMEGREEN);
-        newGameButton.setStyle("-fx-background-color: black; -fx-border-color: limegreen; -fx-border-width: 2px;");
-        newGameButton.setOnMouseEntered(event -> newGameButton.setTextFill(Color.YELLOW));
-        newGameButton.setOnMouseExited(event -> newGameButton.setTextFill(Color.LIMEGREEN));
+        newGameButton.getStyleClass().add("new-game-button");
         newGameButton.setOnAction(event -> startNewGame());
-        BorderPane.setMargin(newGameButton, new Insets(-30, 0, 100, 0));
-        return newGameButton;
+
+        HBox buttonBox = new HBox(newGameButton);
+        buttonBox.getStyleClass().add("button-box");
+        return buttonBox;
     }
 
     private void startNewGame() {
-        MainMenuView mainMenuView = new MainMenuView(primaryStage);
+        MainMenuController mainMenuController = new MainMenuController(primaryStage);
+        MainMenuView mainMenuView = new MainMenuView(primaryStage, mainMenuController);
         mainMenuView.show();
     }
 }
