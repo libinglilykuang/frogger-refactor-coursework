@@ -1,30 +1,22 @@
 package uk.ac.nott.cs.comp2013.froggergame.view.components;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.Font;
-import javafx.scene.paint.Color;
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.view.managers.LevelComposite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Level {
-
-    private static final String FONT_NAME = "Arial";
-    private static final int FONT_SIZE = 25;
-    private static final Color FONT_COLOR = Color.YELLOW;
-    private static final double LEVEL_LABEL_X = 250;
-    private static final double LEVEL_LABEL_Y = 30;
+    private static final String CSS_PATH = "/styles/level.css";
 
     private final Pane background;
     private Text levelLabel;
     private final List<End> ends;
-    private List<Actor> actors;
 
     public Level(Pane background) {
         if (background == null) {
@@ -33,12 +25,12 @@ public class Level {
         this.background = background;
         this.levelLabel = null;
         this.ends = new ArrayList<>();
-        this.actors = new ArrayList<>();
+
+        background.getStylesheets().add(Objects.requireNonNull(getClass().getResource(CSS_PATH)).toExternalForm());
     }
 
     public void addActor(Actor actor) {
         if (actor != null) {
-            actors.add(actor);
             background.getChildren().add(actor);
             System.out.println("Actor added: " + actor.getClass().getSimpleName() + " at position (" + actor.getX() + ", " + actor.getY() + ")");
         }
@@ -48,12 +40,16 @@ public class Level {
         removeExistingLevelLabel();
         levelLabel = createLevelLabel(level);
         background.getChildren().add(levelLabel);
+        levelLabel.toFront();
     }
 
     public void resetLevelLayout(LevelConfig config) {
+        ends.clear();
         LevelComposite levelComposite = new LevelComposite();
         for (int i = 0; i < config.totalEnds(); i++) {
-            levelComposite.addComponent(new End(config.startX() + i * config.gap(), config.y()));
+            End end = new End(config.startX() + i * config.gap(), config.y());
+            levelComposite.addComponent(end);
+            ends.add(end);
         }
         levelComposite.render(background);
     }
@@ -67,19 +63,15 @@ public class Level {
 
     private Text createLevelLabel(int level) {
         Text text = new Text("LEVEL: " + level);
-        text.setFont(Font.font(FONT_NAME, FontWeight.BOLD, FONT_SIZE));
-        text.setFill(FONT_COLOR);
-        text.setX(LEVEL_LABEL_X);
-        text.setY(LEVEL_LABEL_Y);
+        text.getStyleClass().add("level-label");
         return text;
     }
 
     public List<Actor> getActors() {
-        List<Actor> actors = background.getChildren().stream()
+        return background.getChildren().stream()
                 .filter(node -> node instanceof Actor)
                 .map(node -> (Actor) node)
                 .collect(Collectors.toList());
-        return actors;
     }
 
     public List<End> getEnds() {
