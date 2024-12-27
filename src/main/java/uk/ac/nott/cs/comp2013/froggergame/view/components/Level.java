@@ -52,8 +52,8 @@ public class Level {
 
     public void resetLevelLayout(LevelConfig config) {
         LevelComposite levelComposite = new LevelComposite();
-        for (int i = 0; i < config.getTotalEnds(); i++) {
-            levelComposite.addComponent(new End(config.getStartX() + i * config.getGap(), config.getY()));
+        for (int i = 0; i < config.totalEnds(); i++) {
+            levelComposite.addComponent(new End(config.startX() + i * config.gap(), config.y()));
         }
         levelComposite.render(background);
     }

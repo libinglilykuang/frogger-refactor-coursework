@@ -33,12 +33,12 @@ public class GameController implements GameEventListener {
     private static final int DEFAULT_INITIAL_LEVEL = 1;
 
     public GameController(GameControllerConfig config) {
-        this.background = config.getBackground();
-        this.scoreManager = config.getScoreManager();
-        this.gameObjectFactory = config.getGameObjectFactory();
-        this.gameInitializer = config.getGameInitializer();
-        this.gameStateChecker = config.getGameStateChecker();
-        this.scoreView = config.getScoreView();
+        this.background = config.background();
+        this.scoreManager = config.scoreManager();
+        this.gameObjectFactory = config.gameObjectFactory();
+        this.gameInitializer = config.gameInitializer();
+        this.gameStateChecker = config.gameStateChecker();
+        this.scoreView = config.scoreView();
     }
 
     public void initializeGame() {
@@ -64,7 +64,7 @@ public class GameController implements GameEventListener {
         Level levelView = new Level(background);
         TimeBar timeBar = background.getTimeBar();
 
-        levelManager = new LevelManager(animal, levelView, 1, timeBar,this);
+        levelManager = new LevelManager(animal, levelView, 5, timeBar,this);
         levelManager.setLevel(DEFAULT_INITIAL_LEVEL);
         levelView.updateLevelDisplay(DEFAULT_INITIAL_LEVEL);
     }

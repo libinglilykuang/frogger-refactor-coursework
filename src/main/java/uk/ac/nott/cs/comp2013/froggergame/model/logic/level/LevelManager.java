@@ -101,14 +101,13 @@ public class LevelManager {
         for (End end : this.levelView.getEnds()) {
             end.reset();
         }
-        this.totalEnds = config.getTotalEnds();
+        this.totalEnds = config.totalEnds();
 
         if (this.level == 2) {
             String crocodileImagePath = getClass().getResource("/images/crocodile.png").toExternalForm();
             Crocodile crocodile = new Crocodile(140, 440, 2.0, crocodileImagePath);
             this.levelView.addActor(crocodile);
-        }
-        if (this.level == 2) {
+
             String spiderImagePath = getClass().getResource("/images/spider.png").toExternalForm();
             for (Actor actor : levelView.getActors()) {
                 if (actor instanceof Log log) {
@@ -116,7 +115,8 @@ public class LevelManager {
                 }
             }
         }
-        double speedFactor = config.getSpeedFactor();
+
+        double speedFactor = config.speedFactor();
         this.updateObjectsSpeed(speedFactor);
     }
 
@@ -126,12 +126,7 @@ public class LevelManager {
     }
 
     public LevelConfig getLevelConfig(int currentLevel) {
-        return switch (currentLevel) {
-            case 1 -> new LevelConfig(1, 4, 96, 133, 1.0);
-            case 2 -> new LevelConfig(1, 4, 96, 133, 1);
-            case 3 -> new LevelConfig(2, 4, 96, 133, 2.0);
-            default -> new LevelConfig(5, 4, 96, 133, 1.0);
-        };
+        return LevelConfig.createDefault(currentLevel == 2 ? 1.5 : 1.0);
     }
 
     private void updateObjectsSpeed(double speedFactor) {
