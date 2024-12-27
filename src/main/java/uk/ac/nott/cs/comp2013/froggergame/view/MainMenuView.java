@@ -7,32 +7,41 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import java.util.List;
 import java.util.Objects;
 
-import uk.ac.nott.cs.comp2013.froggergame.controller.GameController;
-import uk.ac.nott.cs.comp2013.froggergame.controller.GameControllerFactory;
+import uk.ac.nott.cs.comp2013.froggergame.controller.MainMenuController;
 
+/**
+ * Main menu view for the Frogger game, providing options to play the game, view high scores, or quit.
+ */
 public class MainMenuView {
     private final Stage primaryStage;
     private static final int WINDOW_WIDTH = 600;
     private static final int WINDOW_HEIGHT = 800;
-    private static final String BACKGROUND_COLOR = "#3E5596";
-    private GameView gameView;
-    private GameController gameController;
+    private static final String MENU_IMAGE_PATH = "/images/menu.png";
+    private static final String FROG_ICON_PATH = "/images/froggerUp.png";
+    private final MainMenuController controller;
 
-    public MainMenuView(Stage primaryStage) {
+    /**
+     * Constructor to initialize the main menu view with the primary stage and controller.
+     *
+     * @param primaryStage The primary stage for the application.
+     * @param controller   The controller handling menu actions.
+     */
+    public MainMenuView(Stage primaryStage, MainMenuController controller) {
         this.primaryStage = primaryStage;
+        this.controller = controller;
     }
 
+    /**
+     * Displays the main menu view.
+     */
     public void show() {
         VBox rootLayout = createRootLayout();
         Scene scene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/mainmenu.css")).toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -44,27 +53,24 @@ public class MainMenuView {
         VBox rootLayout = new VBox();
         rootLayout.getChildren().addAll(banner, menuLayout);
         rootLayout.setAlignment(Pos.TOP_CENTER);
-        rootLayout.setStyle("-fx-background-color: " + BACKGROUND_COLOR + ";");
+        rootLayout.getStyleClass().add("root-layout");
 
         return rootLayout;
     }
 
     private VBox createMenuLayout() {
-        HBox playGameButton = createButton("PLAY GAME", this::startGame);
-        HBox highScoresButton = createButton("HIGH SCORES", this::showHighScores);
-        HBox quitGameButton = createButton("QUIT GAME", this::quitGame);
-
-        VBox menuLayout = new VBox(30, playGameButton, highScoresButton, quitGameButton);
-        menuLayout.setAlignment(Pos.CENTER);
-        menuLayout.setTranslateY(30);
-
+        VBox menuLayout = new VBox(
+                createButton("PLAY GAME", controller::startGame),
+                createButton("HIGH SCORES", controller::showHighScores),
+                createButton("QUIT GAME", controller::quitGame)
+        );
+        menuLayout.getStyleClass().add("menu-layout");
         return menuLayout;
     }
 
     private ImageView createHeaderBanner() {
-        ImageView banner = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/menu.png")).toExternalForm()));
-        banner.setFitWidth(WINDOW_WIDTH);
-        banner.setPreserveRatio(true);
+        ImageView banner = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(MENU_IMAGE_PATH)).toExternalForm()));
+        banner.getStyleClass().add("header-banner");
         return banner;
     }
 
@@ -73,70 +79,25 @@ public class MainMenuView {
         frogIcon.setVisible(false);
 
         Button button = createStyledButton(text);
-        button.setOnMouseEntered(event -> {
-            button.setTextFill(Color.YELLOW);
-            frogIcon.setVisible(true);
-            button.setCursor(javafx.scene.Cursor.HAND);
-        });
-        button.setOnMouseExited(event -> {
-            button.setTextFill(Color.LIMEGREEN);
-            frogIcon.setVisible(false);
-        });
+        button.setOnMouseEntered(event -> frogIcon.setVisible(true));
+        button.setOnMouseExited(event -> frogIcon.setVisible(false));
         button.setOnAction(event -> action.run());
 
-        HBox hBox = new HBox(20, frogIcon, button);
-        hBox.setAlignment(Pos.CENTER);
+        HBox hBox = new HBox(frogIcon, button);
+        hBox.getStyleClass().add("button-container");
 
         return hBox;
     }
 
     private Button createStyledButton(String text) {
         Button button = new Button(text);
-        button.setFont(Font.font("Arial", FontWeight.BOLD, 25));
-        button.setTextFill(Color.LIMEGREEN);
-        button.setStyle("-fx-background-color: black; -fx-border-color: limegreen; -fx-border-width: 2px;");
-        button.setPrefWidth(400);
+        button.getStyleClass().add("menu-button");
         return button;
     }
 
     private ImageView createFrogIcon() {
-        ImageView frogIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/froggerUp.png")).toExternalForm()));
-        frogIcon.setFitWidth(30);
-        frogIcon.setFitHeight(30);
+        ImageView frogIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(FROG_ICON_PATH)).toExternalForm()));
+        frogIcon.getStyleClass().add("frog-icon");
         return frogIcon;
-    }
-
-    private void startGame() {
-        initializeStage(primaryStage);
-
-        gameView.startBackground();
-        gameView.playBackgroundMusic();
-        gameController.startGameLoop();
-    }
-
-    private void initializeStage(Stage primaryStage) {
-        gameView = new GameView();
-        gameController = GameControllerFactory.createGameController(gameView.getGameStage());
-        Scene scene = new Scene(gameView, WINDOW_WIDTH, WINDOW_HEIGHT);
-        gameController.configureInputHandling(scene);
-
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
-    }
-
-    private void showHighScores() {
-        List<String[]> scores = List.of(
-                new String[]{"PLAYER1", "1200"},
-                new String[]{"PLAYER2", "950"},
-                new String[]{"PLAYER3", "800"}
-        );
-        HighScoresView highScoresView = new HighScoresView(primaryStage, scores);
-        highScoresView.show();
-    }
-
-
-    private void quitGame() {
-        primaryStage.close();
     }
 }

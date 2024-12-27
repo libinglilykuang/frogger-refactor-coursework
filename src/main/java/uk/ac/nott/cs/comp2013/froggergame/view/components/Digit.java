@@ -23,3 +23,4 @@ public class Digit extends ImageView {
 		setY(y);
 	}
 }
+

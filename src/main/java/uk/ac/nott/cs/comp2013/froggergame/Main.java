@@ -2,6 +2,8 @@ package uk.ac.nott.cs.comp2013.froggergame;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import uk.ac.nott.cs.comp2013.froggergame.controller.MainMenuController;
 import uk.ac.nott.cs.comp2013.froggergame.view.MainMenuView;
 
 public class Main extends Application {
@@ -11,7 +13,9 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		MainMenuView mainMenu = new MainMenuView(primaryStage);
+		MainMenuController mainMenuController = new MainMenuController(primaryStage);
+		MainMenuView mainMenu = new MainMenuView(primaryStage, mainMenuController);
 		mainMenu.show();
 	}
+
 }

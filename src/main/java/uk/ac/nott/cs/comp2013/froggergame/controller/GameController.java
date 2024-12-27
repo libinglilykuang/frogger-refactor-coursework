@@ -1,6 +1,8 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
 import javafx.scene.Scene;
+import java.util.function.Supplier;
+
 import uk.ac.nott.cs.comp2013.froggergame.controller.initializer.GameInitializer;
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.controller.loop.GameLoopManager;
@@ -17,7 +19,6 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.score.ScoreManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
-import java.util.function.Supplier;
 
 public class GameController implements GameEventListener {
     private final MyStage background;
@@ -160,10 +161,8 @@ public class GameController implements GameEventListener {
 
     @Override
     public void onGameWon(int points) {
-        //stopGame();
-        //int point = scoreManager.getPoints();
+        stopGame();
         AlertManager.showGameWonAlert(background, scoreManager.getPoints());
-        System.out.println("Displaying game won alert with points: " + scoreManager.getPoints());
     }
 
     @Override
