@@ -68,12 +68,8 @@ public class AnimalCollisionHandler implements CollisionHandler {
 
         Pane parentPane = spider.getParentPane();
         if (parentPane != null) {
-            System.out.println("Removing Spider from parentPane...");
             Platform.runLater(() -> parentPane.getChildren().remove(spider));
-        } else {
-            System.err.println("Spider's parentPane is null!");
         }
-
         if (spider.getParentLog() != null) {
             spider.getParentLog().clearSpider();
         }

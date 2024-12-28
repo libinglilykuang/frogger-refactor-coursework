@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyEventManager {
-    private final World world;
-    private final List<KeyEventHandlerProvider> providers = new ArrayList<>();
+    public final List<KeyEventHandlerProvider> providers = new ArrayList<>();
 
     public KeyEventManager(World world) {
-        this.world = world;
         world.sceneProperty().addListener(this::configureKeyEvents);
     }
 
@@ -24,7 +22,7 @@ public class KeyEventManager {
         }
     }
 
-    private void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
+    public void processKeyEvent(KeyEvent event, boolean isKeyPressed) {
         for (KeyEventHandlerProvider provider : providers) {
             dispatchKeyEvent(event, isKeyPressed, provider);
         }

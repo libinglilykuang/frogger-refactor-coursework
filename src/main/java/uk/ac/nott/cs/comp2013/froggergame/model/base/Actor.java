@@ -67,7 +67,6 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
     }
 
     public World getWorld() {
-        //World world = (World) this.getParent();
         if (world == null) {
             throw new IllegalStateException("Actor is not attached to any World instance.");
         }
