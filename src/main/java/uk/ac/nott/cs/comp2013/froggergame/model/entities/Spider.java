@@ -10,7 +10,10 @@ public class Spider extends Actor {
     public Spider(Log parentLog, String imagePath) {
         super((int) parentLog.getX(), (int) parentLog.getY(), 0);
         this.parentLog = parentLog;
-        setImage(new Image(imagePath, 30, 30, true, true));
+        try {
+            setImage(new Image(imagePath, 30, 30, true, true));
+        } catch (RuntimeException ignored) {
+        }
     }
 
     public Log getParentLog() {
@@ -40,3 +43,4 @@ public class Spider extends Actor {
     public void act(double elapsedTime) {
     }
 }
+

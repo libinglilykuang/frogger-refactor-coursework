@@ -6,6 +6,7 @@ import uk.ac.nott.cs.comp2013.froggergame.model.data.LevelConfig;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Log;
+import uk.ac.nott.cs.comp2013.froggergame.view.components.CrocodileView;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Level;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.TimeBar;
@@ -131,9 +132,11 @@ public class LevelManager {
         Crocodile crocodile = new Crocodile(
                 config.crocodileX(),
                 config.crocodileY(),
-                config.crocodileSpeed(),
-                crocodileImagePath
+                config.crocodileSpeed()
         );
+
+        CrocodileView.initializeImage(crocodile, crocodileImagePath);
+
         this.levelView.addActor(crocodile);
 
         String spiderImagePath = getClass().getResource(config.spiderImagePath()).toExternalForm();
@@ -144,7 +147,7 @@ public class LevelManager {
         }
     }
 
-    private void resetAnimalPosition() {
+    public void resetAnimalPosition() {
         this.animal.setX(DEFAULT_ANIMAL_START_X);
         this.animal.setY(DEFAULT_ANIMAL_START_Y);
     }
@@ -153,7 +156,7 @@ public class LevelManager {
         return LevelConfig.createDefault(currentLevel == 2 ? 1.5 : 1.0);
     }
 
-    private void updateObjectsSpeed(double speedFactor) {
+    public void updateObjectsSpeed(double speedFactor) {
         for (Actor actor : levelView.getActors()) {
             actor.setSpeedFactor(speedFactor);
         }

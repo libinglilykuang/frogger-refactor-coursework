@@ -42,6 +42,14 @@ public class AnimalStateManager implements StateManager {
         scoreManager.resetScoreChangedFlag();
     }
 
+    protected ImageManager createImageManager() {
+        return new ImageManager();
+    }
+
+    protected DeathAnimationHandler createDeathAnimationHandler() {
+        return new DeathAnimationHandler();
+    }
+
     public boolean isVictory() {
         return endCount >= gameWinEndCount;
     }
