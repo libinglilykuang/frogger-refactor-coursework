@@ -1,5 +1,6 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller.initializer;
 
+import javafx.collections.ObservableList;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectType;
 import uk.ac.nott.cs.comp2013.froggergame.model.factory.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectData;
@@ -29,7 +30,7 @@ public class GameInitializer {
         setupScoreDisplay(scoreView);
     }
 
-    private void setupBackground() {
+    public void setupBackground() {
         Background bg = new Background(BACKGROUND_IMAGE);
         background.getChildren().add(bg);
     }
@@ -55,7 +56,7 @@ public class GameInitializer {
         }
     }
 
-    private void setupEndPoints() {
+    public void setupEndPoints() {
         for (int[] position : GameObjectData.END_POINT_DATA) {
             background.getChildren().add(new End(position[0], position[1]));
         }

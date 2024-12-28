@@ -30,7 +30,10 @@ public class Animal extends Actor {
 
     public Animal(String imageLink) {
         super((int) DEFAULT_X, (int) DEFAULT_Y, DEFAULT_SPEED);
-        setImage(new Image(imageLink, IMAGE_SIZE, IMAGE_SIZE, true, true));
+        try {
+            setImage(new Image(imageLink, IMAGE_SIZE, IMAGE_SIZE, true, true));
+        } catch (RuntimeException ignored) {
+        }
         this.stateManager = createDefaultStateManager();
         this.collisionHandler = createDefaultCollisionHandler();
         this.scoreDisplay = new Score();
@@ -135,7 +138,7 @@ public class Animal extends Actor {
         }
     }
 
-    private boolean isInWaterWithoutPlatform() {
+    public boolean isInWaterWithoutPlatform() {
         return !isOnPlatform() && getY() < 413.0;
     }
 

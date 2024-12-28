@@ -1,6 +1,5 @@
 package uk.ac.nott.cs.comp2013.froggergame.model.entities;
 
-import javafx.scene.image.Image;
 import java.util.Random;
 
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
@@ -11,10 +10,14 @@ public class Log extends Actor {
 	private static final Random RANDOM = new Random();
 
 	public Log(String imageLink, int size, int xPos, int yPos, double speed) {
-		super( xPos, yPos, speed);
-		setImage(new Image(imageLink, size, size, true, true));
+		super(xPos, yPos, speed);
+		try {
+			setImage(new javafx.scene.image.Image(imageLink, size, size, true, true));
+		} catch (RuntimeException ignored) {
+		}
 		configureBounds(-300, 600, 700, -180);
 	}
+
 
 	public void addRandomSpider(String spiderImagePath) {
 		if (spider == null && RANDOM.nextBoolean()) {
@@ -23,6 +26,10 @@ public class Log extends Actor {
 				world.addActor(spider);
 			}
 		}
+	}
+
+	public Spider getSpider() {
+		return spider;
 	}
 
 	public void clearSpider() {
@@ -42,3 +49,4 @@ public class Log extends Actor {
 	public void act(double elapsedTime) {
 	}
 }
+

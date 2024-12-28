@@ -17,7 +17,7 @@ public class WetTurtle extends AbstractTurtle {
 	}
 
 	@Override
-	protected void updateStateBasedOnFrame(int frame) {
+    public void updateStateBasedOnFrame(int frame) {
 		sunk = (frame == animationFrames.length - 1);
 	}
 }

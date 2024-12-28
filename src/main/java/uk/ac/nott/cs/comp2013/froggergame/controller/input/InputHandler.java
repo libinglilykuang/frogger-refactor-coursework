@@ -6,7 +6,7 @@ import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
 
 public class InputHandler {
-    private Animal animal;
+    private final Animal animal;
 
     public InputHandler(Animal animal) {
         this.animal = animal;
