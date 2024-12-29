@@ -6,30 +6,35 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import java.util.Objects;
 
 /**
- * Represents a time bar component with a countdown and timeout behavior.
+ * Represents a time bar component with a countdown timer, visual updates,
+ * and a timeout callback.
  */
 public class TimeBar {
-    private static final double DEFAULT_BAR_WIDTH = 100.0;
-    private static final double DEFAULT_BAR_HEIGHT = 20.0;
-    private static final int DEFAULT_TOTAL_TIME = 90;
+    private static final double DEFAULT_BAR_WIDTH = 100.0; // Default width of the time bar
+    private static final double DEFAULT_BAR_HEIGHT = 20.0; // Default height of the time bar
+    private static final int DEFAULT_TOTAL_TIME = 90; // Default total countdown time in seconds
 
-    private final Rectangle timeBar;
-    private final Text timeLabel;
-    private Timeline timeline;
-    private double remainingTime;
-    private final double barWidth;
-    private final double totalTime;
+    private final Rectangle timeBar; // The visual representation of the time bar
+    private final Text timeLabel; // Label displaying time information
+    private Timeline timeline; // Animation timeline for the countdown
+    private double remainingTime; // Remaining time in seconds
+    private final double barWidth; // Width of the time bar
+    private final double totalTime; // Total countdown time in seconds
 
+    /**
+     * Listener interface to handle timeout events.
+     */
     public interface TimeOutListener {
         void onTimeOut();
     }
 
-    private TimeOutListener timeOutListener;
+    private TimeOutListener timeOutListener; // Callback for timeout events
 
     /**
-     * Constructor for TimeBar with default size and timeout settings.
+     * Constructor for TimeBar with default size and countdown settings.
      *
      * @param parentPane The parent pane to which the time bar will be added.
      */
@@ -38,7 +43,7 @@ public class TimeBar {
     }
 
     /**
-     * Constructor for TimeBar with custom size and timeout settings.
+     * Constructor for TimeBar with custom size and countdown settings.
      *
      * @param parentPane The parent pane to which the time bar will be added.
      * @param barWidth   The width of the time bar.
@@ -63,22 +68,40 @@ public class TimeBar {
 
         // Apply CSS to the parent pane
         parentPane.getStylesheets().add(
-                getClass().getResource("/styles/timebar.css").toExternalForm()
+                Objects.requireNonNull(getClass().getResource("/styles/timebar.css")).toExternalForm()
         );
     }
 
+    /**
+     * Sets the listener for timeout events.
+     *
+     * @param listener The listener to be notified on timeout.
+     */
     public void setTimeOutListener(TimeOutListener listener) {
         this.timeOutListener = listener;
     }
 
+    /**
+     * Returns the rectangle representing the time bar.
+     *
+     * @return The rectangle object of the time bar.
+     */
     public Rectangle getRectangle() {
         return timeBar;
     }
 
+    /**
+     * Returns the text label of the time bar.
+     *
+     * @return The text label of the time bar.
+     */
     public Text getText() {
         return timeLabel;
     }
 
+    /**
+     * Starts the countdown animation.
+     */
     public void start() {
         if (timeline == null) {
             timeline = new Timeline(
@@ -90,6 +113,9 @@ public class TimeBar {
         timeline.play();
     }
 
+    /**
+     * Updates the time bar's width and visual state based on the remaining time.
+     */
     private void updateTimeBar() {
         remainingTime--;
 
@@ -105,6 +131,9 @@ public class TimeBar {
         }
     }
 
+    /**
+     * Handles actions to be performed when the timer reaches zero.
+     */
     private void onTimeOut() {
         timeLabel.setText("TIME: 0");
         timeBar.getStyleClass().removeAll("time-bar", "time-bar-warning", "time-bar-danger");
@@ -115,6 +144,9 @@ public class TimeBar {
         }
     }
 
+    /**
+     * Resets the time bar to its initial state.
+     */
     public void reset() {
         stop();
         remainingTime = totalTime;
@@ -125,6 +157,9 @@ public class TimeBar {
         start();
     }
 
+    /**
+     * Stops the countdown animation.
+     */
     public void stop() {
         if (timeline != null) {
             timeline.stop();

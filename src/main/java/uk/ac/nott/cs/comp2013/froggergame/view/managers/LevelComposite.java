@@ -29,15 +29,6 @@ public class LevelComposite implements GameComponent {
     }
 
     /**
-     * Removes a child component from the composite.
-     *
-     * @param component The GameComponent to be removed.
-     */
-    public void removeComponent(GameComponent component) {
-        this.children.remove(component);
-    }
-
-    /**
      * Renders all child components onto the given pane.
      *
      * @param pane The pane where the components should be rendered.
