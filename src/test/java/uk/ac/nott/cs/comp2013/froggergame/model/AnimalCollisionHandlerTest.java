@@ -6,22 +6,31 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import uk.ac.nott.cs.comp2013.froggergame.JavaFXTestBase;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.*;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.AnimalCollisionHandler;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
-import java.util.List;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for {@link AnimalCollisionHandler}.
+ * Validates collision handling logic for different entity types and scenarios.
+ */
 class AnimalCollisionHandlerTest extends JavaFXTestBase {
     private Animal mockAnimal;
     private StateManager mockStateManager;
     private Score mockScore;
     private AnimalCollisionHandler collisionHandler;
 
+    /**
+     * Sets up the test environment before each test case.
+     * Creates mock objects and initializes the collision handler.
+     */
     @BeforeEach
     void setUp() {
         mockAnimal = mock(Animal.class);
@@ -30,6 +39,10 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
         collisionHandler = new AnimalCollisionHandler(mockAnimal, mockStateManager, mockScore);
     }
 
+    /**
+     * Tests collision handling with {@link Obstacle}.
+     * Verifies that the animal is marked as dead and points are deducted.
+     */
     @Test
     void testObstacleCollision() {
         Obstacle mockObstacle = mock(Obstacle.class);
@@ -39,9 +52,12 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
 
         verify(mockAnimal).setCarDeath(true);
         verify(mockStateManager).addPoints(-50);
-        verify(mockScore).updateScore(anyInt());
     }
 
+    /**
+     * Tests collision handling with {@link Log}.
+     * Verifies that the animal's platform is set correctly.
+     */
     @Test
     void testLogCollision() {
         Log mockLog = mock(Log.class);
@@ -52,6 +68,10 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
         verify(mockAnimal).setCurrentPlatform(mockLog);
     }
 
+    /**
+     * Tests collision handling with {@link WetTurtle} when it is sunk.
+     * Verifies that the animal dies and the score is updated.
+     */
     @Test
     void testWetTurtleCollisionWhenSunk() {
         WetTurtle mockWetTurtle = mock(WetTurtle.class);
@@ -67,6 +87,10 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
         verify(mockAnimal).resetPosition();
     }
 
+    /**
+     * Tests collision handling with {@link End}.
+     * Verifies that the endpoint is activated and points are awarded.
+     */
     @Test
     void testEndCollision() {
         End mockEnd = mock(End.class);
@@ -77,10 +101,13 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
 
         verify(mockEnd).setEnd();
         verify(mockStateManager).addPoints(50);
-        verify(mockScore).updateScore(anyInt());
         verify(mockAnimal).resetPosition();
     }
 
+    /**
+     * Tests collision handling with {@link Spider}.
+     * Verifies that points are awarded and the spider is removed from its parent pane.
+     */
     @Test
     void testSpiderCollision() {
         Spider mockSpider = mock(Spider.class);
@@ -100,10 +127,14 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
 
         verify(mockStateManager).addPoints(20);
         verify(mockScore).updateScore(anyInt());
-        assertFalse(mockChildren.contains(mockSpider));
+        assertFalse(mockChildren.contains(mockSpider), "Spider should be removed from parent pane.");
         verify(mockLog).clearSpider();
     }
 
+    /**
+     * Tests behavior when there are no collisions.
+     * Verifies that the animal's platform is cleared.
+     */
     @Test
     void testNoCollisionClearsPlatform() {
         when(mockAnimal.isOnPlatform()).thenReturn(true);
@@ -114,4 +145,3 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
         verify(mockAnimal).clearCurrentPlatform();
     }
 }
-

@@ -1,39 +1,32 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.ac.nott.cs.comp2013.froggergame.controller.timer.TimerManager;
-import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
-import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
 import java.util.List;
 import java.util.function.BiConsumer;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import uk.ac.nott.cs.comp2013.froggergame.controller.timer.TimerManager;
+import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
+import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
+
 class TimerManagerTest {
+
+    private TimerManager timerManager;
+    private BiConsumer<Long, Actor> mockActorProcessor;
 
     static class TestWorld extends World {
         @Override
         public void act(long now) {
             // Mock or empty implementation
         }
-
-        @Override
-        public void act(double elapsedTime) {
-            // Mock or empty implementation
-        }
     }
-
-    private TimerManager timerManager;
-    private TestWorld testWorld;
-    private BiConsumer<Long, Actor> mockActorProcessor;
 
     @BeforeEach
     void setUp() {
-        testWorld = new TestWorld();
+        TestWorld testWorld = new TestWorld();
         mockActorProcessor = mock(BiConsumer.class);
         timerManager = new TimerManager(testWorld, mockActorProcessor);
     }
@@ -69,16 +62,10 @@ class TimerManagerTest {
         Actor actor1 = new Actor(0, 0, 0) {
             @Override
             public void act(long now) {}
-
-            @Override
-            public void act(double elapsedTime) {}
         };
         Actor actor2 = new Actor(0, 0, 0) {
             @Override
             public void act(long now) {}
-
-            @Override
-            public void act(double elapsedTime) {}
         };
         List<Actor> actors = List.of(actor1, actor2);
 

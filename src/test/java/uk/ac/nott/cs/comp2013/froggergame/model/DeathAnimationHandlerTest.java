@@ -2,14 +2,14 @@ package uk.ac.nott.cs.comp2013.froggergame.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.animation.DeathAnimationHandler;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.animation.DeathAnimationHandler.AnimationState;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.animation.DeathAnimationContext;
 import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageManager;
-
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DeathAnimationHandlerTest {
     private DeathAnimationHandler deathAnimationHandler;

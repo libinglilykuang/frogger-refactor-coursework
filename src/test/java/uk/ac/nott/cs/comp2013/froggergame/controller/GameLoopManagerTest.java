@@ -1,19 +1,18 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uk.ac.nott.cs.comp2013.froggergame.JavaFXTestBase;
+import uk.ac.nott.cs.comp2013.froggergame.controller.core.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.controller.loop.GameLoopManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-class GameLoopManagerTest {
+class GameLoopManagerTest extends JavaFXTestBase {
 
     private GameLoopManager gameLoopManager;
     private Animal mockAnimal;
@@ -22,95 +21,54 @@ class GameLoopManagerTest {
 
     @BeforeEach
     void setUp() {
-        // Mock dependencies
         mockAnimal = mock(Animal.class);
         mockGameStateChecker = mock(GameStateChecker.class);
         mockEventListener = mock(GameEventListener.class);
 
-        // Initialize GameLoopManager
         gameLoopManager = new GameLoopManager(mockAnimal, mockGameStateChecker);
-
-        // Set GameEventListener
         gameLoopManager.setGameEventListener(mockEventListener);
     }
 
     @Test
     void testStartGameLoopExecution() {
         gameLoopManager.startGameLoopExecution();
-
-        // Validate AnimationTimer is initialized
         assertNotNull(getPrivateField(gameLoopManager, "gameLoop"), "GameLoop should be initialized");
     }
 
     @Test
     void testStopGameLoopExecution() {
         gameLoopManager.startGameLoopExecution();
-
-        // Stop the game loop
-        gameLoopManager.stopGameLoopExecution();
-
-        // Validate that the AnimationTimer stop method is called
         AnimationTimer gameLoop = (AnimationTimer) getPrivateField(gameLoopManager, "gameLoop");
         assertNotNull(gameLoop, "GameLoop should be initialized");
-        gameLoop.stop();
+        gameLoopManager.stopGameLoopExecution();
+        verify(mockAnimal, never()).isActive(); // Ensures no unintended logic during stop
     }
 
     @Test
     void testCheckGameState() {
-        // Start the game loop
+        // Arrange
+        when(mockAnimal.isActive()).thenReturn(true);
+
+        // Act
         gameLoopManager.startGameLoopExecution();
+        callPrivateMethod(gameLoopManager, "checkGameState");
 
-        // Call the private method via reflection
-        callPrivateMethod(gameLoopManager);
-
-        // Verify that GameStateChecker is called
+        // Assert
         verify(mockGameStateChecker).checkGameState(mockAnimal, mockEventListener);
     }
-
-    // Utility method for invoking private methods
-    private void callPrivateMethod(Object object) {
-        try {
-            var method = object.getClass().getDeclaredMethod("checkGameState");
-            method.setAccessible(true);
-            method.invoke(object);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     @Test
     void testExecuteGameLoop() {
-        long initialTime = 1_000_000_000;
-        long currentTime = 2_000_000_000;
+        long now = System.nanoTime();
+        setPrivateField(gameLoopManager, "lastUpdateTime", now);
 
-        // Set the last update time
-        setPrivateField(gameLoopManager, "lastUpdateTime", initialTime);
-
-        // Mock the animal's active state
         when(mockAnimal.isActive()).thenReturn(true);
 
-        // Invoke executeGameLoop method
-        callPrivateMethod(gameLoopManager, "executeGameLoop", currentTime);
+        callPrivateMethod(gameLoopManager, "executeGameLoop", now);
 
-        // Verify elapsed time calculation and event listener update
-        verify(mockEventListener).update(1.0);
+        // Verify that `update` and `checkGameState` are called correctly
+        verify(mockEventListener).update(now);
         verify(mockGameStateChecker).checkGameState(mockAnimal, mockEventListener);
-    }
-
-    @Test
-    void testCalculateElapsedTime() {
-        long initialTime = 1_000_000_000;
-        long currentTime = 2_000_000_000;
-
-        // Set the last update time
-        setPrivateField(gameLoopManager, "lastUpdateTime", initialTime);
-
-        // Call calculateElapsedTime
-        double elapsedTime = (double) callPrivateMethod(gameLoopManager, "calculateElapsedTime", currentTime);
-
-        // Assert the result
-        assertEquals(1.0, elapsedTime, 0.001);
     }
 
     // Utility methods for accessing private fields and methods
@@ -134,11 +92,20 @@ class GameLoopManagerTest {
         }
     }
 
-    private Object callPrivateMethod(Object object, String methodName, Object... args) {
+    private void callPrivateMethod(Object object, String methodName, Object... args) {
         try {
-            var method = object.getClass().getDeclaredMethod(methodName, long.class);
+            Class<?>[] parameterTypes = new Class<?>[args.length];
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] instanceof Long) {
+                    parameterTypes[i] = long.class;
+                } else {
+                    parameterTypes[i] = args[i].getClass();
+                }
+            }
+
+            var method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
             method.setAccessible(true);
-            return method.invoke(object, args);
+            method.invoke(object, args);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

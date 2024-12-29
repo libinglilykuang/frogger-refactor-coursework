@@ -7,17 +7,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import uk.ac.nott.cs.comp2013.froggergame.JavaFXTestBase;
+import uk.ac.nott.cs.comp2013.froggergame.controller.menu.MainMenuController;
 import uk.ac.nott.cs.comp2013.froggergame.view.MainMenuView;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class MainMenuViewTest extends JavaFXTestBase {
+class MainMenuControllerTest extends JavaFXTestBase {
 
     private Stage mockStage;
     private MainMenuController mockController;

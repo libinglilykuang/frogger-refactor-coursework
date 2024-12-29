@@ -7,6 +7,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.KeyEventHandlerProvider;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.BoundaryManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.World;
@@ -127,13 +128,6 @@ public abstract class Actor extends ImageView implements KeyEventHandlerProvider
      * @param now The current time in nanoseconds
      */
     public abstract void act(long now);
-
-    /**
-     * Abstract method to define behavior per elapsed time.
-     *
-     * @param elapsedTime The time elapsed since the last tick
-     */
-    public abstract void act(double elapsedTime);
 
     public EventHandler<? super KeyEvent> getKeyPressedHandler() {
         return this.keyPressedHandler;

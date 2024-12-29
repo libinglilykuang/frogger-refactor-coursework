@@ -4,11 +4,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.*;
+
 import uk.ac.nott.cs.comp2013.froggergame.controller.input.InputHandler;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
-
-import static org.mockito.Mockito.*;
 
 class InputHandlerTest {
 
