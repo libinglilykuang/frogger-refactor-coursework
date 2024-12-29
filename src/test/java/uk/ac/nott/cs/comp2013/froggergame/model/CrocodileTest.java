@@ -2,9 +2,9 @@ package uk.ac.nott.cs.comp2013.froggergame.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import uk.ac.nott.cs.comp2013.froggergame.model.entities.Crocodile;
 
 class CrocodileTest {
     private Crocodile crocodile;

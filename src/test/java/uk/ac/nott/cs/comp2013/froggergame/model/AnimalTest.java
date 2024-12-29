@@ -67,10 +67,6 @@ class AnimalTest {
             @Override
             public void act(long now) {
             }
-
-            @Override
-            public void act(double elapsedTime) {
-            }
         });
         assertFalse(animal.isOnPlatform());
         animal.clearCurrentPlatform();

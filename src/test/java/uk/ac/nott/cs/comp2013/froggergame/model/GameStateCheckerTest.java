@@ -2,11 +2,12 @@ package uk.ac.nott.cs.comp2013.froggergame.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.ac.nott.cs.comp2013.froggergame.controller.GameEventListener;
+import static org.mockito.Mockito.*;
+
+import uk.ac.nott.cs.comp2013.froggergame.controller.core.GameEventListener;
 import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.GameStateChecker;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
-import static org.mockito.Mockito.*;
 
 class GameStateCheckerTest {
     private GameStateChecker gameStateChecker;

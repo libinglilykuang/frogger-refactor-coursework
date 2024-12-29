@@ -2,6 +2,7 @@ package uk.ac.nott.cs.comp2013.froggergame.model.entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+
 import uk.ac.nott.cs.comp2013.froggergame.model.base.Actor;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.AnimalCollisionHandler;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.collision.CollisionHandler;
@@ -9,25 +10,34 @@ import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.AnimalStateManager;
 import uk.ac.nott.cs.comp2013.froggergame.model.logic.state.StateManager;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
 
+/**
+ * Represents the player-controlled animal in the game, handling movement, collisions, and state management.
+ */
 public class Animal extends Actor {
 
+    // Constants for default values
     private static final double INITIAL_HIGHEST_Y = 800.0;
-    private static final double MOVEMENT_Y = 26.6667;
-    private static final double MOVEMENT_X = 21.3333;
-    private static final int IMAGE_SIZE = 40;
-    private static final double DEFAULT_X = 300;
-    private static final double DEFAULT_Y = 733 + MOVEMENT_Y;
-    private static final double DEFAULT_SPEED = 0.0;
+    private static final double MOVEMENT_Y = 26.6667; // Vertical movement step
+    private static final double MOVEMENT_X = 21.3333; // Horizontal movement step
+    private static final int IMAGE_SIZE = 40; // Size of the animal image
+    private static final double DEFAULT_X = 300; // Default X position
+    private static final double DEFAULT_Y = 733 + MOVEMENT_Y; // Default Y position
+    private static final double DEFAULT_SPEED = 0.0; // Default speed
 
-    private Actor currentPlatform;
-    private boolean active = true;
-    private final StateManager stateManager;
-    private final CollisionHandler collisionHandler;
-    private double highestY = INITIAL_HIGHEST_Y;
-    private boolean carDeath = false;
-    private boolean waterDeath = false;
-    private Score scoreDisplay;
+    // Instance variables
+    private Actor currentPlatform; // The platform the animal is currently on
+    private boolean active = true; // Whether the animal is active
+    private final StateManager stateManager; // Manages the animal's state (e.g., score, deaths)
+    private final CollisionHandler collisionHandler; // Handles collision logic
+    private boolean carDeath = false; // Whether the animal died due to a car collision
+    private boolean waterDeath = false; // Whether the animal died in water
+    private Score scoreDisplay; // Displays the score
 
+    /**
+     * Constructs an animal with the specified image.
+     *
+     * @param imageLink The path to the animal's image
+     */
     public Animal(String imageLink) {
         super((int) DEFAULT_X, (int) DEFAULT_Y, DEFAULT_SPEED);
         try {
@@ -44,10 +54,20 @@ public class Animal extends Actor {
         this.active = active;
     }
 
+    /**
+     * Creates the default state manager for the animal.
+     *
+     * @return The default StateManager instance
+     */
     private StateManager createDefaultStateManager() {
         return new AnimalStateManager(this);
     }
 
+    /**
+     * Creates the default collision handler for the animal.
+     *
+     * @return The default CollisionHandler instance
+     */
     private CollisionHandler createDefaultCollisionHandler() {
         if (scoreDisplay == null) {
             scoreDisplay = new Score();
@@ -55,6 +75,9 @@ public class Animal extends Actor {
         return new AnimalCollisionHandler(this, stateManager, scoreDisplay);
     }
 
+    /**
+     * Resets the animal's position and state to the defaults.
+     */
     public void resetPosition() {
         setX(DEFAULT_X);
         setY(DEFAULT_Y);
@@ -64,15 +87,11 @@ public class Animal extends Actor {
     }
 
     public void setCurrentPlatform(Actor platform) {
-        if (this.currentPlatform != platform) {
-            this.currentPlatform = platform;
-        }
+        this.currentPlatform = platform;
     }
 
     public void clearCurrentPlatform() {
-        if (this.currentPlatform != null) {
-            this.currentPlatform = null;
-        }
+        this.currentPlatform = null;
     }
 
     public boolean isOnPlatform() {
@@ -87,18 +106,16 @@ public class Animal extends Actor {
         this.waterDeath = waterDeath;
     }
 
-    public void setHighestY(double y) {
-        highestY = y;
-    }
-
-    public double getHighestY() {
-        return highestY;
-    }
-
     public StateManager getStateManager() {
         return stateManager;
     }
 
+    /**
+     * Calculates the horizontal movement based on the pressed key.
+     *
+     * @param key The key code
+     * @return The horizontal movement distance
+     */
     public double getMovementX(KeyCode key) {
         return switch (key) {
             case A -> -MOVEMENT_X;
@@ -107,6 +124,12 @@ public class Animal extends Actor {
         };
     }
 
+    /**
+     * Calculates the vertical movement based on the pressed key.
+     *
+     * @param key The key code
+     * @return The vertical movement distance
+     */
     public double getMovementY(KeyCode key) {
         return switch (key) {
             case W -> -MOVEMENT_Y;
@@ -119,6 +142,9 @@ public class Animal extends Actor {
         return carDeath || waterDeath;
     }
 
+    /**
+     * Moves the animal based on the speed of the platform it is on.
+     */
     private void applyPlatformMovement() {
         if (isOnPlatform() && currentPlatform != null) {
             double platformSpeed = currentPlatform.getSpeed();
@@ -126,10 +152,20 @@ public class Animal extends Actor {
         }
     }
 
+    /**
+     * Handles the death animation of the animal.
+     *
+     * @param now       The current time in nanoseconds
+     * @param deathType The type of death (e.g., "cardeath", "waterdeath")
+     * @param frameCount The number of animation frames
+     */
     private void handleDeathAnimation(long now, String deathType, int frameCount) {
         stateManager.updateDeathAnimation(now, deathType, frameCount);
     }
 
+    /**
+     * Updates the animal's state, including collision checks and platform movement.
+     */
     private void updateState() {
         collisionHandler.checkCollisions();
         applyPlatformMovement();
@@ -138,6 +174,11 @@ public class Animal extends Actor {
         }
     }
 
+    /**
+     * Checks if the animal is in water without being on a platform.
+     *
+     * @return True if in water without a platform, false otherwise
+     */
     public boolean isInWaterWithoutPlatform() {
         return !isOnPlatform() && getY() < 413.0;
     }
@@ -157,9 +198,5 @@ public class Animal extends Actor {
             updateState();
         }
         stateManager.update(now);
-    }
-
-    @Override
-    public void act(double elapsedTime) {
     }
 }

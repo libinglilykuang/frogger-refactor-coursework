@@ -1,4 +1,4 @@
-package uk.ac.nott.cs.comp2013.froggergame.controller;
+package uk.ac.nott.cs.comp2013.froggergame.controller.core;
 
 import javafx.scene.Scene;
 import java.util.function.Supplier;
@@ -19,6 +19,10 @@ import uk.ac.nott.cs.comp2013.froggergame.model.entities.Animal;
 import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Score;
 
+/**
+ * Main controller for managing the Frogger game flow, including initialization,
+ * input handling, game loop execution, and game state updates.
+ */
 public class GameController implements GameEventListener {
     private final MyStage background;
     private final GameInitializer gameInitializer;
@@ -32,6 +36,11 @@ public class GameController implements GameEventListener {
 
     private static final int DEFAULT_INITIAL_LEVEL = 1;
 
+    /**
+     * Constructs the GameController with necessary dependencies.
+     *
+     * @param config Configuration object that contains all dependencies.
+     */
     public GameController(GameControllerConfig config) {
         this.background = config.background();
         this.scoreManager = config.scoreManager();
@@ -41,71 +50,96 @@ public class GameController implements GameEventListener {
         this.scoreView = config.scoreView();
     }
 
+    /**
+     * Initializes the game components and settings.
+     */
     public void initializeGame() {
         setupAnimal();
         setupLevelManager();
         setupGameLoopManager();
-        gameInitializer.initializeComponents(scoreView);
+        gameInitializer.initializeComponents(scoreView); // Initializes view and model components
         setupTimeoutListener();
         setupAnimal();
     }
 
+    /**
+     * Creates and adds the main player character (Animal) to the stage.
+     */
     private void setupAnimal() {
-        animal = gameObjectFactory.createAnimal();
-        background.addActor(animal);
+        animal = gameObjectFactory.createAnimal(); // Uses factory to create the player character
+        background.addActor(animal); // Adds the animal to the game stage
     }
 
+    /**
+     * Sets up the LevelManager responsible for managing game levels and progression.
+     */
     private void setupLevelManager() {
         Level levelView = new Level(background);
         TimeBar timeBar = background.getTimeBar();
-
         levelManager = new LevelManager(animal, levelView, 5, timeBar, this);
-        levelManager.setLevel(DEFAULT_INITIAL_LEVEL);
-        levelView.updateLevelDisplay(DEFAULT_INITIAL_LEVEL);
+        levelManager.setLevel(DEFAULT_INITIAL_LEVEL); // Initializes the default level
+        levelView.updateLevelDisplay(DEFAULT_INITIAL_LEVEL); // Updates the UI display
     }
 
+    /**
+     * Configures the game loop manager and links it with the game state listener.
+     */
     private void setupGameLoopManager() {
         gameLoopManager = new GameLoopManager(animal, gameStateChecker);
-        gameLoopManager.setGameEventListener(this);
+        gameLoopManager.setGameEventListener(this); // Sets this controller as the event listener
     }
 
+    /**
+     * Configures a listener for handling timeout events.
+     */
     private void setupTimeoutListener() {
         background.getTimeBar().setTimeOutListener(() -> {
             stopGame();
             freezeAnimal();
-            AlertManager.showGameOverAlert(background);
+            AlertManager.showGameOverAlert(background); // Shows game-over alert
         });
     }
 
+    /**
+     * Configures key press and release events for player input handling.
+     *
+     * @param scene The JavaFX scene where the game is rendered.
+     */
     public void configureInputHandling(Scene scene) {
         if (scene != null && animal != null) {
             InputHandler inputHandler = new InputHandler(animal);
 
             scene.setOnKeyPressed(event -> {
                 if (animal.isActive()) {
-                    inputHandler.handleKeyPressed(event);
+                    inputHandler.handleKeyPressed(event); // Handles key press
                 }
             });
 
             scene.setOnKeyReleased(event -> {
                 if (animal.isActive()) {
-                    inputHandler.handleKeyReleased(event);
+                    inputHandler.handleKeyReleased(event); // Handles key release
                 }
             });
         } else if (scene != null) {
-            scene.setOnKeyPressed(null);
+            scene.setOnKeyPressed(null); // Clears key event handlers
             scene.setOnKeyReleased(null);
         }
     }
 
+    /**
+     * Starts the game loop and timer for the current level.
+     */
     public void startGameLoop() {
-        gameLoopManager.startGameLoopExecution();
+        gameLoopManager.startGameLoopExecution(); // Starts the game loop
         TimeBar timeBar = background.getTimeBar();
         if (timeBar != null) {
-            timeBar.start();
+            timeBar.start(); // Starts the timer
         }
     }
 
+    /**
+     * Stops the game loop and timer, and halts background music.
+     */
     public void stopGame() {
         gameLoopManager.stopGameLoopExecution();
         TimeBar timeBar = background.getTimeBar();
@@ -115,6 +149,9 @@ public class GameController implements GameEventListener {
         background.stopMusic();
     }
 
+    /**
+     * Updates the game state, including scores and levels, if there are changes.
+     */
     public void updateGameState() {
         updateIfChanged(
                 () -> animal.getStateManager().hasScoreChanged(),
@@ -135,6 +172,25 @@ public class GameController implements GameEventListener {
         );
     }
 
+    public void setGameLoopManager(GameLoopManager gameLoopManager) {
+        this.gameLoopManager = gameLoopManager;
+    }
+
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+    }
+
+    public void setLevelManager(LevelManager levelManager) {
+        this.levelManager = levelManager;
+    }
+
+    /**
+     * Updates a property only if it has changed.
+     *
+     * @param hasChanged Supplier to check if the value has changed.
+     * @param update     Runnable to execute the update logic.
+     * @param resetFlag  Runnable to reset the change flag.
+     */
     private void updateIfChanged(Supplier<Boolean> hasChanged, Runnable update, Runnable resetFlag) {
         if (hasChanged.get()) {
             update.run();
@@ -142,11 +198,14 @@ public class GameController implements GameEventListener {
         }
     }
 
+    /**
+     * Disables the player character and clears input handling.
+     */
     private void freezeAnimal() {
         if (animal != null) {
-            animal.setActive(false);
+            animal.setActive(false); // Deactivates the player
         }
-        configureInputHandling(null);
+        configureInputHandling(null); // Clears input handling
     }
 
     @Override
@@ -166,14 +225,8 @@ public class GameController implements GameEventListener {
     @Override
     public void update(long now) {
         background.act(now);
-        updateGameState();
-    }
-
-    @Override
-    public void update(double elapsedTime) {
-        background.act(elapsedTime);
         if (animal == null || !animal.isActive()) {
-            return;
+            return; // Stops updating if the player is inactive
         }
 
         TimeBar timeBar = background.getTimeBar();
@@ -192,9 +245,5 @@ public class GameController implements GameEventListener {
         }
 
         updateGameState();
-    }
-
-    public Animal getAnimal() {
-        return animal;
     }
 }
