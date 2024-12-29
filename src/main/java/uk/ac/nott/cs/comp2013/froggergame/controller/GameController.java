@@ -47,6 +47,7 @@ public class GameController implements GameEventListener {
         setupGameLoopManager();
         gameInitializer.initializeComponents(scoreView);
         setupTimeoutListener();
+        setupAnimal();
     }
 
     private void setupAnimal() {
