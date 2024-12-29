@@ -1,6 +1,5 @@
 package uk.ac.nott.cs.comp2013.froggergame.controller.initializer;
 
-import javafx.collections.ObservableList;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectType;
 import uk.ac.nott.cs.comp2013.froggergame.model.factory.GameObjectFactory;
 import uk.ac.nott.cs.comp2013.froggergame.model.data.GameObjectData;
@@ -10,18 +9,27 @@ import uk.ac.nott.cs.comp2013.froggergame.view.scenes.MyStage;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.Background;
 import uk.ac.nott.cs.comp2013.froggergame.view.components.End;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 public class GameInitializer {
     private static final String BACKGROUND_IMAGE = "background.png";
     private static final int INITIAL_SCORE = 0;
 
     private final MyStage background;
-    private final GameObjectFactory gameObjectFactory;
     private final ScoreManager scoreManager;
+    private final Map<GameObjectType, BiConsumer<MyStage, Object[][]>> setupMethods;
 
     public GameInitializer(MyStage background, ScoreManager scoreManager, GameObjectFactory gameObjectFactory) {
         this.background = background;
         this.scoreManager = scoreManager;
-        this.gameObjectFactory = gameObjectFactory;
+
+        // Map object types to their respective setup methods
+        this.setupMethods = new HashMap<>();
+        setupMethods.put(GameObjectType.LOG, gameObjectFactory::setupLogs);
+        setupMethods.put(GameObjectType.TURTLE, gameObjectFactory::setupTurtles);
+        setupMethods.put(GameObjectType.OBSTACLE, gameObjectFactory::setupObstacles);
     }
 
     public void initializeComponents(Score scoreView) {
@@ -43,17 +51,8 @@ public class GameInitializer {
     }
 
     private void initializeGameObjects(GameObjectType type, Object[][] data) {
-        switch (type) {
-            case LOG:
-                gameObjectFactory.setupLogs(background, data);
-                break;
-            case TURTLE:
-                gameObjectFactory.setupTurtles(background, data);
-                break;
-            case OBSTACLE:
-                gameObjectFactory.setupObstacles(background, data);
-                break;
-        }
+        // Dynamically dispatch setup logic
+        setupMethods.getOrDefault(type, (bg, dt) -> {}).accept(background, data);
     }
 
     public void setupEndPoints() {

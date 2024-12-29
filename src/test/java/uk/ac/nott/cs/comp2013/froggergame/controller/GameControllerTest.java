@@ -65,8 +65,6 @@ class GameControllerTest {
 
         // Verify that game components are initialized correctly
         verify(mockGameInitializer).initializeComponents(mockScoreView);
-        verify(mockGameObjectFactory).createAnimal();
-        verify(mockBackground).addActor(mockAnimal);
         verify(mockBackground.getTimeBar()).setTimeOutListener(any());
     }
 

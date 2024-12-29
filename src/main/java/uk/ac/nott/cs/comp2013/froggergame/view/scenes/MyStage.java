@@ -7,7 +7,7 @@ import uk.ac.nott.cs.comp2013.froggergame.view.components.TimeBar;
 import uk.ac.nott.cs.comp2013.froggergame.view.resource.MusicManager;
 
 public class MyStage extends World {
-	private final MusicManager musicManager = new MusicManager("/Snake_Charmer.mp3");
+	private final MusicManager musicManager = new MusicManager("/music/Snake_Charmer.mp3");
 	private final Level level = new Level(this);
 	private TimeBar timeBar;
 	public MyStage() {
