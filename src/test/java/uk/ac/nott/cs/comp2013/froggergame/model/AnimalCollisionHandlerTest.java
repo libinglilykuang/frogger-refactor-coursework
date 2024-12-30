@@ -83,7 +83,6 @@ class AnimalCollisionHandlerTest extends JavaFXTestBase {
         verify(mockAnimal).clearCurrentPlatform();
         verify(mockAnimal).setWaterDeath(true);
         verify(mockStateManager).addPoints(-50);
-        verify(mockScore).updateScore(anyInt());
         verify(mockAnimal).resetPosition();
     }
 

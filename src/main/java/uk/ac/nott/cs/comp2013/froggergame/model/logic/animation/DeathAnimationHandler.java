@@ -11,7 +11,6 @@ import uk.ac.nott.cs.comp2013.froggergame.view.resource.ImageManager;
 public class DeathAnimationHandler {
     private int deathAnimationFrame = 0;
     private static final int DEFAULT_FRAME_INTERVAL = 5;
-
     private final int frameInterval;
 
     /**
@@ -80,9 +79,9 @@ public class DeathAnimationHandler {
      * @param imageManager The image manager for retrieving the default image.
      */
     private void resetAfterDeath(Animal animal, ImageManager imageManager) {
-        deathAnimationFrame = 0;
         animal.resetPosition();
         animal.setImage(imageManager.getDefaultImage());
+        deathAnimationFrame = 0;
     }
 
     /**
