@@ -56,3 +56,17 @@ This project reimagines the classic Frogger game, introducing new features and c
 <img src="src/main/resources/images/gameplay.png" alt="Gameplay" width="400">
 
 *Dynamic gameplay showcasing moving obstacles, crocodiles, and bonus items.*
+
+---
+
+## Credits
+- **Original Game**: Inspired by Frogger (Konami, 1981).
+- **Development Tools**:
+   - JavaFX: Used for creating the graphical user interface.
+   - Gradle: Utilized for project management, builds, and dependency management.
+- **Testing Framework**: JUnit: Implemented for unit and integration testing.
+- **References**:
+   - [Frogger - Wikipedia](https://en.wikipedia.org/wiki/Frogger): Background information and inspiration.
+   - Coursework guidance and resources provided by Nottingham University.
+
+
